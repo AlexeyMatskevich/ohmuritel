@@ -1,4 +1,4 @@
-require_relative 'boot'
+require_relative "boot"
 
 require "rails"
 # Pick the frameworks you want:
@@ -32,11 +32,11 @@ module Ohmuritel
     # Don't generate system test files.
     config.generators.system_tests = nil
     config.generators do |g|
-      g.test_framework  false
-      g.stylesheets     false
-      g.javascripts     false
-      g.helper          false
-      g.channel         assets: false
+      g.test_framework false
+      g.stylesheets false
+      g.javascripts false
+      g.helper false
+      g.channel assets: false
     end
   end
 end
