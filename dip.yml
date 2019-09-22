@@ -1,0 +1,64 @@
+version: '2'
+
+environment:
+  RAILS_ENV: development
+
+compose:
+  files:
+    - docker-compose-dev.yml
+
+interaction:
+  bash:
+    service: rails
+    command: /bin/bash
+    compose_run_options: [no-deps]
+
+  bundle:
+    service: rails
+    command: bundle
+    compose_run_options: [no-deps]
+
+  rake:
+    service: rails
+    command: bundle exec rake
+
+  rails:
+    service: rails
+    command: bundle exec rails
+    subcommands:
+      s:
+        service: rails
+        compose_run_options: [service-ports]
+# [service-ports] - DIP `use` run instead of `exec` they have different behavior:
+# that the docker-compose run command does not create any of the ports specified in the service configuration.
+# This prevents port collisions with already-open ports.
+  yarn:
+    service: rails
+    command: yarn
+    compose_run_options: [no-deps]
+# We use no-deps for don't start linker container
+# https://docs.docker.com/compose/reference/run/
+  rspec:
+    service: rails
+    environment:
+      RAILS_ENV: test
+    command: bundle exec rspec
+
+  rubocop:
+    service: rails
+    command: bundle exec rubocop
+    compose_run_options: [no-deps]
+
+  psql:
+    service: postgres
+    command: psql -h postgres -U postgres -d ohmuritel_app_dev
+
+  'redis-cli':
+    service: redis
+    command: redis-cli -h redis
+
+provision:
+  - dip compose down --volumes
+  - dip compose up -d postgres redis
+  - dip yarn install
+  - dip bash -c ./bin/setup
