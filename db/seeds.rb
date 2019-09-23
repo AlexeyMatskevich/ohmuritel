@@ -10,12 +10,12 @@ User.create!(
     {
       email: "john.doe@example.com",
       first_name: "John",
-      last_name: "Doe"
+      last_name: "Doe",
     },
     {
       email: "jane.doe@example.com",
       first_name: "Jane",
-      last_name: "Doe"
-    }
+      last_name: "Doe",
+    },
   ]
 )
