@@ -1,9 +1,9 @@
-import React from 'react';
-import { ApolloProvider } from '@apollo/react-hooks';
-import { client } from '../../utils/apollo';
+import React from 'react'
+import { ApolloProvider } from '@apollo/react-hooks'
+import { client } from '../../utils/apollo'
 
 export default ({ children }) => (
-    <ApolloProvider client={client}>
-        {children}
-    </ApolloProvider>
-);
+  <ApolloProvider client={client}>
+    {children}
+  </ApolloProvider>
+)
