@@ -1,0 +1,14 @@
+pre-commit:
+  parallel: true
+  commands:
+    standard:
+      tags: frontend # skip all frontend tags commands if get error
+      glob: "{package.json,*.{js}}"
+      run:  dip standard_no_tty {staged_files} # {staged_files} - list of files
+    standardrb:
+      tags: backend # skip all frontend tags commands if get error
+      glob: "{Gemfile,*.{rb,erb,}}"
+      run: dip standardrb_no_tty {staged_files} # {staged_files} - list of files
+    rspec:
+      tags: rspec backend
+      run: dip rspec_no_tty --fail-fast

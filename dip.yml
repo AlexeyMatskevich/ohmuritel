@@ -44,10 +44,32 @@ interaction:
       RAILS_ENV: test
     command: bundle exec rspec
 
-  rubocop:
+  rspec_no_tty:
     service: rails
-    command: bundle exec rubocop
+    environment:
+      RAILS_ENV: test
+    command: bundle exec rspec
+    compose_run_options: [-T]
+
+  standard:
+    service: rails
+    command: yarn standard
     compose_run_options: [no-deps]
+
+  standard_no_tty:
+    service: rails
+    command: yarn standard
+    compose_run_options: [no-deps -T]
+
+  standardrb:
+    service: rails
+    command: bundle exec standardrb
+    compose_run_options: [no-deps]
+
+  standardrb_no_tty:
+    service: rails
+    command: bundle exec standardrb
+    compose_run_options: [no-deps -T]
 
   psql:
     service: postgres
