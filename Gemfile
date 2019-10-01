@@ -32,6 +32,7 @@ group :development, :test do
   gem "rspec-rails", "= 4.0.0.beta2"
   gem "graphql-rails_logger", "~> 1.2"
   gem "factory_bot_rails", "~> 5.0"
+  gem "crystalball", "~> 0.7.0"
   gem "standard"
 end
 
@@ -46,5 +47,3 @@ end
 gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem "graphql", "~> 1.9"
-
-gem "crystalball", "~> 0.7.0", :groups => [:development, :test]
