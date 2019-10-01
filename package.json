@@ -19,5 +19,23 @@
   "devDependencies": {
     "standard": "^14.3.1",
     "webpack-dev-server": "^3.8.1"
+  },
+  "standard": {
+    "ignore": [
+      "bin/**/*",
+      "db/**/*",
+      "log/**/*",
+      "tmp/**/*",
+      "storage/**/*",
+      "spec/**/*",
+      "app/assets/**/*",
+      "app/controllers/**/*",
+      "app/graphql/**/*",
+      "app/helpers/**/*",
+      "app/jobs/**/*",
+      "app/mailers/**/*",
+      "app/models/**/*",
+      "app/views/**/*"
+    ]
   }
 }

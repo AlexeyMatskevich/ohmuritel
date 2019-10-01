@@ -1,0 +1,13 @@
+parallel: true
+format: progress
+default_ignores: false
+
+ignore:
+  - 'db/schema.rb'
+  - 'vendor/**/*'
+  - 'node_modules/**/*'
+  - 'log/**/*'
+  - 'tmp/**/*'
+  - 'public/**/*'
+  - '.dockerdev/**/*'
+  - 'app/javascript/**/*'
