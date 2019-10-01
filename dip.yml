@@ -51,6 +51,19 @@ interaction:
     command: bundle exec rspec
     compose_run_options: [-T]
 
+  crystalball:
+    service: rails
+    environment:
+      RAILS_ENV: test
+    command: bundle exec crystalball
+
+  crystalball_no_tty:
+    service: rails
+    environment:
+      RAILS_ENV: test
+    command: bundle exec crystalball
+    compose_run_options: [-T]
+
   standard:
     service: rails
     command: yarn standard

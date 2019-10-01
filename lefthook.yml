@@ -13,3 +13,9 @@ pre-commit:
       tags: rspec backend
       glob: "*spec.rb"
       run: dip rspec_no_tty --fail-fast {staged_files}
+pre-push:
+  parallel: true
+  commands:
+    rspec:
+      tags: rspec backend
+      run: dip crystalball_no_tty --fail-fast
