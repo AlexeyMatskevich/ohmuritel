@@ -32,6 +32,8 @@ group :development, :test do
   gem "rspec-rails", "= 4.0.0.beta2"
   gem "graphql-rails_logger", "~> 1.2"
   gem "factory_bot_rails", "~> 5.0"
+  gem "rubocop-rspec", "~> 1.36"
+  gem "rubocop-rails", "~> 2.3"
   gem "crystalball", "~> 0.7.0"
   gem "standard"
 end
