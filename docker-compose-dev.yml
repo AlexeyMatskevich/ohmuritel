@@ -6,7 +6,7 @@ x-app: &app
     context: .
     dockerfile: ./.dockerdev/Dockerfile
     args:
-      RUBY_VERSION: '2.6.3'
+      RUBY_VERSION: '2.6.5'
       PG_MAJOR: '11'
       NODE_MAJOR: '11'
       YARN_VERSION: '1.13.0'
@@ -14,7 +14,7 @@ x-app: &app
   environment: &env
     NODE_ENV: development
     RAILS_ENV: ${RAILS_ENV:-development}
-  image: ohmuritel:1.0.0 # What is this field?
+  image: ohmuritel:1.0.1
   tmpfs:
     - /tmp
 

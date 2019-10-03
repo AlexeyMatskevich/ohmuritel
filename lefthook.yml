@@ -2,20 +2,32 @@ pre-commit:
   parallel: true
   commands:
     standard:
-      tags: frontend # skip all frontend tags commands if get error
+      tags: frontend lint
       glob: ",*.{js}"
-      run:  dip standard_no_tty {staged_files} --verbose | dip yarn snazzy # {staged_files} - list of files
+      run:  dip yarn_no_tty standard {staged_files} --verbose | dip yarn snazzy # {staged_files} - list of files
     standardrb:
-      tags: backend # skip all frontend tags commands if get error
-      glob: "{Gemfile,*.{rb,erb,}}"
-      run: dip standardrb_no_tty {staged_files} | dip yarn snazzy # {staged_files} - list of files
+      tags: backend lint
+      glob: "{Gemfile,*.{rb,erb}}"
+      run: dip bundle_no_tty exec standardrb {staged_files} | dip yarn snazzy
     rspec:
-      tags: rspec backend
+      tags: rspec spec backend
       glob: "*spec.rb"
       run: dip rspec_no_tty --fail-fast {staged_files}
 pre-push:
   parallel: true
   commands:
     rspec:
-      tags: rspec backend
+      tags: rspec spec backend
       run: dip crystalball_no_tty --fail-fast
+    package_audit:
+      tags: frontend secure
+      run: dip yarn_no_tty audit
+    gem_audit:
+      tags: backend secure
+      run: dip bundle_no_tty audit check --update
+    database_consistency:
+      tags: backend
+      run: dip database_consistency_no_tty
+    brakeman:
+      tags: backend
+      run: dip bundle_no_tty exec brakeman

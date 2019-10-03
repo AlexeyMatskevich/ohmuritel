@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "2.6.3"
+ruby "2.6.5"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem "rails", "~> 6.0.0"
@@ -35,6 +35,9 @@ group :development, :test do
   gem "rubocop-rspec", "~> 1.36"
   gem "rubocop-rails", "~> 2.3"
   gem "crystalball", "~> 0.7.0"
+  gem "database_consistency", "~> 0.7.4"
+  gem "bundler-audit", "~> 0.6.1"
+  gem "brakeman", "~> 4.6"
   gem "standard"
 end
 
@@ -42,6 +45,7 @@ group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem "web-console", ">= 3.3.0"
   gem "listen", ">= 3.0.5", "< 3.2"
+  gem "sniffer", "~> 0.3.2"
   gem "graphiql-rails"
 end
 

@@ -18,6 +18,11 @@ interaction:
     command: bundle
     compose_run_options: [no-deps]
 
+  bundle_no_tty:
+    service: rails
+    command: bundle
+    compose_run_options: [no-deps -T]
+
   rake:
     service: rails
     command: bundle exec rake
@@ -38,6 +43,11 @@ interaction:
     compose_run_options: [no-deps]
 # We use no-deps for don't start linker container
 # https://docs.docker.com/compose/reference/run/
+  yarn_no_tty:
+    service: rails
+    command: yarn
+    compose_run_options: [no-deps -T]
+
   rspec:
     service: rails
     environment:
@@ -64,25 +74,28 @@ interaction:
     command: bundle exec crystalball
     compose_run_options: [-T]
 
+  database_consistency:
+    service: rails
+    environment:
+      RAILS_ENV: test
+    command: bundle exec database_consistency
+
+  database_consistency_no_tty:
+    service: rails
+    environment:
+      RAILS_ENV: test
+    command: bundle exec database_consistency
+    compose_run_options: [-T]
+
   standard:
     service: rails
     command: yarn standard
     compose_run_options: [no-deps]
 
-  standard_no_tty:
-    service: rails
-    command: yarn standard
-    compose_run_options: [no-deps -T]
-
   standardrb:
     service: rails
     command: bundle exec standardrb
     compose_run_options: [no-deps]
-
-  standardrb_no_tty:
-    service: rails
-    command: bundle exec standardrb
-    compose_run_options: [no-deps -T]
 
   psql:
     service: postgres
