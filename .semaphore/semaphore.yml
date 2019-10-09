@@ -1,24 +1,17 @@
 version: v1.0
-name: Semaphore Python / Flask / Docker Example Pipeline
+name: Docker Pipeline
 agent:
   machine:
-    # Use a machine type with more RAM and CPU power for faster container
-    # builds:
     type: e1-standard-2
     os_image: ubuntu1804
 blocks:
   - name: Build
     task:
-      # Mount a secret which defines DOCKER_USERNAME and DOCKER_PASSWORD
-      # environment variables.
-      # For info on creating secrets, see:
-      # https://docs.semaphoreci.com/article/66-environment-variables-and-secrets
       secrets:
         - name: dockerhub-secrets
       jobs:
         - name: Docker build
           commands:
-            # Authenticate with Docker Hub
             - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
             - checkout
             - docker-compose build
@@ -28,41 +21,32 @@ blocks:
             - docker push "$DOCKER_USERNAME"/ohmuritel:$SEMAPHORE_WORKFLOW_ID
 
   - name: Lint & Secure
-      task:
-        # Mount a secret which defines DOCKER_USERNAME and DOCKER_PASSWORD
-        # environment variables.
-        # For info on creating secrets, see:
-        # https://docs.semaphoreci.com/article/66-environment-variables-and-secrets
-        secrets:
-            - name: dockerhub-secrets
-        prologue:
+    task:
+      secrets:
+        - name: dockerhub-secrets
+      prologue:
+        commands:
+          - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+          - docker pull "$DOCKER_USERNAME"/ohmuritel
+      jobs:
+        - name: Frontend lint
           commands:
-            # Authenticate with Docker Hub
-            - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-            - docker pull "$DOCKER_USERNAME"/ohmuritel
-        jobs:
-          - name: Frontend lint
-            commands:
-              - docker-compose -f docker-compose-test.yml run node yarn standard --verbose | yarn snazzy && yarn audit
-          - name: Backend lint
-            commands:
-              - docker-compose -f docker-compose-test.yml run --no-deps rails bundle exec rails standardrb | yarn snazzy
-          - name: Yarn audit
-            commands:
-              - docker-compose -f docker-compose-test.yml run node yarn audit
-          - name: Bundle audit
-            commands:
-              - docker-compose -f docker-compose-test.yml run --no-deps rails bundle audit check --update
-          - name: Brakeman
-            commands:
-              - docker-compose -f docker-compose-test.yml run --no-deps rails bundle exec brakeman
+            - docker-compose -f docker-compose-test.yml run node yarn standard --verbose | yarn snazzy && yarn audit
+        - name: Backend lint
+          commands:
+            - docker-compose -f docker-compose-test.yml run --no-deps rails bundle exec rails standardrb | yarn snazzy
+        - name: Yarn audit
+          commands:
+            - docker-compose -f docker-compose-test.yml run node yarn audit
+        - name: Bundle audit
+          commands:
+            - docker-compose -f docker-compose-test.yml run --no-deps rails bundle audit check --update
+        - name: Brakeman
+          commands:
+            - docker-compose -f docker-compose-test.yml run --no-deps rails bundle exec brakeman
 
   - name: Spec && DB lint
     task:
-      # Mount a secret which defines DOCKER_USERNAME and DOCKER_PASSWORD
-      # environment variables.
-      # For info on creating secrets, see:
-      # https://docs.semaphoreci.com/article/66-environment-variables-and-secrets
       secrets:
         - name: dockerhub-secrets
       prologue:
