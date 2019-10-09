@@ -27,6 +27,7 @@ blocks:
       prologue:
         commands:
           - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+          - checkout --use-cache
           - docker pull "$DOCKER_USERNAME"/ohmuritel-test:1.0.1
       jobs:
         - name: Frontend lint
