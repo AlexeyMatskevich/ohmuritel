@@ -14,11 +14,11 @@ blocks:
           commands:
             - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
             - checkout
-            - docker-compose -f docker-compose-test.yml build
-            - docker tag ohmuritel:1.0.1 "$DOCKER_USERNAME"/ohmuritel:1.0.1
-            - docker tag ohmuritel:1.0.1 "$DOCKER_USERNAME"/ohmuritel:$SEMAPHORE_WORKFLOW_ID
-            - docker push "$DOCKER_USERNAME"/ohmuritel:1.0.1
-            - docker push "$DOCKER_USERNAME"/ohmuritel:$SEMAPHORE_WORKFLOW_ID
+            - docker-compose -f docker-compose-test.yml build rails
+            - docker tag ohmuritel-test:1.0.1 "$DOCKER_USERNAME"/ohmuritel-test:1.0.1
+            - docker tag ohmuritel-test:1.0.1 "$DOCKER_USERNAME"/ohmuritel-test:$SEMAPHORE_WORKFLOW_ID
+            - docker push "$DOCKER_USERNAME"/ohmuritel-test:1.0.1
+            - docker push "$DOCKER_USERNAME"/ohmuritel-test:$SEMAPHORE_WORKFLOW_ID
 
   - name: Lint & Secure
     task:
@@ -27,7 +27,7 @@ blocks:
       prologue:
         commands:
           - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-          - docker pull "$DOCKER_USERNAME"/ohmuritel
+          - docker pull "$DOCKER_USERNAME"/ohmuritel-test
       jobs:
         - name: Frontend lint
           commands:
@@ -53,7 +53,7 @@ blocks:
         commands:
           # Authenticate with Docker Hub
           - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-          - docker pull "$DOCKER_USERNAME"/ohmuritel
+          - docker pull "$DOCKER_USERNAME"/ohmuritel-test
           - docker-compose -f docker-compose-test.yml run rails bundle exec rails db:create
           - docker-compose -f docker-compose-test.yml run rails bundle exec rails db:schema:load
       jobs:
