@@ -53,6 +53,7 @@ blocks:
         commands:
           # Authenticate with Docker Hub
           - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+          - checkout --use-cache
           - docker pull "$DOCKER_USERNAME"/ohmuritel-test:1.0.1
           - docker-compose -f docker-compose-test.yml run rails bundle exec rails db:create
           - docker-compose -f docker-compose-test.yml run rails bundle exec rails db:schema:load
