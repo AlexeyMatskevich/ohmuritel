@@ -14,7 +14,7 @@ blocks:
           commands:
             - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
             - checkout
-            - docker-compose build
+            - docker-compose -f docker-compose-test.yml build
             - docker tag ohmuritel:1.0.1 "$DOCKER_USERNAME"/ohmuritel:1.0.1
             - docker tag ohmuritel:1.0.1 "$DOCKER_USERNAME"/ohmuritel:$SEMAPHORE_WORKFLOW_ID
             - docker push "$DOCKER_USERNAME"/ohmuritel:1.0.1
