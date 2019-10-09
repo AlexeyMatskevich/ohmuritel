@@ -42,9 +42,6 @@ blocks:
         - name: Bundle audit
           commands:
             - docker-compose -f docker-compose-test.yml run --no-deps rails bundle audit check --update
-        - name: Brakeman
-          commands:
-            - docker-compose -f docker-compose-test.yml run --no-deps rails bundle exec brakeman
 
   - name: Spec && DB lint
     task:
