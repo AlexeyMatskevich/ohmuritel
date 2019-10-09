@@ -29,23 +29,22 @@ blocks:
           - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
           - checkout --use-cache
           - docker pull "$DOCKER_USERNAME"/ohmuritel-test:1.0.1
-          - docker-compose -f docker-compose-test.yml up -d
       jobs:
         - name: Frontend lint
           commands:
-            - docker-compose -f docker-compose-test.yml exec rails yarn standard --verbose | yarn snazzy && yarn audit
+            - docker-compose -f docker-compose-test.yml run node yarn standard
         - name: Backend lint
           commands:
-            - docker-compose -f docker-compose-test.yml exec --no-deps rails bundle exec rails standardrb | yarn snazzy
+            - docker-compose -f docker-compose-test.yml run --no-deps rails bundle exec rails standardrb
         - name: Yarn audit
           commands:
-            - docker-compose -f docker-compose-test.yml exec rails yarn audit
+            - docker-compose -f docker-compose-test.yml run node yarn audit
         - name: Bundle audit
           commands:
-            - docker-compose -f docker-compose-test.yml exec --no-deps rails bundle audit check --update
+            - docker-compose -f docker-compose-test.yml run --no-deps rails bundle audit check --update
         - name: Brakeman
           commands:
-            - docker-compose -f docker-compose-test.yml exec --no-deps rails bundle exec brakeman
+            - docker-compose -f docker-compose-test.yml run --no-deps rails bundle exec brakeman
 
   - name: Spec && DB lint
     task:
@@ -57,19 +56,15 @@ blocks:
           - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
           - checkout --use-cache
           - docker pull "$DOCKER_USERNAME"/ohmuritel-test:1.0.1
-          - docker-compose -f docker-compose-test.yml up -d
-          - docker-compose -f docker-compose-test.yml exec rails bundle exec rails db:create
-          - docker-compose -f docker-compose-test.yml exec rails bundle exec rails db:schema:load
+          - docker-compose -f docker-compose-test.yml run rails bundle exec rails db:create
+          - docker-compose -f docker-compose-test.yml run rails bundle exec rails db:schema:load
       jobs:
         - name: DB lint
           commands:
-            - docker-compose -f docker-compose-test.yml exec rails bundle exec database_consistency
+            - docker-compose -f docker-compose-test.yml run rails bundle exec database_consistency
         - name: Rspec
           commands:
-            - docker-compose -f docker-compose-test.yml exec rails bundle exec rspec
-        - name: Yarn audit
-          commands:
-            - docker-compose -f docker-compose-test.yml exec rails bundle exec rails standardrb | yarn snazzy
+            - docker-compose -f docker-compose-test.yml run rails bundle exec rspec
 promotions:
   - name: Deploy to Heroku
     pipeline_file: deploy-heroku.yml
