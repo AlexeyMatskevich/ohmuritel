@@ -45,3 +45,17 @@ RUN gem update --system && \
 
 # Create a directory for the app code
 WORKDIR /app
+
+ARG BUNDLE_WITHOUT
+ARG RAILS_ENV
+COPY Gemfile* /app/
+RUN bundle install --without $BUNDLE_WITHOUT \
+ && rm -rf $BUNDLE_PATH/cache/*.gem \
+ && find $BUNDLE_PATH/gems/ -name "*.c" -delete \
+ && find $BUNDLE_PATH/gems/ -name "*.o" -delete
+
+COPY package.json yarn.lock /app/
+RUN yarn install
+
+COPY . /app/
+RUN RAILS_ENV=$RAILS_ENV bundle exec rake assets:precompile
