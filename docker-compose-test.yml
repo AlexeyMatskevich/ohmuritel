@@ -5,7 +5,7 @@ services:
     build:
       context: .
       cache_from:
-        - {$DOCKER_USERNAME}/ohmuritel-test:1.0.1
+        - ${DOCKER_USERNAME}/ohmuritel-test:1.0.1
       args:
         RUBY_VERSION: '2.6.5'
         PG_MAJOR: '11'
@@ -27,7 +27,7 @@ services:
       HISTFILE: /app/log/.bash_history
       PSQL_HISTFILE: /app/log/.psql_history
       EDITOR: vi
-    image: {$DOCKER_USERNAME}/ohmuritel-test:1.0.1
+    image: ${DOCKER_USERNAME}/ohmuritel-test:1.0.1
     depends_on:
       - postgres
       - redis
