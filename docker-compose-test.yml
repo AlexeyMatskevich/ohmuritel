@@ -5,7 +5,7 @@ x-app: &app
   build:
     context: .
     cache_from:
-      - ${DOCKER_USERNAME}/ohmuritel:1.0.1
+      - ${DOCKER_USERNAME}/ohmuritel-test:1.0.1
     args:
       RUBY_VERSION: '2.6.5'
       PG_MAJOR: '11'
@@ -17,7 +17,7 @@ x-app: &app
   environment: &env
     NODE_ENV: test
     RAILS_ENV: test
-  image: ${DOCKER_USERNAME}/ohmuritel:1.0.1
+  image: ${DOCKER_USERNAME}/ohmuritel-test:1.0.1
 
 x-backend: &backend
   <<: *app
