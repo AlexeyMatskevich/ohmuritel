@@ -12,10 +12,5 @@ build:
     BUNDLER_VERSION: '2.0.2'
     BUNDLE_WITHOUT: 'development test'
     RAILS_ENV: 'production'
-release:
-  command:
-    - bundle exec rails db:create
-    - bundle exec rails db:setup
-  image: web
 run:
   web: bundle exec puma -C config/puma.rb
