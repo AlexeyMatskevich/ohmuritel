@@ -17,4 +17,4 @@ release:
     - bundle exec rails db:migrate
   image: web
 run:
-  web: RAILS_ENV=production bundle exec puma -C config/puma.rb
+  web: RAILS_ENV=production bundle exec rails server
