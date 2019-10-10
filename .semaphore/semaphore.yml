@@ -1,0 +1,69 @@
+version: v1.0
+name: Docker Pipeline
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+blocks:
+  - name: Build
+    task:
+      secrets:
+        - name: dockerhub-secrets
+      jobs:
+        - name: Docker build
+          commands:
+            - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+            - checkout
+            - docker-compose -f docker-compose-test.yml build rails
+            - docker tag "$DOCKER_USERNAME"/ohmuritel-test:1.0.1 "$DOCKER_USERNAME"/ohmuritel-test:1.0.1
+            - docker tag "$DOCKER_USERNAME"/ohmuritel-test:1.0.1 "$DOCKER_USERNAME"/ohmuritel-test:$SEMAPHORE_WORKFLOW_ID
+            - docker push "$DOCKER_USERNAME"/ohmuritel-test:1.0.1
+            - docker push "$DOCKER_USERNAME"/ohmuritel-test:$SEMAPHORE_WORKFLOW_ID
+
+  - name: Lint & Secure
+    task:
+      secrets:
+        - name: dockerhub-secrets
+      prologue:
+        commands:
+          - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+          - checkout --use-cache
+          - docker pull "$DOCKER_USERNAME"/ohmuritel-test:1.0.1
+      jobs:
+        - name: Frontend lint
+          commands:
+            - docker-compose -f docker-compose-test.yml run node yarn standard
+        - name: Backend lint
+          commands:
+            - docker-compose -f docker-compose-test.yml run --no-deps rails bundle exec standardrb
+        - name: Yarn audit
+          commands:
+            - docker-compose -f docker-compose-test.yml run node yarn audit
+        - name: Bundle audit
+          commands:
+            - docker-compose -f docker-compose-test.yml run --no-deps rails bundle audit check --update
+
+  - name: Spec && DB lint
+    task:
+      secrets:
+        - name: dockerhub-secrets
+      prologue:
+        commands:
+          # Authenticate with Docker Hub
+          - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+          - checkout --use-cache
+          - docker pull "$DOCKER_USERNAME"/ohmuritel-test:1.0.1
+          - docker-compose -f docker-compose-test.yml run rails bundle exec rails db:create
+          - docker-compose -f docker-compose-test.yml run rails bundle exec rails db:schema:load
+      jobs:
+        - name: DB lint
+          commands:
+            - docker-compose -f docker-compose-test.yml run rails bundle exec database_consistency
+        - name: Rspec
+          commands:
+            - docker-compose -f docker-compose-test.yml run rails bundle exec rspec
+promotions:
+  - name: Deploy to Heroku
+    pipeline_file: deploy-heroku.yml
+  - name: Deploy to Heroku stage
+    pipeline_file: deploy-heroku-stage.yml
