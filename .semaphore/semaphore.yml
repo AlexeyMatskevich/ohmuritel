@@ -35,7 +35,7 @@ blocks:
             - docker-compose -f docker-compose-test.yml run node yarn standard
         - name: Backend lint
           commands:
-            - docker-compose -f docker-compose-test.yml run --no-deps rails bundle exec rails standardrb
+            - docker-compose -f docker-compose-test.yml run --no-deps rails bundle exec standardrb
         - name: Yarn audit
           commands:
             - docker-compose -f docker-compose-test.yml run node yarn audit
