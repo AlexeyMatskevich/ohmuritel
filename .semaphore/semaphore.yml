@@ -66,4 +66,4 @@ promotions:
   - name: Deploy to Heroku
     pipeline_file: deploy-heroku.yml
   - name: Deploy to Heroku stage
-  pipeline_file: deploy-heroku-stage.yml
+    pipeline_file: deploy-heroku-stage.yml
