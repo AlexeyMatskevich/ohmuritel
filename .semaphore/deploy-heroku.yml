@@ -12,7 +12,7 @@ blocks:
         - name: ohmuritel-heroku
       env_vars:
         - name: HEROKU_REMOTE
-          value: https://git.heroku.com/semaphore-demoapp.git
+          value: https://git.heroku.com/ohmuritel.git
       jobs:
         - name: Push code
           commands:
