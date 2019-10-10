@@ -58,4 +58,4 @@ COPY package.json yarn.lock /app/
 RUN yarn install
 
 COPY . /app/
-RUN RAILS_ENV=$RAILS_ENV bundle exec rake assets:precompile
+RUN RAILS_ENV=$RAILS_ENV SECRET_KEY_BASE=$(rake secret) bundle exec rake assets:precompile

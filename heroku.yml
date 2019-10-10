@@ -10,7 +10,7 @@ build:
     NODE_MAJOR: '11'
     YARN_VERSION: '1.19.1'
     BUNDLER_VERSION: '2.0.2'
-    BUNDLE_WITHOUT: 'development, test'
+    BUNDLE_WITHOUT: 'development test'
     RAILS_ENV: 'production'
 release:
   command:
