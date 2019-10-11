@@ -38,6 +38,7 @@ group :development, :test do
   gem "database_consistency", "~> 0.7.4"
   gem "bundler-audit", "~> 0.6.1"
   gem "brakeman", "~> 4.6"
+  gem "git", "~> 1.5"
   gem "standard"
 end
 

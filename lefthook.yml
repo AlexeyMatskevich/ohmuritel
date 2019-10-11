@@ -31,3 +31,14 @@ pre-push:
     brakeman:
       tags: backend
       run: dip bundle_no_tty exec brakeman
+post-checkout:
+  piped: true
+  scripts:
+    01-bundle-checkinstall:
+      tags: backendhttps://ohmuritel.herokuapp.com/
+    02-db-migrate:
+      tags: backend
+      runner: docker exec -it --rm <ohmuritel_rails_1> {cmd}
+    03-crystalball-update:
+      tags: rspec backend
+      runner: docker exec -it --rm ohmuritel_rails_1 {cmd}
