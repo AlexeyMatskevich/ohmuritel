@@ -23,6 +23,10 @@ interaction:
     command: bundle
     compose_run_options: [no-deps -T]
 
+
+
+
+
   rake:
     service: rails
     command: bundle exec rake
