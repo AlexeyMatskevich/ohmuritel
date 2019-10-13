@@ -5,14 +5,10 @@ x-app: &app
   build:
     context: .
     cache_from:
-      - ${DOCKER_USERNAME}/ohmuritel-test:1.0.1
+      - alexeymatskevichflatstack/ohmuritel-base-environment:1.0.1
+      - alexeymatskevichflatstack/ohmuritel-rails-base:1.0.1
+      - alexeymatskevichflatstack/ohmuritel-rails-node:1.0.1
     args:
-      RUBY_VERSION: '2.6.5'
-      PG_MAJOR: '11'
-      NODE_MAJOR: '11'
-      YARN_VERSION: '1.19.1'
-      BUNDLER_VERSION: '2.0.2'
-      BUNDLE_WITHOUT: 'development'
       RAILS_ENV: 'test'
   environment: &env
     NODE_ENV: test

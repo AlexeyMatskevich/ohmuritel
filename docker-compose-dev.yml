@@ -4,17 +4,11 @@ version: '3.4'
 x-app: &app
   build:
     context: .
-    dockerfile: ./.dockerdev/Dockerfile
-    args:
-      RUBY_VERSION: '2.6.5'
-      PG_MAJOR: '11'
-      NODE_MAJOR: '11'
-      YARN_VERSION: '1.19.1'
-      BUNDLER_VERSION: '2.0.2'
+    dockerfile: ./.docker/Dockerfile.dev
   environment: &env
     NODE_ENV: ${NODE_ENV:-development}
     RAILS_ENV: ${RAILS_ENV:-development}
-  image: ohmuritel:1.0.1
+  image: alexeymatskevichflatstack/ohmuritel-base-environment-dev:1.0.1
   tmpfs:
     - /tmp
 
@@ -25,10 +19,10 @@ x-backend: &backend
   volumes:
     - .:/app:cached
     - rails_cache:/app/tmp/cache
-    - bundle:/bundle
+    - bundle:/usr/local/bundle
     - node_modules:/app/node_modules
     - packs:/app/public/packs
-    - .dockerdev/.psqlrc:/root/.psqlrc:ro
+    - .docker/.psqlrc:/root/.psqlrc:ro
   environment:
     <<: *env
     REDIS_URL: redis://redis:6379/
@@ -57,7 +51,7 @@ services:
   postgres:
     image: postgres:11.1
     volumes:
-      - .dockerdev/.psqlrc:/root/.psqlrc:ro
+      - .docker/.psqlrc:/root/.psqlrc:ro
       - postgres:/var/lib/postgresql/data
       - ./log:/root/log:cached
     environment:
@@ -79,7 +73,7 @@ services:
       - '3035:3035'
     volumes:
       - .:/app:cached
-      - bundle:/bundle
+      - bundle:/usr/local/bundle
       - node_modules:/app/node_modules
       - packs:/app/public/packs
     environment:

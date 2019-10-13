@@ -9,5 +9,5 @@ ignore:
   - 'log/**/*'
   - 'tmp/**/*'
   - 'public/**/*'
-  - '.dockerdev/**/*'
+  - '.docker/**/*'
   - 'app/javascript/**/*'
