@@ -1,0 +1,5 @@
+FROM alexeymatskevichflatstack/ohmuritel-base-environment:1.0.1
+
+WORKDIR /app
+
+RUN apk add --no-cache build-base libxml2-dev libxslt-dev

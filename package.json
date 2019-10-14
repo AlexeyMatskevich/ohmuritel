@@ -38,5 +38,8 @@
       "app/models/**/*",
       "app/views/**/*"
     ]
+  },
+  "scripts": {
+    "postinstall": "ruby /app/scripts/heroku_yml_update.rb"
   }
 }

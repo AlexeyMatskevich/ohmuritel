@@ -38,7 +38,7 @@
    ```shell script
    dip rails s
    dip RAILS_ENV=production rails c
-   ```https://ohmuritel-stage.herokuapp.com/
+   ```
 ## Info
 1. [Stage](https://ohmuritel-stage.herokuapp.com/)
 2. [Production](https://ohmuritel.herokuapp.com/)

@@ -4,6 +4,7 @@ agent:
   machine:
     type: e1-standard-2
     os_image: ubuntu1804
+
 blocks:
   - name: Build
     task:
@@ -14,11 +15,12 @@ blocks:
           commands:
             - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
             - checkout
+            - export GEMFILE_SHA=$(sha256sum Gemfile.lock | awk '{print $1}')
+            - export YARN_SHA=$(sha256sum yarn.lock | awk '{print $1}')
+            - scripts/build_first_step.sh
+            - scripts/build_second_step.sh
             - docker-compose -f docker-compose-test.yml build rails
-            - docker tag "$DOCKER_USERNAME"/ohmuritel-test:1.0.1 "$DOCKER_USERNAME"/ohmuritel-test:1.0.1
-            - docker tag "$DOCKER_USERNAME"/ohmuritel-test:1.0.1 "$DOCKER_USERNAME"/ohmuritel-test:$SEMAPHORE_WORKFLOW_ID
-            - docker push "$DOCKER_USERNAME"/ohmuritel-test:1.0.1
-            - docker push "$DOCKER_USERNAME"/ohmuritel-test:$SEMAPHORE_WORKFLOW_ID
+            - docker push "$DOCKER_USERNAME"/ohmuritel-test:"$SEMAPHORE_WORKFLOW_ID"
 
   - name: Lint & Secure
     task:
@@ -28,20 +30,22 @@ blocks:
         commands:
           - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
           - checkout --use-cache
-          - docker pull "$DOCKER_USERNAME"/ohmuritel-test:1.0.1
+          - export GEMFILE_SHA=$(sha256sum Gemfile.lock | awk '{print $1}')
+          - export YARN_SHA=$(sha256sum yarn.lock | awk '{print $1}')
+          - docker pull "$DOCKER_USERNAME"/ohmuritel-test:$SEMAPHORE_WORKFLOW_ID
       jobs:
         - name: Frontend lint
           commands:
-            - docker-compose -f docker-compose-test.yml run node yarn standard
+            - docker-compose -f docker-compose-test.yml run --no-deps rails yarn standard
         - name: Backend lint
           commands:
             - docker-compose -f docker-compose-test.yml run --no-deps rails bundle exec standardrb
         - name: Yarn audit
           commands:
-            - docker-compose -f docker-compose-test.yml run node yarn audit
+            - docker-compose -f docker-compose-test.yml run --no-deps rails yarn audit
         - name: Bundle audit
           commands:
-            - docker-compose -f docker-compose-test.yml run --no-deps rails bundle audit check --update
+            - docker-compose -f docker-compose-test.yml run --no-deps rails bundle exec bundle audit check --update
 
   - name: Spec && DB lint
     task:
@@ -52,7 +56,9 @@ blocks:
           # Authenticate with Docker Hub
           - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
           - checkout --use-cache
-          - docker pull "$DOCKER_USERNAME"/ohmuritel-test:1.0.1
+          - export GEMFILE_SHA=$(sha256sum Gemfile.lock | awk '{print $1}')
+          - export YARN_SHA=$(sha256sum yarn.lock | awk '{print $1}')
+          - docker pull "$DOCKER_USERNAME"/ohmuritel-test:$SEMAPHORE_WORKFLOW_ID
           - docker-compose -f docker-compose-test.yml run rails bundle exec rails db:create
           - docker-compose -f docker-compose-test.yml run rails bundle exec rails db:schema:load
       jobs:
@@ -62,6 +68,7 @@ blocks:
         - name: Rspec
           commands:
             - docker-compose -f docker-compose-test.yml run rails bundle exec rspec
+
 promotions:
   - name: Deploy to Heroku
     pipeline_file: deploy-heroku.yml
