@@ -1,4 +1,6 @@
-FROM alexeymatskevichflatstack/ohmuritel-rails-node:1.0.1
+ARG GEMFILE_SHA
+ARG YARN_SHA
+FROM alexeymatskevichflatstack/ohmuritel-rails-node:$GEMFILE_SHA$YARN_SHA
 
 ARG RAILS_ENV
 

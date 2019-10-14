@@ -1,14 +1,17 @@
+---
 setup:
   addons:
-    - plan: heroku-postgresql
+  - plan: heroku-postgresql
 build:
   docker:
     web: Dockerfile
   config:
-    RAILS_ENV: 'production'
+    RAILS_ENV: production
+    GEMFILE_SHA: d79a915eaa50245fa6daf7d90e111df91e05265f8c11524740757201c5af06ed
+    YARN_SHA: 7ef11d19039795425b8d80c8e1e71d1d826b14196a45201d06db090f2679182e
 release:
   command:
-    - bundle exec rails db:migrate
+  - bundle exec rails db:migrate
   image: web
 run:
   web: RAILS_ENV=production bundle exec rails server

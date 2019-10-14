@@ -4,6 +4,7 @@ agent:
   machine:
     type: e1-standard-2
     os_image: ubuntu1804
+
 blocks:
   - name: Build
     task:
@@ -14,9 +15,12 @@ blocks:
           commands:
             - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
             - checkout
+            - export GEMFILE_SHA=$(sha256sum Gemfile.lock | awk '{print $1}')
+            - export YARN_SHA=$(sha256sum yarn.lock | awk '{print $1}')
+            - scripts/build_first_step.sh
+            - scripts/build_second_step.sh
             - docker-compose -f docker-compose-test.yml build rails
-            - docker tag "$DOCKER_USERNAME"/ohmuritel-test:$SEMAPHORE_WORKFLOW_ID "$DOCKER_USERNAME"/ohmuritel-test:$SEMAPHORE_WORKFLOW_ID
-            - docker push "$DOCKER_USERNAME"/ohmuritel-test:$SEMAPHORE_WORKFLOW_ID
+            - docker push "$DOCKER_USERNAME"/ohmuritel-test:"$SEMAPHORE_WORKFLOW_ID"
 
   - name: Lint & Secure
     task:
@@ -60,6 +64,7 @@ blocks:
         - name: Rspec
           commands:
             - docker-compose -f docker-compose-test.yml run rails bundle exec rspec
+
 promotions:
   - name: Deploy to Heroku
     pipeline_file: deploy-heroku.yml

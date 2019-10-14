@@ -1,4 +1,5 @@
-FROM alexeymatskevichflatstack/ohmuritel-rails-base:1.0.1
+ARG GEMFILE_SHA
+FROM alexeymatskevichflatstack/ohmuritel-rails-base:$GEMFILE_SHA
 
 COPY package.json yarn.lock /app/
 RUN yarn install --production=true
