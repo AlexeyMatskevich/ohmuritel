@@ -2,12 +2,14 @@
 
 # Don't run build if there were no changes in gems
 git diff --quiet --exit-code origin/master $SEMAPHORE_GIT_BRANCH -- Gemfile.lock && exit;
-#git diff --quiet --exit-code HEAD^ HEAD -- Gemfile.lock && exit;
 
-docker pull "$DOCKER_USERNAME"/ohmuritel-rails-base:"$GEMFILE_SHA"
-DOCKER_BUILDKIT=1 docker build --file=.docker/Dockerfile.rails_base . --tag "$DOCKER_USERNAME"/ohmuritel-rails-base:"$GEMFILE_SHA"
-docker push "$DOCKER_USERNAME"/ohmuritel-rails-base:"$GEMFILE_SHA"
+function docker_tag_exists() {
+    curl --silent -f -lSL https://hub.docker.com/v2/repositories/$1/tags/$2 > /dev/null
+}
 
-docker pull "$DOCKER_USERNAME"/ohmuritel-rails-node:"$GEMFILE_SHA""$YARN_SHA"
-DOCKER_BUILDKIT=1 docker build --file=.docker/Dockerfile.rails_node --build-arg GEMFILE_SHA=$GEMFILE_SHA . --tag "$DOCKER_USERNAME"/ohmuritel-rails-node:"$GEMFILE_SHA""$YARN_SHA"
-docker push "$DOCKER_USERNAME"/ohmuritel-rails-node:"$GEMFILE_SHA""$YARN_SHA"
+if docker_tag_exists "$DOCKER_USERNAME"/ohmuritel-rails-base $GEMFILE_SHA; then
+  echo "Docker image $DOCKER_USERNAME/ohmuritel-rails-base:$GEMFILE_SHA exist"
+else
+  DOCKER_BUILDKIT=1 docker build --quiet --file=.docker/Dockerfile.rails_base . --tag "$DOCKER_USERNAME"/ohmuritel-rails-base:"$GEMFILE_SHA"
+  docker push "$DOCKER_USERNAME"/ohmuritel-rails-base:"$GEMFILE_SHA"
+fi

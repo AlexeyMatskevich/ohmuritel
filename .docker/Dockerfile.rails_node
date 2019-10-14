@@ -2,4 +2,7 @@ ARG GEMFILE_SHA
 FROM alexeymatskevichflatstack/ohmuritel-rails-base:$GEMFILE_SHA
 
 COPY package.json yarn.lock /app/
+COPY heroku.yml /app/
+COPY scripts/heroku_yml_update.rb /app/scripts/
+
 RUN yarn install --production=true

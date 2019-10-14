@@ -40,6 +40,6 @@
     ]
   },
   "scripts": {
-    "postinstall": "ruby scripts/heroku_yml_update.rb"
+    "postinstall": "ruby /app/scripts/heroku_yml_update.rb"
   }
 }
