@@ -15,7 +15,7 @@ blocks:
             - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
             - checkout
             - docker-compose -f docker-compose-test.yml build rails
-            - docker tag "$DOCKER_USERNAME"/ohmuritel-test:1.0.1 "$DOCKER_USERNAME"/ohmuritel-test:$SEMAPHORE_WORKFLOW_ID
+            - docker tag "$DOCKER_USERNAME"/ohmuritel-test:$SEMAPHORE_WORKFLOW_ID "$DOCKER_USERNAME"/ohmuritel-test:$SEMAPHORE_WORKFLOW_ID
             - docker push "$DOCKER_USERNAME"/ohmuritel-test:$SEMAPHORE_WORKFLOW_ID
 
   - name: Lint & Secure
@@ -30,13 +30,13 @@ blocks:
       jobs:
         - name: Frontend lint
           commands:
-            - docker-compose -f docker-compose-test.yml run node yarn standard
+            - docker-compose -f docker-compose-test.yml run --no-deps rails yarn standard
         - name: Backend lint
           commands:
             - docker-compose -f docker-compose-test.yml run --no-deps rails bundle exec standardrb
         - name: Yarn audit
           commands:
-            - docker-compose -f docker-compose-test.yml run node yarn audit
+            - docker-compose -f docker-compose-test.yml run --no-deps rails yarn audit
         - name: Bundle audit
           commands:
             - docker-compose -f docker-compose-test.yml run --no-deps rails bundle audit check --update
