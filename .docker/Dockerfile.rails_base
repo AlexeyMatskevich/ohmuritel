@@ -1,0 +1,14 @@
+FROM alexeymatskevichflatstack/ohmuritel-base-environment:1.0.1
+
+WORKDIR /app
+
+COPY Gemfile Gemfile.lock /app/
+RUN apk add --no-cache --virtual .build-base-gem \
+      build-base \
+      libxml2-dev \
+      libxslt-dev \
+    && bundle install --jobs 4 --retry 3 --without development --deployment --no-cache \
+    && rm -rf /app/vendor/bundle/ruby/2.6.0/cache/*.gem \
+        && find /app/vendor/bundle/ruby/2.6.0/gems -name "*.c" -delete \
+        && find /app/vendor/bundle/ruby/2.6.0/gems -name "*.o" -delete \
+    && apk del .build-base-gem
