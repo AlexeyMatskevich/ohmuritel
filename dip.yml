@@ -34,6 +34,11 @@ interaction:
       s:
         service: rails
         compose_run_options: [service-ports]
+
+  ruby:
+    service: rails
+    command: ruby
+
 # [service-ports] - DIP `use` run instead of `exec` they have different behavior:
 # that the docker-compose run command does not create any of the ports specified in the service configuration.
 # This prevents port collisions with already-open ports.
