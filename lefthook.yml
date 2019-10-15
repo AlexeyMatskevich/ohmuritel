@@ -38,7 +38,7 @@ post-checkout:
       tags: backendhttps://ohmuritel.herokuapp.com/
     02-db-migrate:
       tags: backend
-      runner: docker run --rm --entrypoint=ruby ohmuritel:1.0.1 ruby -e '1+1'
+      runner: docker exec -it --rm <ohmuritel_rails_1> {cmd}
     03-crystalball-update:
       tags: rspec backend
       runner: docker exec -it --rm ohmuritel_rails_1 {cmd}
