@@ -10,10 +10,12 @@
     "@rails/webpacker": "^4.0.7",
     "apollo-boost": "^0.4.4",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "date-fns": "^2.5.0",
     "graphql": "^14.5.8",
     "prop-types": "^15.7.2",
     "react": "^16.10.1",
-    "react-dom": "^16.10.1"
+    "react-dom": "^16.10.1",
+    "react-hook-form": "^3.24.0"
   },
   "version": "0.1.0",
   "devDependencies": {
