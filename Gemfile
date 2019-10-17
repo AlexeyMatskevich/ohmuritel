@@ -48,9 +48,14 @@ group :development do
   gem "listen", ">= 3.0.5", "< 3.2"
   gem "sniffer", "~> 0.3.2"
   gem "graphiql-rails"
+  gem "letter_opener", "~> 1.7"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem "graphql", "~> 1.9"
+
+gem "batch-loader", "~> 1.4"
+
+gem "aasm", "~> 5.0"
