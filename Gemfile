@@ -38,12 +38,12 @@ group :development, :test do
   gem "database_consistency", "~> 0.7.4"
   gem "bundler-audit", "~> 0.6.1"
   gem "brakeman", "~> 4.6"
-  gem "git", "~> 1.5"
   gem "standard"
 end
 
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
+  gem "git", "~> 1.5"
   gem "web-console", ">= 3.3.0"
   gem "listen", ">= 3.0.5", "< 3.2"
   gem "sniffer", "~> 0.3.2"
