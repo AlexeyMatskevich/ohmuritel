@@ -7,7 +7,7 @@ pre-commit:
       run:  dip yarn_no_tty standard {staged_files} --verbose | dip yarn snazzy # {staged_files} - list of files
     standardrb:
       tags: backend lint
-      glob: "{bin/*,Gemfile,*.{rb,erb}}"
+      glob: "{bin/*,.lefthook/**/*,Gemfile,*.{rb,erb}}"
       run: dip bundle_no_tty exec standardrb {staged_files} | dip yarn snazzy
     rspec:
       tags: rspec spec backend
@@ -31,3 +31,16 @@ pre-push:
     brakeman:
       tags: backend
       run: dip bundle_no_tty exec brakeman
+post-checkout:
+  piped: true
+  scripts:
+    "01-bundle-checkinstall":
+      tags: backend
+    "02-yarn-checkinstall":
+      tags: fronend
+    "03-db-migrate":
+      tags: backend
+      runner: docker-compose -f docker-compose-dev.yml run --rm rails
+    "04-crystalball-update":
+      tags: rspec backend
+      runner: docker-compose -f docker-compose-dev.yml run --rm rails

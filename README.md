@@ -42,3 +42,20 @@
 ## Info
 1. [Stage](https://ohmuritel-stage.herokuapp.com/)
 2. [Production](https://ohmuritel.herokuapp.com/)
+
+## Development
+1. Install [Lefthook](https://github.com/Arkweid/lefthook/blob/master/docs/full_guide.md#referencing-commands-from-lefthookyml)
+    for apply git hooks
+    ```shell script
+    brew install Arkweid/lefthook/lefthook
+    ```
+    or other way from link
+2. Use `lefthook run ${hook name}` for run hooks manual
+3. Run `standardrb` to lint a ruby code
+4. Run `standard` to lint a js code
+4. Run `crystalball` ro run all ruby spec using [Regression Test Selection mechanism](https://tenderlovemaking.com/2015/02/13/predicting-test-failues.html)
+5. Run `rspec` to run all ruby spec
+6. Commit auto generate changes in heroku.yml when you change gem/js dependency
+ it need for rebuild intermediate containers in CI process and get correct 
+ review_app stage and production. 
+###### You can see all supported commands in a `dip.yml`
