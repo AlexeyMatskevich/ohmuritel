@@ -49,6 +49,9 @@ group :development do
   gem "sniffer", "~> 0.3.2"
   gem "graphiql-rails"
   gem "letter_opener", "~> 1.7"
+  gem "awesome_print", "~> 1.8"
+  gem "pry", "~> 0.12.2"
+  gem "pry-rails", "~> 0.3.9"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
