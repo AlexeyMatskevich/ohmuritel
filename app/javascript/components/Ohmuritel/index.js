@@ -1,15 +1,6 @@
 import React from 'react'
 import { useQuery } from '@apollo/react-hooks'
-import { gql } from 'apollo-boost'
-
-const USERS = gql`
-    {
-        users{
-            email,
-            fullName
-        }
-    }
-`
+import { USERS } from './operations.graphql'
 
 export default function Users () {
   const { loading, error, data } = useQuery(USERS)

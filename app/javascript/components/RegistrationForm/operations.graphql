@@ -1,0 +1,26 @@
+mutation ADD_USER(
+    $firstName: String!,
+    $lastName: String!,
+    $email: String!,
+    $password: String!,
+    $passwordConfirmation: String!
+) {
+    createUser(
+        firstName: $firstName,
+        lastName: $lastName,
+        email: $email,
+        password: $password,
+        passwordConfirmation: $passwordConfirmation) {
+        user{
+            id
+            firstName
+            email
+            lastName
+            fullName
+        }
+        errors{
+            message
+            path
+        }
+    }
+}
