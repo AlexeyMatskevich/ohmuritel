@@ -22,3 +22,8 @@ User:
   email:
     ColumnPresenceChecker:
       enabled: false
+
+Product:
+  lower(name):
+    MissingUniqueIndexChecker:
+      enabled: false
