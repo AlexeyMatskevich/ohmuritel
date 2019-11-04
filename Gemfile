@@ -18,7 +18,7 @@ gem "jbuilder", "~> 2.7"
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
+gem "bcrypt", "~> 3.1.7"
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
@@ -29,7 +29,9 @@ gem "bootsnap", ">= 1.4.2", require: false
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
+  gem "pry", "~> 0.12.2"
   gem "rspec-rails", "= 4.0.0.beta2"
+  gem "rspec-graphql_matchers", "~> 1.1"
   gem "graphql-rails_logger", "~> 1.2"
   gem "factory_bot_rails", "~> 5.0"
   gem "rubocop-rspec", "~> 1.36"
@@ -49,6 +51,8 @@ group :development do
   gem "sniffer", "~> 0.3.2"
   gem "graphiql-rails"
   gem "letter_opener", "~> 1.7"
+  gem "awesome_print", "~> 1.8"
+  gem "pry-rails", "~> 0.3.9"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
@@ -59,3 +63,6 @@ gem "graphql", "~> 1.9"
 gem "batch-loader", "~> 1.4"
 
 gem "aasm", "~> 5.0"
+
+gem "graphql-auth", git: "https://github.com/AlexeyMatskevich/graphql-auth.git"
+gem "rack-cors", "~> 1.0"

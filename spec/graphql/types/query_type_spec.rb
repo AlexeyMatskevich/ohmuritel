@@ -22,4 +22,24 @@ RSpec.describe Types::QueryType do
       )
     end
   end
+
+  describe "user_by_email" do
+    let!(:users) { create :user, email: "example@example.com" }
+
+    let(:query) do
+      %(query {
+        userByEmail(email: "example@example.com") {
+          email
+        }
+      })
+    end
+
+    subject(:result) do
+      OhmuritelSchema.execute(query).as_json
+    end
+
+    it "find user with email" do
+      expect(result.dig("data", "userByEmail")).to eq({"email" => "example@example.com"})
+    end
+  end
 end

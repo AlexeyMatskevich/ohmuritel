@@ -11,11 +11,13 @@ User.create!(
       email: "john.doe@example.com",
       first_name: "John",
       last_name: "Doe",
+      password: "12345678",
     },
     {
       email: "jane.doe@example.com",
       first_name: "Jane",
       last_name: "Doe",
+      password: "12345678",
     },
   ]
 )

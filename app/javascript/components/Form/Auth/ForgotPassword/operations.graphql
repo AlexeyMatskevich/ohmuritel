@@ -1,0 +1,14 @@
+mutation forgotPassword(
+    $email: String!
+) {
+    forgotPassword(
+        email: $email
+    ) {
+        errors{
+            message
+            field
+            details
+        }
+        success
+    }
+}

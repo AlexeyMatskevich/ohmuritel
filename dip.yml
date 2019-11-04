@@ -58,6 +58,10 @@ interaction:
     environment:
       RAILS_ENV: test
     command: bundle exec rspec
+    subcommands:
+      s:
+        service: rails
+        compose_run_options: [service-ports]
 
   rspec_no_tty:
     service: rails

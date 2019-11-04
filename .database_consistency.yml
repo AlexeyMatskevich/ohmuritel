@@ -1,0 +1,24 @@
+DatabaseConsistencySettings:
+  color: true
+
+DatabaseConsistencyCheckers:
+  MissingIndexChecker:
+    enabled: true
+  MissingUniqueIndexChecker:
+    enabled: true
+  ColumnPresenceChecker:
+    enabled: true
+  NullConstraintChecker:
+    enabled: true
+  BelongsToPresenceChecker:
+    enabled: true
+  LengthConstraintChecker:
+    enabled: true
+
+User:
+  lower(email):
+    MissingUniqueIndexChecker:
+      enabled: false
+  email:
+    ColumnPresenceChecker:
+      enabled: false

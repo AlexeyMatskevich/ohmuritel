@@ -1,11 +1,60 @@
 import React from 'react'
-import { render } from 'react-dom'
+import ReactDOM from 'react-dom'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import {
+  BrowserRouter,
+  Switch,
+  Route
+} from 'react-router-dom'
+import Header from '../components/Header'
+import Registration from '../components/Form/Auth/Registration'
+import Login from '../components/Form/Auth/Login'
 import Provider from '../components/Provider'
-import Users from '../components/Ohmuritel'
+import ForgotPassword from '../components/Form/Auth/ForgotPassword'
+import RootContext from '../components/Context'
+import ResetPassword from '../components/Form/Auth/ResetPassword'
 
-render(
-  <Provider>
-    <Users />
-  </Provider>,
+if (process.env.NODE_ENV !== 'production') {
+  const axe = require('react-axe')
+  axe(React, ReactDOM, 1000)
+}
+
+function Home () {
+  return <h1>Home</h1>
+}
+
+function Order () {
+  return <h1>Order</h1>
+}
+
+ReactDOM.render(
+  <BrowserRouter>
+    <Provider>
+      <CssBaseline />
+      <RootContext>
+        <Header />
+        <Switch>
+          <Route path='/new-password/:resetPasswordToken/:email'>
+            <ResetPassword />
+          </Route>
+          <Route path='/forgot_password'>
+            <ForgotPassword />
+          </Route>
+          <Route path='/registration'>
+            <Registration />
+          </Route>
+          <Route path='/login'>
+            <Login />
+          </Route>
+          <Route path='/order'>
+            <Order />
+          </Route>
+          <Route exact path='/'>
+            <Home />
+          </Route>
+        </Switch>
+      </RootContext>
+    </Provider>
+  </BrowserRouter>,
   document.querySelector('#root')
 )

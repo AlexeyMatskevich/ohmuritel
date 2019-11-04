@@ -7,8 +7,8 @@ build:
     web: Dockerfile
   config:
     RAILS_ENV: production
-    GEMFILE_SHA: ecd006b4e12b7a4f2e86051a004afeefa0c65593ccd4daaf48e81a3427126f19
-    YARN_SHA: ca84bcb1706457a85e66fc01327f9afaab0d81c7ae77929190048c12cbc9e818
+    GEMFILE_SHA: f5b62257bc26dbcf0287c665f3884401dd5d43b2d53ed2966e3fe28c8813f1d6
+    YARN_SHA: 13d644e7f66055e74d56b0e6b5ff19568bd565aa3dd137ed7c70b3889320e269
 release:
   command:
   - bundle exec rails db:migrate
