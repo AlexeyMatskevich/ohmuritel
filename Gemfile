@@ -29,6 +29,7 @@ gem "bootsnap", ">= 1.4.2", require: false
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
+  gem "pry", "~> 0.12.2"
   gem "rspec-rails", "= 4.0.0.beta2"
   gem "rspec-graphql_matchers", "~> 1.1"
   gem "graphql-rails_logger", "~> 1.2"
@@ -51,7 +52,6 @@ group :development do
   gem "graphiql-rails"
   gem "letter_opener", "~> 1.7"
   gem "awesome_print", "~> 1.8"
-  gem "pry", "~> 0.12.2"
   gem "pry-rails", "~> 0.3.9"
 end
 
@@ -63,3 +63,6 @@ gem "graphql", "~> 1.9"
 gem "batch-loader", "~> 1.4"
 
 gem "aasm", "~> 5.0"
+
+gem "graphql-auth", git: "https://github.com/AlexeyMatskevich/graphql-auth.git"
+gem "rack-cors", "~> 1.0"

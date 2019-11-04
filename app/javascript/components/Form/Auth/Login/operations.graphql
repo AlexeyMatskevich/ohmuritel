@@ -1,0 +1,21 @@
+mutation signIn(
+    $email: String!,
+    $password: String!,
+    $rememberMe: Boolean
+) {
+    signIn(
+        email: $email,
+        password: $password,
+        rememberMe: $rememberMe
+    ) {
+        user{
+            fullName
+        }
+        errors{
+            message
+            field
+            details
+        }
+        success
+    }
+}

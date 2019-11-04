@@ -1,6 +1,5 @@
 DatabaseConsistencySettings:
   color: true
-  log_level: DEBUG
 
 DatabaseConsistencyCheckers:
   MissingIndexChecker:
@@ -19,4 +18,7 @@ DatabaseConsistencyCheckers:
 User:
   lower(email):
     MissingUniqueIndexChecker:
+      enabled: false
+  email:
+    ColumnPresenceChecker:
       enabled: false

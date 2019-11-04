@@ -1,10 +1,17 @@
 module Types
   class AttributesError < Types::BaseObject
-    description "A user-readable error"
+    description "Form error"
 
-    field :message, String, null: false,
-                            description: "A description of the error"
-    field :path, [String], null: true,
-                           description: "Which input value this error came from"
+    field :field, String, null: false do
+      description "Field of the error"
+    end
+
+    field :message, String, null: false do
+      description "Error message"
+    end
+
+    field :details, GraphQL::Types::JSON, null: true do
+      description "Error details"
+    end
   end
 end

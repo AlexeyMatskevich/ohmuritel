@@ -3,17 +3,9 @@ module Mutations
     field :errors, [Types::AttributesError], null: false
 
     def add_attribute_errors(obj)
-      errors = obj.errors.map { |attribute, message|
-        path = [attribute]
-        {
-          path: path,
-          message: message,
-        }
-      }
-      {
-        "#{obj.model_name}": obj,
-        errors: errors,
-      }
+      obj.errors.messages.map do |field, messages|
+        {field: field.to_s.camelize(:lower), message: messages.first.capitalize}
+      end
     end
   end
 end

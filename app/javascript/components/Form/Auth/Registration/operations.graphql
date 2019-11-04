@@ -1,26 +1,25 @@
-mutation ADD_USER(
+mutation signUp(
     $firstName: String!,
     $lastName: String!,
     $email: String!,
     $password: String!,
     $passwordConfirmation: String!
 ) {
-    createUser(
+    signUp(
         firstName: $firstName,
         lastName: $lastName,
         email: $email,
         password: $password,
-        passwordConfirmation: $passwordConfirmation) {
+        passwordConfirmation: $passwordConfirmation
+    ) {
         user{
-            id
-            firstName
-            email
-            lastName
             fullName
         }
         errors{
             message
-            path
+            field
+            details
         }
+        success
     }
 }

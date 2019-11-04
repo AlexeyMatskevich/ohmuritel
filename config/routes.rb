@@ -1,8 +1,15 @@
 Rails.application.routes.draw do
+  devise_for :users, skip: :all
+
   if Rails.env.development?
     mount GraphiQL::Rails::Engine, at: "/graphiql", graphql_path: "/graphql"
   end
+
   post "/graphql", to: "graphql#execute"
+
   root "ohmuritel#index"
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
+  # IMPORTANT #
+  # This `match` must be the *last* route in routes.rb
+  match "*path", to: "ohmuritel#index", via: :all
 end
