@@ -13,7 +13,11 @@ module Mutations
     end
 
     argument :preview_description, String, required: true do
-      description "New products price"
+      description "New products description for preview page"
+    end
+
+    argument :description, String, required: false do
+      description "New products description"
     end
 
     field :product, Types::ProductType, null: true

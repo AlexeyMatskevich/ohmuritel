@@ -21,5 +21,9 @@ module Types
     field :preview_description, String, null: false do
       description "Product description for preview"
     end
+
+    field :description, String, null: true do
+      description "Product description"
+    end
   end
 end

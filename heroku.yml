@@ -8,7 +8,7 @@ build:
   config:
     RAILS_ENV: production
     GEMFILE_SHA: f5b62257bc26dbcf0287c665f3884401dd5d43b2d53ed2966e3fe28c8813f1d6
-    YARN_SHA: 3f4e81bb2b780cce8e395d1b1a6b755469bee174ab6deed2481272641070ef11
+    YARN_SHA: f647ef735f700109430b75bb1e1a853a26b39bb2a13f331730ff84d90f9578b5
 release:
   command:
   - bundle exec rails db:migrate
