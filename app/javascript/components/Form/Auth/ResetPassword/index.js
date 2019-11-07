@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import clsx from 'clsx'
 import useForm, { FormContext } from 'react-hook-form'
 import { useMutation } from '@apollo/react-hooks'
 import { resetPassword } from './operations.graphql'
-import { Avatar, Button, CircularProgress, Container, Grid, Typography } from '@material-ui/core'
+import { Avatar, Button, CircularProgress, Container, Grid, Snackbar, Typography } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { useParams } from 'react-router-dom'
 import { useStyles } from '../../style'
@@ -16,7 +16,14 @@ export default function ResetPassword () {
   const classes = useStyles()
   const { resetPasswordToken, email } = useParams()
   const buttonClassname = clsx({ [classes.buttonSuccess]: false })
-  const [addUser, { loading: mutationLoading, error: mutationError, data }] = useMutation(resetPassword)
+  const handleError = () => setOpen(true)
+  const handleServerError = ({ resetPassword }) => {
+    if (resetPassword.success) { return }
+    setServerErrors(extractErrors(resetPassword))
+  }
+
+  const [addUser, { loading: mutationLoading, data }] = useMutation(resetPassword,
+    { onError: handleError, onCompleted: handleServerError })
   const methods = useForm({ mode: 'onChange' })
   const { handleSubmit, errors } = methods
   const [showPassword, setShowPassword] = useState(false)
@@ -24,10 +31,13 @@ export default function ResetPassword () {
   const handleMouseDownPassword = event => { event.preventDefault() }
 
   const [serverErrors, setServerErrors] = useState([])
+  const [open, setOpen] = React.useState(false)
 
-  useEffect(() => {
-    setServerErrors(typeof data !== 'undefined' && data.resetPassword.errors ? extractErrors(data.resetPassword) : [])
-  }, [data])
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') return
+
+    setOpen(false)
+  }
 
   const onSubmit = data => addUser({
     variables:
@@ -57,13 +67,21 @@ export default function ResetPassword () {
                   />
                 </Grid>
               )}
-              {mutationError &&
-                <Grid item xs={12}>
-                  <Snackbars
-                    variant='error'
-                    message='Error :( Please try again'
-                  />
-                </Grid>}
+              <Snackbar
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left'
+                }}
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+              >
+                <Snackbars
+                  onClose={handleClose}
+                  variant='error'
+                  message='Error :( Please try again'
+                />
+              </Snackbar>
               <Grid item xs={12}>
                 <PasswordFormControl
                   showPassword={showPassword}

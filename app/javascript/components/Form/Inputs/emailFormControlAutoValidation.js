@@ -1,18 +1,17 @@
 import { FormControl, FormHelperText, Input, InputAdornment, InputLabel, makeStyles } from '@material-ui/core'
 import EmailIcon from '@material-ui/icons/Email'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useFormContext } from 'react-hook-form'
 import { userByEmail } from './operations.graphql'
 import { useLazyQuery } from '@apollo/react-hooks'
 import PropTypes from 'prop-types'
+import { sleep } from '../helper'
 
 const useStyles = makeStyles(theme => ({
   mail: {
     margin: theme.spacing(1.5)
   }
 }))
-
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 export default function EmailFormControlAutoValidation (props) {
   const { validationMessage } = props
@@ -22,17 +21,11 @@ export default function EmailFormControlAutoValidation (props) {
   const requiredAria = 'email-error-required'
   const patternAria = 'email-error-pattern'
   const emailTakenAria = 'email-error-already-taken'
-  const [getEmail, { data: emailTaken }] = useLazyQuery(userByEmail)
+  const handleTakenEmail = ({ userByEmail }) => {
+    userByEmail ? setError('email', 'emailTaken') : clearError('email')
+  }
 
-  useEffect(() => {
-    if (typeof emailTaken !== 'undefined') {
-      if (emailTaken.userByEmail) {
-        setError('email', 'emailTaken')
-      } else {
-        clearError('email')
-      }
-    }
-  }, [emailTaken])
+  const [getEmail] = useLazyQuery(userByEmail, { onCompleted: handleTakenEmail })
 
   return (
     <FormControl required fullWidth error={!!errors.email}>
@@ -40,6 +33,7 @@ export default function EmailFormControlAutoValidation (props) {
       <Input
         id='email'
         name='email'
+        type='email'
         inputRef={register({
           required: true,
           maxLength: 255,
@@ -51,7 +45,6 @@ export default function EmailFormControlAutoValidation (props) {
             }
           }
         })}
-        aria-invalid={errors.email ? 'true' : 'false'}
         aria-describedby={`${requiredAria} ${patternAria} ${emailTakenAria}`}
         autoComplete='email'
         endAdornment={

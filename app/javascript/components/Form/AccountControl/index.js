@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { IconButton, Menu, MenuItem } from '@material-ui/core'
 import { AccountCircle } from '@material-ui/icons'
-import ExitToAppIcon from '@material-ui/icons/ExitToApp'
+import LockOpenIcon from '@material-ui/icons/LockOpen'
 import { useHistory } from 'react-router-dom'
 import { AuthContext } from '../../Context'
 
@@ -47,7 +47,7 @@ export default function AccountControl () {
       onClick={() => history.push('/login')}
       color='inherit'
     >
-      <ExitToAppIcon />
+      <LockOpenIcon />
     </IconButton>
   )
 

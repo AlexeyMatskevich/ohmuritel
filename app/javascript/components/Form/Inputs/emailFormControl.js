@@ -23,12 +23,12 @@ export default function EmailFormControl () {
       <Input
         id='email'
         name='email'
+        type='email'
         inputRef={register({
           required: true,
           maxLength: 255,
           pattern: emailPattern
         })}
-        aria-invalid={errors.email ? 'true' : 'false'}
         aria-describedby={`${requiredAria} ${patternAria} ${serverAria}`}
         autoComplete='email'
         endAdornment={

@@ -1,7 +1,5 @@
-query userByEmail(
-    $email: String!
-) {
-    userByEmail(email: $email) {
-        email
-    }
+query userByEmail($email: String!) {
+  userByEmail(email: $email) {
+    email
+  }
 }
