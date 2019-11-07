@@ -13,14 +13,12 @@ import Provider from '../components/Provider'
 import ForgotPassword from '../components/Form/Auth/ForgotPassword'
 import RootContext from '../components/Context'
 import ResetPassword from '../components/Form/Auth/ResetPassword'
+import AddProduct from '../components/Form/AddProduct'
+import Home from '../components/Home'
 
 if (process.env.NODE_ENV !== 'production') {
   const axe = require('react-axe')
   axe(React, ReactDOM, 1000)
-}
-
-function Home () {
-  return <h1>Home</h1>
 }
 
 function Order () {
@@ -34,6 +32,9 @@ ReactDOM.render(
       <RootContext>
         <Header />
         <Switch>
+          <Route path='/new_product'>
+            <AddProduct />
+          </Route>
           <Route path='/new-password/:resetPasswordToken/:email'>
             <ResetPassword />
           </Route>

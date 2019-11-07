@@ -12,3 +12,5 @@ export function extractErrors (response) {
   })
   return memo
 }
+
+export function sleep (ms) { return new Promise(resolve => setTimeout(resolve, ms)) }

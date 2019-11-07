@@ -5,7 +5,8 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import ErrorIcon from '@material-ui/icons/Error'
 import InfoIcon from '@material-ui/icons/Info'
 import { amber, green } from '@material-ui/core/colors'
-import SnackbarContent from '@material-ui/core/SnackbarContent'
+import CloseIcon from '@material-ui/icons/Close'
+import { SnackbarContent, IconButton } from '@material-ui/core'
 import WarningIcon from '@material-ui/icons/Warning'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -44,25 +45,41 @@ const useStyles1 = makeStyles(theme => ({
 
 export default function Snackbars (props) {
   const classes = useStyles1()
-  const { className, message, variant } = props
+  const { className, message, variant, onClose } = props
   const Icon = variantIcon[variant]
+  const span = (
+    <span id='client-snackbar' className={classes.message}>
+      <Icon className={clsx(classes.icon, classes.iconVariant)} />
+      {message}
+    </span>)
 
-  return (
-    <SnackbarContent
-      className={clsx(classes[variant], className)}
-      aria-describedby='client-snackbar'
-      message={
-        <span id='client-snackbar' className={classes.message}>
-          <Icon className={clsx(classes.icon, classes.iconVariant)} />
-          {message}
-        </span>
-      }
-    />
-  )
+  if (onClose) {
+    return (
+      <SnackbarContent
+        className={clsx(classes[variant], className)}
+        aria-describedby='client-snackbar'
+        message={span}
+        action={[
+          <IconButton key='close' aria-label='close' color='inherit' onClick={onClose}>
+            <CloseIcon className={classes.icon} />
+          </IconButton>
+        ]}
+      />
+    )
+  } else {
+    return (
+      <SnackbarContent
+        className={clsx(classes[variant], className)}
+        aria-describedby='client-snackbar'
+        message={span}
+      />
+    )
+  }
 }
 
 Snackbars.propTypes = {
   className: PropTypes.string,
-  message: PropTypes.string,
-  variant: PropTypes.oneOf(['error', 'info', 'success', 'warning']).isRequired
+  message: PropTypes.string.isRequired,
+  variant: PropTypes.oneOf(['error', 'info', 'success', 'warning']).isRequired,
+  onClose: PropTypes.func
 }
