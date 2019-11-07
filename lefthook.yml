@@ -43,4 +43,4 @@ post-checkout:
       runner: docker-compose -f docker-compose-dev.yml run --rm rails
     "04-crystalball-update":
       tags: rspec backend
-      runner: docker-compose -f docker-compose-dev.yml run --rm rails
+      runner: docker-compose -f docker-compose-dev.yml run --rm -e RAILS_ENV=test rails
