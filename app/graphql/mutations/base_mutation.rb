@@ -1,6 +1,7 @@
 module Mutations
   class BaseMutation < GraphQL::Schema::Mutation
     field :errors, [Types::AttributesError], null: false
+    field :success, Boolean, null: false
 
     def add_attribute_errors(obj)
       obj.errors.messages.map do |field, messages|

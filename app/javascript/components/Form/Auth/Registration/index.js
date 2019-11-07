@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import clsx from 'clsx'
 import useForm, { FormContext } from 'react-hook-form'
 import { useMutation } from '@apollo/react-hooks'
@@ -13,7 +13,7 @@ import {
   Grid,
   Input,
   InputLabel,
-  Link,
+  Link, Snackbar,
   Typography
 } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
@@ -31,15 +31,19 @@ export default function Registration () {
   const history = useHistory()
   const buttonClassname = clsx({ [classes.buttonSuccess]: false })
   const { setAuthenticated } = useContext(AuthContext)
-  const handleOnCompleted = (data) => {
-    if (data.signUp.success) {
+  const [open, setOpen] = React.useState(false)
+  const handleError = () => setOpen(true)
+  const handleOnCompleted = ({ signUp }) => {
+    if (signUp.success) {
       setAuthenticated(true)
       history.push('/')
+    } else {
+      setServerErrors(extractErrors(signUp))
     }
   }
 
-  const [addUser, { loading: mutationLoading, error: mutationError, data }] = useMutation(
-    signUp, { onCompleted: handleOnCompleted })
+  const [addUser, { loading: mutationLoading }] = useMutation(
+    signUp, { onError: handleError, onCompleted: handleOnCompleted })
 
   const methods = useForm({ mode: 'onChange' })
   const { register, handleSubmit, errors } = methods
@@ -47,10 +51,11 @@ export default function Registration () {
   const handleClickShowPassword = () => { setShowPassword(!showPassword) }
   const handleMouseDownPassword = event => { event.preventDefault() }
   const [serverErrors, setServerErrors] = useState([])
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') return
 
-  useEffect(() => {
-    setServerErrors(typeof data !== 'undefined' && data.signUp.errors ? extractErrors(data.signUp) : [])
-  }, [data])
+    setOpen(false)
+  }
 
   const onSubmit = data => addUser({
     variables:
@@ -69,7 +74,7 @@ export default function Registration () {
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component='h1' variant='h5'>Create account</Typography>
+        <Typography component='h1' variant='h5'>Create new account</Typography>
         <FormContext {...methods}>
           <form className={classes.form} onSubmit={handleSubmit(onSubmit)} noValidate>
             <Grid container spacing={2}>
@@ -81,13 +86,21 @@ export default function Registration () {
                   />
                 </Grid>
               )}
-              {mutationError &&
-                <Grid item xs={12}>
-                  <Snackbars
-                    variant='error'
-                    message='Error :( Please try again'
-                  />
-                </Grid>}
+              <Snackbar
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left'
+                }}
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+              >
+                <Snackbars
+                  onClose={handleClose}
+                  variant='error'
+                  message='Error :( Please try again'
+                />
+              </Snackbar>
               <Grid item xs={12} sm={6}>
                 <FormControl required fullWidth error={!!errors.firstName}>
                   <InputLabel htmlFor='first-name'>First name</InputLabel>

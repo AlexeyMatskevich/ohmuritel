@@ -5,6 +5,19 @@ module Types
       null: false,
       description: "Returns a list of users"
 
+    field :products,
+      [Types::ProductType],
+      null: false,
+      description: "Returns a list of products"
+
+    field :product_by_name, Types::ProductType, null: true do
+      description "Returns product by name"
+
+      argument :name, String, required: true do
+        description "Product name"
+      end
+    end
+
     field :user, Types::UserType, null: true do
       description "Returns a user by id"
 
@@ -19,6 +32,14 @@ module Types
       argument :email, String, required: true do
         description "User email"
       end
+    end
+
+    def products
+      Product.all
+    end
+
+    def product_by_name(name:)
+      Product.find_by_name(name)
     end
 
     def users

@@ -20,8 +20,6 @@ module Mutations
       description "User's new password confirmation"
     end
 
-    field :errors, [::Types::Auth::Error], null: false
-    field :success, Boolean, null: false
     field :user, Types::UserType, null: true
 
     def resolve(args)

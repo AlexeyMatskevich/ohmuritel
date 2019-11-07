@@ -1,10 +1,10 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState } from 'react'
 import clsx from 'clsx'
 import useForm, { FormContext } from 'react-hook-form'
 import { useMutation } from '@apollo/react-hooks'
 import { signIn } from './operations.graphql'
 import {
-  Avatar, Button, Checkbox, CircularProgress, Container, FormControlLabel, Grid, Link, Typography
+  Avatar, Button, Checkbox, CircularProgress, Container, FormControlLabel, Grid, Link, Snackbar, Typography
 } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { useHistory } from 'react-router-dom'
@@ -20,15 +20,19 @@ export default function Registration () {
   const history = useHistory()
   const buttonClassname = clsx({ [classes.buttonSuccess]: false })
   const { setAuthenticated } = useContext(AuthContext)
-  const handleOnCompleted = (data) => {
-    if (data.signIn.success) {
+  const [open, setOpen] = React.useState(false)
+  const handleError = () => setOpen(true)
+  const handleOnCompleted = ({ signIn }) => {
+    if (signIn.success) {
       setAuthenticated(true)
       history.push('/')
+    } else {
+      setServerErrors(extractErrors(signIn))
     }
   }
 
-  const [addUser, { loading: mutationLoading, error: mutationError, data }] = useMutation(
-    signIn, { onCompleted: handleOnCompleted })
+  const [addUser, { loading: mutationLoading }] = useMutation(
+    signIn, { onError: handleError, onCompleted: handleOnCompleted })
 
   const methods = useForm({ mode: 'onChange' })
   const { register, handleSubmit, errors } = methods
@@ -46,10 +50,11 @@ export default function Registration () {
   })
 
   const [serverErrors, setServerErrors] = useState([])
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') return
 
-  useEffect(() => {
-    setServerErrors(typeof data !== 'undefined' && data.signIn.errors ? extractErrors(data.signIn) : [])
-  }, [data])
+    setOpen(false)
+  }
 
   return (
     <Container component='main' maxWidth='xs'>
@@ -69,13 +74,21 @@ export default function Registration () {
                   />
                 </Grid>
               )}
-              {mutationError &&
-                <Grid item xs={12}>
-                  <Snackbars
-                    variant='error'
-                    message='Error :( Please try again'
-                  />
-                </Grid>}
+              <Snackbar
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left'
+                }}
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+              >
+                <Snackbars
+                  onClose={handleClose}
+                  variant='error'
+                  message='Error :( Please try again'
+                />
+              </Snackbar>
               <Grid item xs={12}>
                 <EmailFormControl />
               </Grid>

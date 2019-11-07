@@ -1,18 +1,10 @@
-mutation resetPassword(
-    $resetPasswordToken: String!
-    $password: String!
-    $passwordConfirmation: String!
-) {
-    resetPassword(
-        resetPasswordToken: $resetPasswordToken,
-        password: $password,
-        passwordConfirmation: $passwordConfirmation
-    ) {
-        errors{
-            message
-            field
-            details
-        }
-        success
+mutation resetPassword($resetPasswordToken: String!, $password: String!, $passwordConfirmation: String!) {
+  resetPassword(resetPasswordToken: $resetPasswordToken, password: $password, passwordConfirmation: $passwordConfirmation) {
+    errors {
+      message
+      field
+      details
     }
+    success
+  }
 }
