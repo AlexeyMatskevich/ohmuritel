@@ -5,13 +5,22 @@ import { useFormContext } from 'react-hook-form'
 import { userByEmail } from './operations.graphql'
 import { useLazyQuery } from '@apollo/react-hooks'
 import PropTypes from 'prop-types'
-import { sleep } from '../helper'
+import debounce from 'lodash/debounce'
 
 const useStyles = makeStyles(theme => ({
   mail: {
     margin: theme.spacing(1.5)
   }
 }))
+
+// function debounce (callback, wait) {
+//   let timeout
+//   return (...args) => {
+//     const context = this
+//     clearTimeout(timeout)
+//     timeout = setTimeout(() => callback.apply(context, args), wait)
+//   }
+// }
 
 export default function EmailFormControlAutoValidation (props) {
   const { validationMessage } = props
@@ -38,12 +47,10 @@ export default function EmailFormControlAutoValidation (props) {
           required: true,
           maxLength: 255,
           pattern: emailPattern,
-          validate: {
-            emailTaken: async (value) => {
-              await sleep(1000).then(() => getEmail({ variables: { email: value } }))
-              return true
-            }
-          }
+          validate: debounce(async (value) => {
+            getEmail({ variables: { email: value } })
+            return true
+          }, 1000)
         })}
         aria-describedby={`${requiredAria} ${patternAria} ${emailTakenAria}`}
         autoComplete='email'

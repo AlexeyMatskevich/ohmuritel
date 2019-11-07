@@ -21,8 +21,9 @@ import {
 import AddIcon from '@material-ui/icons/Add'
 import { useStyles } from '../style'
 import Snackbars from '../Snackbars'
-import { isEmpty, extractErrors, sleep } from '../helper'
+import { isEmpty, extractErrors } from '../helper'
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney'
+import debounce from 'lodash/debounce'
 
 export default function AddProduct () {
   const { register, handleSubmit, errors, setError, clearError, reset } = useForm({ mode: 'onChange' })
@@ -135,12 +136,10 @@ export default function AddProduct () {
                   inputRef={register({
                     required: true,
                     maxLength: 55,
-                    validate: {
-                      nameTaken: async (value) => {
-                        await sleep(1000).then(() => getName({ variables: { name: value } }))
-                        return true
-                      }
-                    }
+                    validate: debounce(async (value) => {
+                      getName({ variables: { name: value } })
+                      return true
+                    }, 1000)
                   })}
                   aria-describedby='name-error-required'
                 />
