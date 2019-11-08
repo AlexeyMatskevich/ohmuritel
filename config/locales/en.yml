@@ -39,3 +39,5 @@ en:
       role:
         user: user
         admin: admin
+  action_policy:
+    unauthorized: You are not authorized to perform this action
