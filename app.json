@@ -30,7 +30,7 @@
   },
   "name": "ohmuritel",
   "scripts": {
-    "postdeploy": "bin/rails db:seed"
+    "postdeploy": "bundle exec rake db:schema:load db:seed"
   },
   "stack": "container"
 }
