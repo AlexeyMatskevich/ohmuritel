@@ -32,6 +32,7 @@ group :development, :test do
   gem "pry", "~> 0.12.2"
   gem "rspec-rails", "= 4.0.0.beta2"
   gem "rspec-graphql_matchers", "~> 1.1"
+  gem "shoulda-matchers", "~> 4.1"
   gem "graphql-rails_logger", "~> 1.2"
   gem "factory_bot_rails", "~> 5.0"
   gem "rubocop-rspec", "~> 1.36"
@@ -57,12 +58,10 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-
 gem "graphql", "~> 1.9"
-
 gem "batch-loader", "~> 1.4"
-
 gem "aasm", "~> 5.0"
-
 gem "graphql-auth", git: "https://github.com/AlexeyMatskevich/graphql-auth.git"
 gem "rack-cors", "~> 1.0"
+gem "action_policy-graphql", "~> 0.3.1"
+gem "enumerize", "~> 2.3"

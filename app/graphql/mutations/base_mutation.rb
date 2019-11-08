@@ -1,5 +1,7 @@
 module Mutations
   class BaseMutation < GraphQL::Schema::Mutation
+    include ActionPolicy::GraphQL::Behaviour
+
     field :errors, [Types::AttributesError], null: false
     field :success, Boolean, null: false
 

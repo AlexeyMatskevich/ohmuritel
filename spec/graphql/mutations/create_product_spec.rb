@@ -6,7 +6,6 @@ RSpec.describe Mutations::CreateProduct do
   it { is_expected.to have_a_field(:product).of_type(Types::ProductType) }
 
   describe "create Product" do
-    let(:user) { build_stubbed(:user) }
     let(:mutation_type) { "createProduct" }
     let(:mutation_string) {
       <<-GRAPHQL
@@ -42,8 +41,27 @@ RSpec.describe Mutations::CreateProduct do
     end
 
     context "when a user authenticated" do
-      it "return the product object" do
-        expect(gql_response.data[mutation_type]["product"]).to include("name" => "Example product")
+      context "and authorized as admin" do
+        let(:user) { build_stubbed(:admin) }
+
+        it "return the product object" do
+          expect(gql_response.data[mutation_type]["product"]).to include("name" => "Example product")
+        end
+      end
+
+      context "and authorized as user" do
+        let(:user) { build_stubbed(:user) }
+        let(:expected_error) {
+          {
+            "details" => nil,
+            "field" => "_error",
+            "message" => "You are not authorized to perform this action",
+          }
+        }
+
+        it "return the unauthorized message" do
+          expect(gql_response.data[mutation_type]["errors"]).to include(expected_error)
+        end
       end
     end
 
@@ -57,7 +75,7 @@ RSpec.describe Mutations::CreateProduct do
         }
       }
 
-      it "return the error message" do
+      it "return the unauthenticated message" do
         expect(gql_response.data[mutation_type]["errors"]).to include(expected_error)
       end
     end
