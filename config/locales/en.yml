@@ -34,3 +34,8 @@ en:
     attributes:
       user:
         email: email
+  enumerize:
+    user:
+      role:
+        user: user
+        admin: admin

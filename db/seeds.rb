@@ -23,6 +23,13 @@ User.create!(
       last_name: "Doe",
       password: "12345678",
     },
+    {
+      email: "admin@admin",
+      first_name: "Jane",
+      last_name: "Doe",
+      password: "12345678",
+      role: :admin,
+    },
   ]
 )
 
