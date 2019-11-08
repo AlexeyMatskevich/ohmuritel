@@ -7,6 +7,8 @@ import { red } from '@material-ui/core/colors'
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart'
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney'
 import Rating from '@material-ui/lab/Rating'
+import { useHistory } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -31,12 +33,13 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function Item (props) {
-  const { name, price, previewDescription } = props
+  const { product: { id, name, price, previewDescription } } = props
   const classes = useStyles()
+  const history = useHistory()
 
   return (
     <Card className={classes.card}>
-      <CardActionArea>
+      <CardActionArea onClick={() => history.push(`/product/${id}`)}>
         <CardHeader
           title={name}
           subheader={<Rating value={4.5} readOnly />}
@@ -44,9 +47,9 @@ export default function Item (props) {
         <CardMedia
           className={classes.media}
           image='/burger.jpg'
-          title='Paella dish'
+          title={name}
         />
-        <CardContent className={classes.content}>
+        <CardContent>
           <Typography variant='body2' color='textSecondary' component='p'>
             {previewDescription}
           </Typography>
@@ -64,4 +67,8 @@ export default function Item (props) {
       </CardActions>
     </Card>
   )
+}
+
+Item.propTypes = {
+  product: PropTypes.object.isRequired
 }

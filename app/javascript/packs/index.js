@@ -15,6 +15,7 @@ import RootContext from '../components/Context'
 import ResetPassword from '../components/Form/Auth/ResetPassword'
 import AddProduct from '../components/Form/AddProduct'
 import Home from '../components/Home'
+import Product from '../components/Product'
 
 if (process.env.NODE_ENV !== 'production') {
   const axe = require('react-axe')
@@ -32,6 +33,9 @@ ReactDOM.render(
       <RootContext>
         <Header />
         <Switch>
+          <Route path='/product/:id'>
+            <Product />
+          </Route>
           <Route path='/new_product'>
             <AddProduct />
           </Route>

@@ -21,13 +21,16 @@ import {
 import AddIcon from '@material-ui/icons/Add'
 import { useStyles } from '../style'
 import Snackbars from '../Snackbars'
-import { isEmpty, extractErrors, sleep } from '../helper'
+import { isEmpty, extractErrors } from '../helper'
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney'
+import debounce from 'lodash/debounce'
+import { TrixEditor } from 'react-trix'
 
 export default function AddProduct () {
   const { register, handleSubmit, errors, setError, clearError, reset } = useForm({ mode: 'onChange' })
   const classes = useStyles()
   const buttonClassname = clsx({ [classes.buttonSuccess]: false })
+  const [trixInput, setTrixInput] = useState()
   const [serverErrors, setServerErrors] = useState([])
   const [openError, setOpenError] = React.useState(false)
   const [openSuccess, setOpenSuccess] = React.useState(false)
@@ -63,7 +66,8 @@ export default function AddProduct () {
         name: data.name,
         weight: Number(data.weight),
         price: Number(data.price),
-        previewDescription: data.previewDescription
+        previewDescription: data.previewDescription,
+        description: trixInput
       }
   })
 
@@ -80,7 +84,7 @@ export default function AddProduct () {
   }
 
   return (
-    <Container component='main' maxWidth='xs'>
+    <Container component='main' maxWidth='xl'>
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <AddIcon />
@@ -89,7 +93,7 @@ export default function AddProduct () {
         <form className={classes.form} onSubmit={handleSubmit(onSubmit)} noValidate>
           <Grid container spacing={2}>
             {serverErrors.map((errorMessage) =>
-              <Grid key={errorMessage} item xs={12}>
+              <Grid key={errorMessage} item md={12}>
                 <Snackbars
                   variant='error'
                   message={errorMessage}
@@ -126,7 +130,7 @@ export default function AddProduct () {
                 message='New product created successfully'
               />
             </Snackbar>
-            <Grid item xs={12}>
+            <Grid item md={6} xs={12}>
               <FormControl required fullWidth error={!!errors.name}>
                 <InputLabel color='primary' htmlFor='name'>Name</InputLabel>
                 <Input
@@ -135,12 +139,10 @@ export default function AddProduct () {
                   inputRef={register({
                     required: true,
                     maxLength: 55,
-                    validate: {
-                      nameTaken: async (value) => {
-                        await sleep(1000).then(() => getName({ variables: { name: value } }))
-                        return true
-                      }
-                    }
+                    validate: debounce(async (value) => {
+                      getName({ variables: { name: value } })
+                      return true
+                    }, 1000)
                   })}
                   aria-describedby='name-error-required'
                 />
@@ -155,7 +157,7 @@ export default function AddProduct () {
                 )}
               </FormControl>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item md={3} sm={6} xs={12}>
               <FormControl required fullWidth error={!!errors.weight}>
                 <InputLabel htmlFor='weight'>Weight</InputLabel>
                 <Input
@@ -175,7 +177,7 @@ export default function AddProduct () {
                 )}
               </FormControl>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item md={3} sm={6} xs={12}>
               <FormControl required fullWidth error={!!errors.price}>
                 <InputLabel htmlFor='price'>Price</InputLabel>
                 <Input
@@ -195,7 +197,7 @@ export default function AddProduct () {
                 )}
               </FormControl>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item md={6} xs={12}>
               <FormControl required fullWidth error={!!errors.previewDescription}>
                 <InputLabel htmlFor='preview-description'>Description for product page</InputLabel>
                 <Input
@@ -210,7 +212,11 @@ export default function AddProduct () {
                 )}
               </FormControl>
             </Grid>
-            <Grid item xs={12} className={classes.wrapper}>
+            <Grid item md={12} xs={12}>
+              <Typography align='center' component='h2' variant='h6'>Description</Typography>
+              <TrixEditor style={{ minHeight: '400px' }} onChange={(html) => setTrixInput(html)} />
+            </Grid>
+            <Grid item md={4} xs={12} justifyContent='center' className={classes.wrapper}>
               <Button
                 color='primary'
                 variant='contained'

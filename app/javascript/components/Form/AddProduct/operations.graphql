@@ -1,5 +1,5 @@
-mutation createProduct($name: String!, $weight: Int!, $price: Int!, $previewDescription: String!) {
-  createProduct(name: $name, weight: $weight, price: $price, previewDescription: $previewDescription) {
+mutation createProduct($name: String!, $weight: Int!, $price: Int!, $previewDescription: String!, $description: String! ) {
+  createProduct(name: $name, weight: $weight, price: $price, previewDescription: $previewDescription, description: $description) {
     product {
       id
       name
