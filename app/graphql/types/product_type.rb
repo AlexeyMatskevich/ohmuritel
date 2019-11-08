@@ -25,5 +25,9 @@ module Types
     field :description, String, null: true do
       description "Product description"
     end
+
+    def description
+      object.rich_text_description.to_s
+    end
   end
 end

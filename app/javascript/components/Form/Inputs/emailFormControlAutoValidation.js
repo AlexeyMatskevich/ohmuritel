@@ -13,15 +13,6 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-// function debounce (callback, wait) {
-//   let timeout
-//   return (...args) => {
-//     const context = this
-//     clearTimeout(timeout)
-//     timeout = setTimeout(() => callback.apply(context, args), wait)
-//   }
-// }
-
 export default function EmailFormControlAutoValidation (props) {
   const { validationMessage } = props
   const classes = useStyles()

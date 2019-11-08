@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { Container, Grid, makeStyles, Typography, LinearProgress, Snackbar } from '@material-ui/core'
 import { useQuery } from '@apollo/react-hooks'
 import Item from '../Item'
@@ -18,13 +18,10 @@ const useStyles = makeStyles(theme => ({
 
 export default function Home () {
   const classes = useStyles()
-  const { loading, error, data } = useQuery(PRODUCTS)
   const [open, setOpen] = React.useState(false)
+  const handleError = () => setOpen(true)
+  const { loading, data } = useQuery(PRODUCTS, { onError: handleError })
   const { authenticated } = useContext(AuthContext)
-
-  useEffect(() => {
-    setOpen(typeof error !== 'undefined')
-  }, [error])
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') return
@@ -64,9 +61,9 @@ export default function Home () {
           <Grid item className={classes.item} xs={12} sm={6} md={4} lg={3} xl={2}>
             <AddItem />
           </Grid>}
-        {data && data.products.map(({ id, name, previewDescription, price }) => (
-          <Grid key={id} item className={classes.item} xs={12} sm={6} md={4} lg={3} xl={2}>
-            <Item name={name} previewDescription={previewDescription} price={price} />
+        {data && data.products.map((product) => (
+          <Grid key={product.id} item className={classes.item} xs={12} sm={6} md={4} lg={3} xl={2}>
+            <Item product={product} />
           </Grid>
         ))}
       </Grid>

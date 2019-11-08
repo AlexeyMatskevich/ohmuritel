@@ -216,7 +216,7 @@ export default function AddProduct () {
               <Typography align='center' component='h2' variant='h6'>Description</Typography>
               <TrixEditor style={{ minHeight: '400px' }} onChange={(html) => setTrixInput(html)} />
             </Grid>
-            <Grid item md={4} xs={12} className={classes.wrapper}>
+            <Grid item md={4} xs={12} justifyContent='center' className={classes.wrapper}>
               <Button
                 color='primary'
                 variant='contained'
