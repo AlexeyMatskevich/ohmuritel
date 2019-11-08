@@ -57,12 +57,9 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-
 gem "graphql", "~> 1.9"
-
 gem "batch-loader", "~> 1.4"
-
 gem "aasm", "~> 5.0"
-
 gem "graphql-auth", git: "https://github.com/AlexeyMatskevich/graphql-auth.git"
 gem "rack-cors", "~> 1.0"
+gem "action_policy-graphql", "~> 0.3.1"
