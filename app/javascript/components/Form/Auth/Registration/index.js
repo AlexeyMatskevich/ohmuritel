@@ -4,17 +4,7 @@ import useForm, { FormContext } from 'react-hook-form'
 import { useMutation } from '@apollo/react-hooks'
 import { signUp } from './operations.graphql'
 import {
-  Avatar,
-  Button,
-  CircularProgress,
-  Container,
-  FormControl,
-  FormHelperText,
-  Grid,
-  Input,
-  InputLabel,
-  Link, Snackbar,
-  Typography
+  Avatar, Button, CircularProgress, Container, FormControl, FormHelperText, Grid, Input, InputLabel, Link, Typography
 } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { useHistory } from 'react-router-dom'
@@ -23,18 +13,15 @@ import PasswordFormControl from '../../Inputs/passwordFormControl'
 import PasswordConfirmFormControl from '../../Inputs/passwordConfirmFormControl'
 import EmailFormControlAutoValidation from '../../Inputs/emailFormControlAutoValidation'
 import { isEmpty, extractErrors } from '../../helper'
-import Snackbars from '../../Snackbars'
+import CustomSnackbarContent from '../../../CustomSnackbar/CustomSnackbarContent'
 
 export default function Registration () {
   const classes = useStyles()
   const history = useHistory()
   const buttonClassname = clsx({ [classes.buttonSuccess]: false })
-  const [open, setOpen] = React.useState(false)
-  const handleError = () => setOpen(true)
   const handleOnCompleted = ({ signUp }) => signUp.success ? history.push('/') : setServerErrors(extractErrors(signUp))
 
-  const [addUser, { loading: mutationLoading }] = useMutation(
-    signUp, { onError: handleError, onCompleted: handleOnCompleted })
+  const [addUser, { loading: mutationLoading }] = useMutation(signUp, { onCompleted: handleOnCompleted })
 
   const methods = useForm({ mode: 'onChange' })
   const { register, handleSubmit, errors } = methods
@@ -42,11 +29,6 @@ export default function Registration () {
   const handleClickShowPassword = () => { setShowPassword(!showPassword) }
   const handleMouseDownPassword = event => { event.preventDefault() }
   const [serverErrors, setServerErrors] = useState([])
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') return
-
-    setOpen(false)
-  }
 
   const onSubmit = data => addUser({
     variables:
@@ -71,27 +53,12 @@ export default function Registration () {
             <Grid container spacing={2}>
               {serverErrors.map((errorMessage) =>
                 <Grid key={errorMessage} item xs={12}>
-                  <Snackbars
+                  <CustomSnackbarContent
                     variant='error'
                     message={errorMessage}
                   />
                 </Grid>
               )}
-              <Snackbar
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left'
-                }}
-                open={open}
-                autoHideDuration={6000}
-                onClose={handleClose}
-              >
-                <Snackbars
-                  onClose={handleClose}
-                  variant='error'
-                  message='Error :( Please try again'
-                />
-              </Snackbar>
               <Grid item xs={12} sm={6}>
                 <FormControl required fullWidth error={!!errors.firstName}>
                   <InputLabel htmlFor='first-name'>First name</InputLabel>

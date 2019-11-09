@@ -1,10 +1,9 @@
 import React from 'react'
-import { Container, Grid, makeStyles, Typography, LinearProgress, Snackbar } from '@material-ui/core'
+import { Container, Grid, makeStyles, Typography, LinearProgress } from '@material-ui/core'
 import { useQuery } from '@apollo/react-hooks'
-import Item from '../Item'
-import AddItem from '../AddItem'
+import Item from '../ShopItem'
+import NewItem from '../ShopItem/NewItem'
 import { PRODUCTS } from './operations.graphql'
-import Snackbars from '../Form/Snackbars'
 import { IsUserLoggedIn } from '../operations.graphql'
 
 const useStyles = makeStyles(theme => ({
@@ -18,17 +17,8 @@ const useStyles = makeStyles(theme => ({
 
 export default function Home () {
   const classes = useStyles()
-  const [open, setOpen] = React.useState(false)
-  const handleError = () => setOpen(true)
-  const { loading, data } = useQuery(PRODUCTS, { onError: handleError })
+  const { loading, data } = useQuery(PRODUCTS)
   const { data: user } = useQuery(IsUserLoggedIn)
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') return
-
-    setOpen(false)
-  }
-
   const progress = () => (
     <Grid item className={classes.item} xs={12}>
       <LinearProgress />
@@ -37,21 +27,6 @@ export default function Home () {
 
   return (
     <Container component='main' maxWidth={false} className={classes.root}>
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left'
-        }}
-        open={open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-      >
-        <Snackbars
-          onClose={handleClose}
-          variant='error'
-          message='Error :( Please try again'
-        />
-      </Snackbar>
       <Grid container spacing={2}>
         {loading && progress()}
         <Grid item xs={12}>
@@ -59,7 +34,7 @@ export default function Home () {
         </Grid>
         {user.isLoggedIn &&
           <Grid item className={classes.item} xs={12} sm={6} md={4} lg={3} xl={2}>
-            <AddItem />
+            <NewItem />
           </Grid>}
         {data && data.products.map((product) => (
           <Grid key={product.id} item className={classes.item} xs={12} sm={6} md={4} lg={3} xl={2}>

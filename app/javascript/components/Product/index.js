@@ -3,18 +3,8 @@ import { useParams } from 'react-router-dom'
 import { product } from './operations.graphql'
 import { useQuery } from '@apollo/react-hooks'
 import {
-  Card,
-  CardActionArea,
-  CardActions,
-  CardMedia,
-  Container,
-  Grid,
-  LinearProgress,
-  makeStyles,
-  Snackbar,
-  Typography
+  Card, CardActionArea, CardActions, CardMedia, Container, Grid, LinearProgress, makeStyles, Typography
 } from '@material-ui/core'
-import Snackbars from '../Form/Snackbars'
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney'
 
 const useStyles = makeStyles(theme => ({
@@ -32,16 +22,8 @@ const useStyles = makeStyles(theme => ({
 
 export default function Product () {
   const classes = useStyles()
-  const [open, setOpen] = React.useState(false)
-  const handleError = () => setOpen(true)
   const { id } = useParams()
-  const { loading, data } = useQuery(product,
-    { variables: { id: id }, onError: handleError })
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') return
-
-    setOpen(false)
-  }
+  const { loading, data } = useQuery(product, { variables: { id: id } })
 
   const progress = () => (
     <Grid item xs={12}>
@@ -52,21 +34,6 @@ export default function Product () {
   if (data === undefined) {
     return (
       <Container component='main' maxWidth={false} className={classes.root}>
-        <Snackbar
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left'
-          }}
-          open={open}
-          autoHideDuration={6000}
-          onClose={handleClose}
-        >
-          <Snackbars
-            onClose={handleClose}
-            variant='error'
-            message='Error :( Please try again'
-          />
-        </Snackbar>
         <Grid container spacing={2}>
           {loading && progress()}
         </Grid>

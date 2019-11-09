@@ -4,12 +4,13 @@ import { HttpLink } from 'apollo-link-http'
 import { onError } from 'apollo-link-error'
 import { ApolloLink, Observable } from 'apollo-link'
 import { resolvers, typeDefs } from './type'
+import { networkErrors } from '../components/operations.graphql'
 
 const cache = new InMemoryCache()
 const isLoggedIn = !!window.localStorage.getItem('refreshToken') || !!window.localStorage.getItem('token')
 
 cache.writeData({
-  data: { isLoggedIn }
+  data: { isLoggedIn, networkErrors: [] }
 })
 
 if (process.env.NODE_ENV === 'development') {
@@ -109,6 +110,11 @@ const createErrorLink = () =>
     }
     if (networkError) {
       logError('GraphQL - NetworkError', networkError)
+      const errorList = cache.readQuery({ query: networkErrors })
+
+      cache.writeData({
+        data: { networkErrors: [...errorList.networkErrors, 'Network error, please try again'] }
+      })
     }
   })
 

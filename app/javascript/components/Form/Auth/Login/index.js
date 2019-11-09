@@ -4,26 +4,24 @@ import useForm, { FormContext } from 'react-hook-form'
 import { useMutation } from '@apollo/react-hooks'
 import { signIn } from './operations.graphql'
 import {
-  Avatar, Button, Checkbox, CircularProgress, Container, FormControlLabel, Grid, Link, Snackbar, Typography
+  Avatar, Button, Checkbox, CircularProgress, Container, FormControlLabel, Grid, Link, Typography
 } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { useHistory } from 'react-router-dom'
 import { useStyles } from '../../style'
 import PasswordFormControl from '../../Inputs/passwordFormControl'
 import EmailFormControl from '../../Inputs/emailFormControl'
-import Snackbars from '../../Snackbars'
+import CustomSnackbarContent from '../../../CustomSnackbar/CustomSnackbarContent'
 import { isEmpty, extractErrors } from '../../helper'
 
 export default function Registration () {
+  const [serverErrors, setServerErrors] = useState([])
   const classes = useStyles()
   const history = useHistory()
   const buttonClassname = clsx({ [classes.buttonSuccess]: false })
-  const [open, setOpen] = React.useState(false)
-  const handleError = () => setOpen(true)
   const handleOnCompleted = ({ signIn }) => signIn.success ? history.push('/') : setServerErrors(extractErrors(signIn))
 
-  const [addUser, { loading: mutationLoading }] = useMutation(
-    signIn, { onError: handleError, onCompleted: handleOnCompleted })
+  const [addUser, { loading: mutationLoading }] = useMutation(signIn, { onCompleted: handleOnCompleted })
 
   const methods = useForm({ mode: 'onChange' })
   const { register, handleSubmit, errors } = methods
@@ -40,13 +38,6 @@ export default function Registration () {
       }
   })
 
-  const [serverErrors, setServerErrors] = useState([])
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') return
-
-    setOpen(false)
-  }
-
   return (
     <Container component='main' maxWidth='xs'>
       <div className={classes.paper}>
@@ -59,27 +50,12 @@ export default function Registration () {
             <Grid container spacing={2}>
               {serverErrors.map((errorMessage) =>
                 <Grid key={errorMessage} item xs={12}>
-                  <Snackbars
+                  <CustomSnackbarContent
                     variant='error'
                     message={errorMessage}
                   />
                 </Grid>
               )}
-              <Snackbar
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left'
-                }}
-                open={open}
-                autoHideDuration={6000}
-                onClose={handleClose}
-              >
-                <Snackbars
-                  onClose={handleClose}
-                  variant='error'
-                  message='Error :( Please try again'
-                />
-              </Snackbar>
               <Grid item xs={12}>
                 <EmailFormControl />
               </Grid>

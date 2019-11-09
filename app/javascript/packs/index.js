@@ -13,8 +13,9 @@ import Provider from '../components/Provider'
 import ForgotPassword from '../components/Form/Auth/ForgotPassword'
 import ResetPassword from '../components/Form/Auth/ResetPassword'
 import AddProduct from '../components/Form/AddProduct'
-import Home from '../components/Home'
+import Home from '../components/ShopList'
 import Product from '../components/Product'
+import NetworkError from '../components/NetworkError'
 
 if (process.env.NODE_ENV !== 'production') {
   const axe = require('react-axe')
@@ -30,6 +31,7 @@ ReactDOM.render(
     <Provider>
       <CssBaseline />
       <Header />
+      <NetworkError />
       <Switch>
         <Route path='/product/:id'>
           <Product />
