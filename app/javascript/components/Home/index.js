@@ -1,11 +1,11 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Container, Grid, makeStyles, Typography, LinearProgress, Snackbar } from '@material-ui/core'
 import { useQuery } from '@apollo/react-hooks'
 import Item from '../Item'
 import AddItem from '../AddItem'
 import { PRODUCTS } from './operations.graphql'
 import Snackbars from '../Form/Snackbars'
-import { AuthContext } from '../Context'
+import { IsUserLoggedIn } from '../operations.graphql'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,7 +21,7 @@ export default function Home () {
   const [open, setOpen] = React.useState(false)
   const handleError = () => setOpen(true)
   const { loading, data } = useQuery(PRODUCTS, { onError: handleError })
-  const { authenticated } = useContext(AuthContext)
+  const { data: user } = useQuery(IsUserLoggedIn)
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') return
@@ -57,7 +57,7 @@ export default function Home () {
         <Grid item xs={12}>
           <Typography align='center' component='h1' variant='h5'>Ohmuritel shop</Typography>
         </Grid>
-        {authenticated &&
+        {user.isLoggedIn &&
           <Grid item className={classes.item} xs={12} sm={6} md={4} lg={3} xl={2}>
             <AddItem />
           </Grid>}

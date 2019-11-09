@@ -4,7 +4,7 @@ import { AppBar, Toolbar, IconButton, Badge, InputBase } from '@material-ui/core
 import HomeIcon from '@material-ui/icons/Home'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import SearchIcon from '@material-ui/icons/Search'
-import AccountControl from '../Form/AccountControl'
+import AccountControl from '../AccountControl'
 import { useHistory } from 'react-router-dom'
 import { withRouter } from 'react-router'
 

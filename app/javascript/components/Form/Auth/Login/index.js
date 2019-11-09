@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import clsx from 'clsx'
 import useForm, { FormContext } from 'react-hook-form'
 import { useMutation } from '@apollo/react-hooks'
@@ -9,7 +9,6 @@ import {
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { useHistory } from 'react-router-dom'
 import { useStyles } from '../../style'
-import { AuthContext } from '../../../Context'
 import PasswordFormControl from '../../Inputs/passwordFormControl'
 import EmailFormControl from '../../Inputs/emailFormControl'
 import Snackbars from '../../Snackbars'
@@ -19,17 +18,9 @@ export default function Registration () {
   const classes = useStyles()
   const history = useHistory()
   const buttonClassname = clsx({ [classes.buttonSuccess]: false })
-  const { setAuthenticated } = useContext(AuthContext)
   const [open, setOpen] = React.useState(false)
   const handleError = () => setOpen(true)
-  const handleOnCompleted = ({ signIn }) => {
-    if (signIn.success) {
-      setAuthenticated(true)
-      history.push('/')
-    } else {
-      setServerErrors(extractErrors(signIn))
-    }
-  }
+  const handleOnCompleted = ({ signIn }) => signIn.success ? history.push('/') : setServerErrors(extractErrors(signIn))
 
   const [addUser, { loading: mutationLoading }] = useMutation(
     signIn, { onError: handleError, onCompleted: handleOnCompleted })
