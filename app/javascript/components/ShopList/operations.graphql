@@ -6,3 +6,11 @@ query PRODUCTS {
         price
     }
 }
+
+query canEdit {
+    currentUser {
+        canCreateProduct {
+            value
+        }
+    }
+}

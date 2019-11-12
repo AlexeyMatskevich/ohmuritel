@@ -14,10 +14,9 @@ export default function AccountControl () {
   const isMenuOpen = Boolean(anchorEl)
 
   const handleLogoutClick = () => {
-    client.writeData({ data: { isLoggedIn: false } })
     window.localStorage.clear()
     handleMenuClose()
-    history.push('/')
+    window.location.reload()
   }
 
   const handleMenuClose = () => {

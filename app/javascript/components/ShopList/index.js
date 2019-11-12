@@ -3,8 +3,7 @@ import { Container, Grid, makeStyles, Typography, LinearProgress } from '@materi
 import { useQuery } from '@apollo/react-hooks'
 import Item from '../ShopItem'
 import NewItem from '../ShopItem/NewItem'
-import { PRODUCTS } from './operations.graphql'
-import { IsUserLoggedIn } from '../operations.graphql'
+import { PRODUCTS, canEdit } from './operations.graphql'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -18,7 +17,7 @@ const useStyles = makeStyles(theme => ({
 export default function Home () {
   const classes = useStyles()
   const { loading, data } = useQuery(PRODUCTS)
-  const { data: user } = useQuery(IsUserLoggedIn)
+  const { data: user } = useQuery(canEdit)
   const progress = () => (
     <Grid item className={classes.item} xs={12}>
       <LinearProgress />
@@ -32,7 +31,7 @@ export default function Home () {
         <Grid item xs={12}>
           <Typography align='center' component='h1' variant='h5'>Ohmuritel shop</Typography>
         </Grid>
-        {user.isLoggedIn &&
+        {user && user.currentUser && user.currentUser.canCreateProduct.value &&
           <Grid item className={classes.item} xs={12} sm={6} md={4} lg={3} xl={2}>
             <NewItem />
           </Grid>}

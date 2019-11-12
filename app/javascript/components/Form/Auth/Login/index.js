@@ -19,7 +19,14 @@ export default function Registration () {
   const classes = useStyles()
   const history = useHistory()
   const buttonClassname = clsx({ [classes.buttonSuccess]: false })
-  const handleOnCompleted = ({ signIn }) => signIn.success ? history.push('/') : setServerErrors(extractErrors(signIn))
+  const handleOnCompleted = ({ signIn }) => {
+    if (signIn.success) {
+      history.push('/')
+      window.location.reload()
+    } else {
+      setServerErrors(extractErrors(signIn))
+    }
+  }
 
   const [addUser, { loading: mutationLoading }] = useMutation(signIn, { onCompleted: handleOnCompleted })
 
