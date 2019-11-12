@@ -3,12 +3,18 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import { HttpLink } from 'apollo-link-http'
 import { onError } from 'apollo-link-error'
 import { ApolloLink, Observable } from 'apollo-link'
-export const createCache = () => {
-  const cache = new InMemoryCache()
-  if (process.env.NODE_ENV === 'development') {
-    window.secretVariableToStoreCache = cache
-  }
-  return cache
+import { resolvers, typeDefs } from './type'
+import { networkErrors } from '../components/operations.graphql'
+
+const cache = new InMemoryCache()
+const isLoggedIn = !!window.localStorage.getItem('refreshToken') || !!window.localStorage.getItem('token')
+
+cache.writeData({
+  data: { isLoggedIn, networkErrors: [] }
+})
+
+if (process.env.NODE_ENV === 'development') {
+  window.secretVariableToStoreCache = cache
 }
 
 const getTokens = () => {
@@ -51,6 +57,9 @@ const createLinkWithToken = () =>
 
                 if (token) {
                   window.localStorage.setItem('token', token)
+                  cache.writeData({
+                    data: { isLoggedIn: true }
+                  })
                 }
 
                 if (expires) {
@@ -62,11 +71,16 @@ const createLinkWithToken = () =>
                 }
               }
 
+              if (window.localStorage.getItem('refreshToken')) return response
+
               const tokenExpiration = window.localStorage.getItem('expires')
               const currentTime = Date.now().valueOf() / 1000
 
               if (tokenExpiration && currentTime > tokenExpiration) {
-                window.localStorage.removeItem('isLogin')
+                window.localStorage.removeItem('token')
+                cache.writeData({
+                  data: { isLoggedIn: false }
+                })
               }
 
               return response
@@ -96,6 +110,11 @@ const createErrorLink = () =>
     }
     if (networkError) {
       logError('GraphQL - NetworkError', networkError)
+      const errorList = cache.readQuery({ query: networkErrors })
+
+      cache.writeData({
+        data: { networkErrors: [...errorList.networkErrors, 'Network error, please try again'] }
+      })
     }
   })
 
@@ -105,13 +124,15 @@ const createHttpLink = () =>
     credentials: 'include'
   })
 
-export const createClient = (cache, requestLink) => {
+export const createClient = () => {
   return new ApolloClient({
+    cache,
     link: ApolloLink.from([
       createErrorLink(),
       createLinkWithToken(),
       createHttpLink()
     ]),
-    cache
+    typeDefs,
+    resolvers
   })
 }

@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import useForm from 'react-hook-form'
 import { useLazyQuery, useMutation } from '@apollo/react-hooks'
 import { createProduct, productByName } from './operations.graphql'
-import { PRODUCTS } from '../../Home/operations.graphql'
+import { PRODUCTS } from '../../ShopList/operations.graphql'
 import {
   Avatar,
   Button,
@@ -20,7 +20,7 @@ import {
 } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import { useStyles } from '../style'
-import Snackbars from '../Snackbars'
+import CustomSnackbarContent from '../../CustomSnackbar/CustomSnackbarContent'
 import { isEmpty, extractErrors } from '../helper'
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney'
 import debounce from 'lodash/debounce'
@@ -32,9 +32,13 @@ export default function AddProduct () {
   const buttonClassname = clsx({ [classes.buttonSuccess]: false })
   const [trixInput, setTrixInput] = useState()
   const [serverErrors, setServerErrors] = useState([])
-  const [openError, setOpenError] = React.useState(false)
   const [openSuccess, setOpenSuccess] = React.useState(false)
-  const handleError = () => setOpenError(true)
+  const handleCloseSuccess = (event, reason) => {
+    if (reason === 'clickaway') return
+
+    setOpenSuccess(false)
+  }
+
   const handleSuccess = ({ createProduct }) => {
     if (createProduct.success) {
       setOpenSuccess(true)
@@ -45,7 +49,6 @@ export default function AddProduct () {
   }
 
   const [addProduct, { loading: mutationLoading }] = useMutation(createProduct, {
-    onError: handleError,
     onCompleted: handleSuccess,
     update (proxy, { data: { createProduct } }) {
       const data = proxy.readQuery({ query: PRODUCTS })
@@ -71,18 +74,6 @@ export default function AddProduct () {
       }
   })
 
-  const handleCloseError = (event, reason) => {
-    if (reason === 'clickaway') return
-
-    setOpenError(false)
-  }
-
-  const handleCloseSuccess = (event, reason) => {
-    if (reason === 'clickaway') return
-
-    setOpenSuccess(false)
-  }
-
   return (
     <Container component='main' maxWidth='xl'>
       <div className={classes.paper}>
@@ -94,27 +85,9 @@ export default function AddProduct () {
           <Grid container spacing={2}>
             {serverErrors.map((errorMessage) =>
               <Grid key={errorMessage} item md={12}>
-                <Snackbars
-                  variant='error'
-                  message={errorMessage}
-                />
+                <CustomSnackbarContent variant='error' message={errorMessage} />
               </Grid>
             )}
-            <Snackbar
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left'
-              }}
-              open={openError}
-              autoHideDuration={6000}
-              onClose={handleCloseError}
-            >
-              <Snackbars
-                onClose={handleCloseError}
-                variant='error'
-                message='Error :( Please try again'
-              />
-            </Snackbar>
             <Snackbar
               anchorOrigin={{
                 vertical: 'bottom',
@@ -124,7 +97,7 @@ export default function AddProduct () {
               autoHideDuration={6000}
               onClose={handleCloseSuccess}
             >
-              <Snackbars
+              <CustomSnackbarContent
                 onClose={handleCloseSuccess}
                 variant='success'
                 message='New product created successfully'

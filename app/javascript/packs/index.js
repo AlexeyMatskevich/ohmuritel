@@ -11,11 +11,11 @@ import Registration from '../components/Form/Auth/Registration'
 import Login from '../components/Form/Auth/Login'
 import Provider from '../components/Provider'
 import ForgotPassword from '../components/Form/Auth/ForgotPassword'
-import RootContext from '../components/Context'
 import ResetPassword from '../components/Form/Auth/ResetPassword'
 import AddProduct from '../components/Form/AddProduct'
-import Home from '../components/Home'
+import Home from '../components/ShopList'
 import Product from '../components/Product'
+import NetworkError from '../components/NetworkError'
 
 if (process.env.NODE_ENV !== 'production') {
   const axe = require('react-axe')
@@ -30,35 +30,34 @@ ReactDOM.render(
   <BrowserRouter>
     <Provider>
       <CssBaseline />
-      <RootContext>
-        <Header />
-        <Switch>
-          <Route path='/product/:id'>
-            <Product />
-          </Route>
-          <Route path='/new_product'>
-            <AddProduct />
-          </Route>
-          <Route path='/new-password/:resetPasswordToken/:email'>
-            <ResetPassword />
-          </Route>
-          <Route path='/forgot_password'>
-            <ForgotPassword />
-          </Route>
-          <Route path='/registration'>
-            <Registration />
-          </Route>
-          <Route path='/login'>
-            <Login />
-          </Route>
-          <Route path='/order'>
-            <Order />
-          </Route>
-          <Route exact path='/'>
-            <Home />
-          </Route>
-        </Switch>
-      </RootContext>
+      <Header />
+      <NetworkError />
+      <Switch>
+        <Route path='/product/:id'>
+          <Product />
+        </Route>
+        <Route path='/new_product'>
+          <AddProduct />
+        </Route>
+        <Route path='/new-password/:resetPasswordToken/:email'>
+          <ResetPassword />
+        </Route>
+        <Route path='/forgot_password'>
+          <ForgotPassword />
+        </Route>
+        <Route path='/registration'>
+          <Registration />
+        </Route>
+        <Route path='/login'>
+          <Login />
+        </Route>
+        <Route path='/order'>
+          <Order />
+        </Route>
+        <Route exact path='/'>
+          <Home />
+        </Route>
+      </Switch>
     </Provider>
   </BrowserRouter>,
   document.querySelector('#root')

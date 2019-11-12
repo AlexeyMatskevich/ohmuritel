@@ -26,5 +26,7 @@ module Types
       # `object` references the user instance
       [object.first_name, object.last_name].compact.join(" ")
     end
+
+    expose_authorization_rules :create?, with: ProductPolicy, field_name: "can_create_product"
   end
 end

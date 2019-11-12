@@ -1,20 +1,21 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { IconButton, Menu, MenuItem } from '@material-ui/core'
 import { AccountCircle } from '@material-ui/icons'
 import LockOpenIcon from '@material-ui/icons/LockOpen'
 import { useHistory } from 'react-router-dom'
-import { AuthContext } from '../../Context'
+import { IsUserLoggedIn } from '../operations.graphql'
+import { useQuery } from '@apollo/react-hooks'
 
 export default function AccountControl () {
   const [anchorEl, setAnchorEl] = React.useState(null)
-  const { authenticated, setAuthenticated } = useContext(AuthContext)
+  const { data: user } = useQuery(IsUserLoggedIn)
   const history = useHistory()
   const isMenuOpen = Boolean(anchorEl)
 
   const handleLogoutClick = () => {
-    setAuthenticated(false)
+    window.localStorage.clear()
     handleMenuClose()
-    history.push('/')
+    window.location.reload()
   }
 
   const handleMenuClose = () => {
@@ -66,7 +67,7 @@ export default function AccountControl () {
 
   return (
     <>
-      {authenticated ? account : login}
+      {user.isLoggedIn ? account : login}
       {renderMenu}
     </>
   )

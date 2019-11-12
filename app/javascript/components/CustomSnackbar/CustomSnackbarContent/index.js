@@ -43,7 +43,7 @@ const useStyles1 = makeStyles(theme => ({
   }
 }))
 
-export default function Snackbars (props) {
+export default function CustomSnackbarContent (props) {
   const classes = useStyles1()
   const { className, message, variant, onClose } = props
   const Icon = variantIcon[variant]
@@ -77,7 +77,7 @@ export default function Snackbars (props) {
   }
 }
 
-Snackbars.propTypes = {
+CustomSnackbarContent.propTypes = {
   className: PropTypes.string,
   message: PropTypes.string.isRequired,
   variant: PropTypes.oneOf(['error', 'info', 'success', 'warning']).isRequired,

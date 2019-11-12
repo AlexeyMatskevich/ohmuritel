@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function AddItem () {
+export default function NewItem () {
   const classes = useStyles()
   const history = useHistory()
 

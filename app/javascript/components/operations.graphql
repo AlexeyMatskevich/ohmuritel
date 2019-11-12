@@ -1,0 +1,6 @@
+query IsUserLoggedIn {
+  isLoggedIn @client
+}
+query networkErrors {
+  networkErrors @client
+}

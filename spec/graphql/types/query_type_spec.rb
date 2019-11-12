@@ -2,7 +2,14 @@ require "rails_helper"
 
 RSpec.describe Types::QueryType do
   describe "get all users" do
-    let!(:users) { create_pair(:user) }
+    let(:admin) { create :admin }
+    let!(:users) {
+      [
+        admin,
+        create(:user),
+        create(:user),
+      ]
+    }
 
     let(:query_type) { "users" }
     let(:query_string) {
@@ -16,7 +23,7 @@ RSpec.describe Types::QueryType do
     }
 
     before do
-      query query_string
+      query query_string, context: {current_user: admin}
     end
 
     it "returns all users" do

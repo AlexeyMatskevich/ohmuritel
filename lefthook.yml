@@ -3,7 +3,7 @@ pre-commit:
   commands:
     standard:
       tags: frontend lint
-      glob: ",*.{js}"
+      glob: "*.{js}"
       run:  dip yarn_no_tty standard {staged_files} --verbose | dip yarn snazzy # {staged_files} - list of files
     standardrb:
       tags: backend lint

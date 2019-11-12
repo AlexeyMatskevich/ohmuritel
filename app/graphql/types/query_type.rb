@@ -1,9 +1,8 @@
 module Types
   class QueryType < Types::BaseObject
-    field :users,
-      [Types::UserType],
-      null: false,
-      description: "Returns a list of users"
+    field :users, [Types::UserType], null: false, authorize: true do
+      description "Returns a list of users"
+    end
 
     field :product, Types::ProductType, null: true do
       description "Returns a product"
@@ -26,12 +25,16 @@ module Types
       end
     end
 
-    field :user, Types::UserType, null: true do
+    field :user, Types::UserType, null: true, authorize: true do
       description "Returns a user by id"
 
       argument :id, ID, required: true do
         description "User ID"
       end
+    end
+
+    field :current_user, Types::UserType, null: true do
+      description "Returns current user"
     end
 
     field :user_by_email, Types::UserType, null: true do
@@ -56,6 +59,10 @@ module Types
 
     def users
       User.all
+    end
+
+    def current_user
+      context[:current_user]
     end
 
     def user(id:)
