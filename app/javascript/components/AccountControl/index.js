@@ -4,10 +4,9 @@ import { AccountCircle } from '@material-ui/icons'
 import LockOpenIcon from '@material-ui/icons/LockOpen'
 import { useHistory } from 'react-router-dom'
 import { IsUserLoggedIn } from '../operations.graphql'
-import { useQuery, useApolloClient } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/react-hooks'
 
 export default function AccountControl () {
-  const client = useApolloClient()
   const [anchorEl, setAnchorEl] = React.useState(null)
   const { data: user } = useQuery(IsUserLoggedIn)
   const history = useHistory()
