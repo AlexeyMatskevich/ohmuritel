@@ -38,3 +38,7 @@
 trix-editor {
   min-height: 30rem;
 }
+
+trix-toolbar .trix-button-group--file-tools {
+  display: none;
+}
