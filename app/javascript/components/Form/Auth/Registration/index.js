@@ -9,9 +9,9 @@ import {
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { useHistory } from 'react-router-dom'
 import { useStyles } from '../../style'
-import PasswordFormControl from '../../Inputs/passwordFormControl'
-import PasswordConfirmFormControl from '../../Inputs/passwordConfirmFormControl'
-import EmailFormControlAutoValidation from '../../Inputs/emailFormControlAutoValidation'
+import PasswordFormControl from '../Inputs/passwordFormControl'
+import PasswordConfirmFormControl from '../Inputs/passwordConfirmFormControl'
+import EmailFormControlAutoValidation from '../Inputs/emailFormControlAutoValidation'
 import { isEmpty, extractErrors } from '../../helper'
 import CustomSnackbarContent from '../../../CustomSnackbar/CustomSnackbarContent'
 

@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import useForm from 'react-hook-form'
 import { useLazyQuery, useMutation } from '@apollo/react-hooks'
 import { createProduct, productByName } from './operations.graphql'
-import { PRODUCTS } from '../../ShopList/operations.graphql'
+import { PRODUCTS } from '../../../ShopList/operations.graphql'
 import {
   Avatar,
   Button,
@@ -19,9 +19,9 @@ import {
   Snackbar
 } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
-import { useStyles } from '../style'
-import CustomSnackbarContent from '../../CustomSnackbar/CustomSnackbarContent'
-import { isEmpty, extractErrors } from '../helper'
+import { useStyles } from '../../style'
+import CustomSnackbarContent from '../../../CustomSnackbar/CustomSnackbarContent'
+import { isEmpty, extractErrors } from '../../helper'
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney'
 import debounce from 'lodash/debounce'
 import { TrixEditor } from 'react-trix'
@@ -187,7 +187,7 @@ export default function AddProduct () {
             </Grid>
             <Grid item md={12} xs={12}>
               <Typography align='center' component='h2' variant='h6'>Description</Typography>
-              <TrixEditor style={{ minHeight: '400px' }} onChange={(html) => setTrixInput(html)} />
+              <TrixEditor onChange={(html) => setTrixInput(html)} />
             </Grid>
             <Grid item md={4} xs={12} className={classes.wrapper}>
               <Button
