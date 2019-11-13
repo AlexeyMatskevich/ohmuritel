@@ -1,33 +1,23 @@
 import React, { useState } from 'react'
 import clsx from 'clsx'
-import useForm from 'react-hook-form'
-import { useLazyQuery, useMutation } from '@apollo/react-hooks'
-import { createProduct, productByName } from './operations.graphql'
+import useForm, { FormContext } from 'react-hook-form'
+import { useMutation } from '@apollo/react-hooks'
+import { createProduct } from './operations.graphql'
 import { PRODUCTS } from '../../../ShopList/operations.graphql'
-import {
-  Avatar,
-  Button,
-  CircularProgress,
-  Container,
-  FormControl,
-  FormHelperText,
-  Grid,
-  Input,
-  InputLabel,
-  Typography,
-  InputAdornment,
-  Snackbar
-} from '@material-ui/core'
+import { Avatar, Button, CircularProgress, Container, Grid, Typography, Snackbar } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import { useStyles } from '../../style'
 import CustomSnackbarContent from '../../../CustomSnackbar/CustomSnackbarContent'
 import { isEmpty, extractErrors } from '../../helper'
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney'
-import debounce from 'lodash/debounce'
 import { TrixEditor } from 'react-trix'
+import NameFormControlValidation from '../Inputs/NameFormControlValidation'
+import WeightFormControl from '../Inputs/WeightFormControl'
+import PriceFormControl from '../Inputs/PriceFormControl'
+import PreviewDescriptionFormControl from '../Inputs/PreviewDescriptionFormControl'
 
 export default function AddProduct () {
-  const { register, handleSubmit, errors, setError, clearError, reset } = useForm({ mode: 'onChange' })
+  const methods = useForm({ mode: 'onChange' })
+  const { handleSubmit, errors, reset } = methods
   const classes = useStyles()
   const buttonClassname = clsx({ [classes.buttonSuccess]: false })
   const [trixInput, setTrixInput] = useState()
@@ -57,12 +47,6 @@ export default function AddProduct () {
     }
   })
 
-  const handleTakenName = ({ productByName }) => {
-    productByName ? setError('name', 'nameTaken') : clearError('name')
-  }
-
-  const [getName] = useLazyQuery(productByName, { onCompleted: handleTakenName })
-
   const onSubmit = data => addProduct({
     variables:
       {
@@ -81,129 +65,61 @@ export default function AddProduct () {
           <AddIcon />
         </Avatar>
         <Typography component='h1' variant='h5'>Add new product</Typography>
-        <form className={classes.form} onSubmit={handleSubmit(onSubmit)} noValidate>
-          <Grid container spacing={2}>
-            {serverErrors.map((errorMessage) =>
-              <Grid key={errorMessage} item md={12}>
-                <CustomSnackbarContent variant='error' message={errorMessage} />
-              </Grid>
-            )}
-            <Snackbar
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left'
-              }}
-              open={openSuccess}
-              autoHideDuration={6000}
-              onClose={handleCloseSuccess}
-            >
-              <CustomSnackbarContent
+        <FormContext {...methods}>
+          <form className={classes.form} onSubmit={handleSubmit(onSubmit)} noValidate>
+            <Grid container spacing={2}>
+              {serverErrors.map((errorMessage) =>
+                <Grid key={errorMessage} item md={12}>
+                  <CustomSnackbarContent variant='error' message={errorMessage} />
+                </Grid>
+              )}
+              <Snackbar
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left'
+                }}
+                open={openSuccess}
+                autoHideDuration={6000}
                 onClose={handleCloseSuccess}
-                variant='success'
-                message='New product created successfully'
-              />
-            </Snackbar>
-            <Grid item md={6} xs={12}>
-              <FormControl required fullWidth error={!!errors.name}>
-                <InputLabel color='primary' htmlFor='name'>Name</InputLabel>
-                <Input
-                  id='name'
-                  name='name'
-                  inputRef={register({
-                    required: true,
-                    maxLength: 55,
-                    validate: debounce(async (value) => {
-                      getName({ variables: { name: value } })
-                      return true
-                    }, 1000)
-                  })}
-                  aria-describedby='name-error-required'
-                />
-                {errors.name && errors.name.type === 'required' && (
-                  <FormHelperText id='name-error-required'>This is required</FormHelperText>
-                )}
-                {errors.name && errors.name.type === 'maxLength' && (
-                  <FormHelperText id='name-error-max-length'>Max length exceeded</FormHelperText>
-                )}
-                {errors.name && errors.name.type === 'nameTaken' && (
-                  <FormHelperText id='name-error-already-taken'>This name has already been taken</FormHelperText>
-                )}
-              </FormControl>
-            </Grid>
-            <Grid item md={3} sm={6} xs={12}>
-              <FormControl required fullWidth error={!!errors.weight}>
-                <InputLabel htmlFor='weight'>Weight</InputLabel>
-                <Input
-                  id='weight'
-                  name='weight'
-                  type='number'
-                  defaultValue='50'
-                  inputRef={register({ required: true, min: 1 })}
-                  aria-describedby='weight-error-required weight-error-min'
-                  endAdornment={<InputAdornment position='end'>Gm</InputAdornment>}
-                />
-                {errors.weight && errors.weight.type === 'required' && (
-                  <FormHelperText id='weight-error-required'>This is required</FormHelperText>
-                )}
-                {errors.weight && errors.weight.type === 'min' && (
-                  <FormHelperText id='weight-error-min'>Must be greater than 0</FormHelperText>
-                )}
-              </FormControl>
-            </Grid>
-            <Grid item md={3} sm={6} xs={12}>
-              <FormControl required fullWidth error={!!errors.price}>
-                <InputLabel htmlFor='price'>Price</InputLabel>
-                <Input
-                  id='price'
-                  name='price'
-                  type='number'
-                  defaultValue='5'
-                  inputRef={register({ required: true, min: 1 })}
-                  aria-describedby='price-error-required price-error-min'
-                  endAdornment={<InputAdornment position='end'><AttachMoneyIcon /></InputAdornment>}
-                />
-                {errors.price && errors.price.type === 'required' && (
-                  <FormHelperText id='price-error-required'>This is required</FormHelperText>
-                )}
-                {errors.price && errors.price.type === 'min' && (
-                  <FormHelperText id='price-error-min'>Must be greater than 0</FormHelperText>
-                )}
-              </FormControl>
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <FormControl required fullWidth error={!!errors.previewDescription}>
-                <InputLabel htmlFor='preview-description'>Description for product page</InputLabel>
-                <Input
-                  id='preview-description'
-                  name='previewDescription'
-                  multiline
-                  inputRef={register({ required: true, min: 1 })}
-                  aria-describedby='preview-description-error-required'
-                />
-                {errors.price && errors.price.type === 'required' && (
-                  <FormHelperText id='preview-description-error-required'>This is required</FormHelperText>
-                )}
-              </FormControl>
-            </Grid>
-            <Grid item md={12} xs={12}>
-              <Typography align='center' component='h2' variant='h6'>Description</Typography>
-              <TrixEditor onChange={(html) => setTrixInput(html)} />
-            </Grid>
-            <Grid item md={4} xs={12} className={classes.wrapper}>
-              <Button
-                color='primary'
-                variant='contained'
-                type='submit'
-                fullWidth
-                className={buttonClassname}
-                disabled={!isEmpty(errors) || mutationLoading}
               >
+                <CustomSnackbarContent
+                  onClose={handleCloseSuccess}
+                  variant='success'
+                  message='New product created successfully'
+                />
+              </Snackbar>
+              <Grid item md={6} xs={12}>
+                <NameFormControlValidation />
+              </Grid>
+              <Grid item md={3} sm={6} xs={12}>
+                <WeightFormControl />
+              </Grid>
+              <Grid item md={3} sm={6} xs={12}>
+                <PriceFormControl />
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <PreviewDescriptionFormControl />
+              </Grid>
+              <Grid item md={12} xs={12}>
+                <Typography align='center' component='h2' variant='h6'>Description</Typography>
+                <TrixEditor onChange={(html) => setTrixInput(html)} />
+              </Grid>
+              <Grid item md={4} xs={12} className={classes.wrapper}>
+                <Button
+                  color='primary'
+                  variant='contained'
+                  type='submit'
+                  fullWidth
+                  className={buttonClassname}
+                  disabled={!isEmpty(errors) || mutationLoading}
+                >
                 Create
-              </Button>
-              {mutationLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                </Button>
+                {mutationLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
+          </form>
+        </FormContext>
       </div>
     </Container>
   )

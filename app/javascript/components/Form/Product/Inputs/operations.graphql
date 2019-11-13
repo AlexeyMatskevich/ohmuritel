@@ -1,0 +1,5 @@
+query productByName($name: String!) {
+  productByName(name: $name) {
+    name
+  }
+}
