@@ -20,6 +20,10 @@ module Mutations
       description "New products description"
     end
 
+    argument :image, String, required: true do
+      description "Signed blob ID generated via `createDirectUpload` mutation"
+    end
+
     field :product, Types::ProductType, null: true
 
     def resolve(args)

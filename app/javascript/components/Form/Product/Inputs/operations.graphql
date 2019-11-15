@@ -3,3 +3,14 @@ query productByName($name: String!) {
     name
   }
 }
+
+mutation createDirectUpload($filename: String!, $contentType: String!, $checksum: String!, $byteSize: Int!) {
+  createDirectUpload(input: {filename: $filename, contentType: $contentType, checksum: $checksum, byteSize: $byteSize}) {
+    directUpload {
+      url
+      headers
+      blobId
+      signedBlobId
+    }
+  }
+}

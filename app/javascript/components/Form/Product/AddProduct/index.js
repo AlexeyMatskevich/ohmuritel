@@ -14,6 +14,8 @@ import NameFormControlValidation from '../Inputs/NameFormControlValidation'
 import WeightFormControl from '../Inputs/WeightFormControl'
 import PriceFormControl from '../Inputs/PriceFormControl'
 import PreviewDescriptionFormControl from '../Inputs/PreviewDescriptionFormControl'
+import ImageFormControl from '../Inputs/ImageFormControl'
+import { directUpload } from '../direct_upload'
 
 export default function AddProduct () {
   const methods = useForm({ mode: 'onChange' })
@@ -21,6 +23,7 @@ export default function AddProduct () {
   const classes = useStyles()
   const buttonClassname = clsx({ [classes.buttonSuccess]: false })
   const [trixInput, setTrixInput] = useState()
+  const [directVariables, setDirectVariables] = useState()
   const [serverErrors, setServerErrors] = useState([])
   const [openSuccess, setOpenSuccess] = React.useState(false)
   const handleCloseSuccess = (event, reason) => {
@@ -47,16 +50,19 @@ export default function AddProduct () {
     }
   })
 
-  const onSubmit = data => addProduct({
-    variables:
-      {
-        name: data.name,
-        weight: Number(data.weight),
-        price: Number(data.price),
-        previewDescription: data.previewDescription,
-        description: trixInput
-      }
-  })
+  const onSubmit = data => {
+    directUpload(directVariables.url, directVariables.headers, directVariables.file).then(() => addProduct({
+      variables:
+        {
+          name: data.name,
+          weight: Number(data.weight),
+          price: Number(data.price),
+          previewDescription: data.previewDescription,
+          description: trixInput,
+          image: directVariables.signedBlobId
+        }
+    }))
+  }
 
   return (
     <Container component='main' maxWidth='xl'>
@@ -88,19 +94,24 @@ export default function AddProduct () {
                   message='New product created successfully'
                 />
               </Snackbar>
+              <Grid item container md={6} xs={12} spacing={2} alignContent='flex-start'>
+                <Grid item container justify='center' xs={12}>
+                  <Grid><ImageFormControl setDirectVariables={setDirectVariables} /></Grid>
+                </Grid>
+                <Grid item xs={12}>
+                  <NameFormControlValidation />
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                  <WeightFormControl />
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                  <PriceFormControl />
+                </Grid>
+                <Grid item xs={12}>
+                  <PreviewDescriptionFormControl />
+                </Grid>
+              </Grid>
               <Grid item md={6} xs={12}>
-                <NameFormControlValidation />
-              </Grid>
-              <Grid item md={3} sm={6} xs={12}>
-                <WeightFormControl />
-              </Grid>
-              <Grid item md={3} sm={6} xs={12}>
-                <PriceFormControl />
-              </Grid>
-              <Grid item md={6} xs={12}>
-                <PreviewDescriptionFormControl />
-              </Grid>
-              <Grid item md={12} xs={12}>
                 <Typography align='center' component='h2' variant='h6'>Description</Typography>
                 <TrixEditor onChange={(html) => setTrixInput(html)} />
               </Grid>
