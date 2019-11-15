@@ -5,6 +5,7 @@ import { onError } from 'apollo-link-error'
 import { ApolloLink, Observable } from 'apollo-link'
 import { resolvers, typeDefs } from './type'
 import { networkErrors } from '../components/operations.graphql'
+import { CSRF } from './csrf'
 
 const cache = new InMemoryCache()
 const isLoggedIn = !!window.localStorage.getItem('refreshToken') || !!window.localStorage.getItem('token')
@@ -18,11 +19,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 const getTokens = () => {
-  let tokens = {
-    'X-CSRF-Token': document
-      .querySelector('meta[name="csrf-token"]')
-      .getAttribute('content')
-  }
+  let tokens = { 'X-CSRF-Token': CSRF() }
 
   const authToken = window.localStorage.getItem('token')
   const authRefreshToken = window.localStorage.getItem('refreshToken')
@@ -100,17 +97,24 @@ const createLinkWithToken = () =>
 const logError = error => console.error(error)
 
 const createErrorLink = () =>
-  onError(({ graphQLErrors, networkError, operation }) => {
+  onError(({ graphQLErrors, networkError, operation, response }) => {
+    const errorList = cache.readQuery({ query: networkErrors })
+
     if (graphQLErrors) {
       logError('GraphQL - Error', {
         errors: graphQLErrors,
         operationName: operation.operationName,
         variables: operation.variables
       })
+
+      graphQLErrors.forEach((error) => {
+        cache.writeData({
+          data: { networkErrors: [...errorList.networkErrors, error.message] }
+        })
+      })
     }
     if (networkError) {
       logError('GraphQL - NetworkError', networkError)
-      const errorList = cache.readQuery({ query: networkErrors })
 
       cache.writeData({
         data: { networkErrors: [...errorList.networkErrors, 'Network error, please try again'] }
