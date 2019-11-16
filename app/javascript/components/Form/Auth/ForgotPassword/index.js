@@ -7,7 +7,7 @@ import { Button, CircularProgress, Container, Avatar, Typography, Grid } from '@
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { useStyles } from '../../style'
 import { extractErrors, isEmpty } from '../../helper'
-import EmailFormControl from '../../Inputs/emailFormControl'
+import EmailFormControl from '../Inputs/emailFormControl'
 import CustomSnackbarContent from '../../../CustomSnackbar/CustomSnackbarContent'
 
 export default function ForgotPassword () {

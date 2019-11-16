@@ -1,4 +1,5 @@
 class GraphqlController < ApplicationController
+  include ActiveStorage::SetCurrent
   include Graphql::AuthHelper
 
   def execute

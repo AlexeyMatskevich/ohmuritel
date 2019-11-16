@@ -9,7 +9,7 @@ Rails.application.routes.draw do
 
   root "ohmuritel#index"
 
-  # IMPORTANT #
-  # This `match` must be the *last* route in routes.rb
-  match "*path", to: "ohmuritel#index", via: :all
+  get "*all", to: "ohmuritel#index", constraints: lambda { |req|
+    req.path.exclude? "rails/active_storage"
+  }
 end

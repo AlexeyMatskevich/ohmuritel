@@ -9,8 +9,8 @@ import {
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { useHistory } from 'react-router-dom'
 import { useStyles } from '../../style'
-import PasswordFormControl from '../../Inputs/passwordFormControl'
-import EmailFormControl from '../../Inputs/emailFormControl'
+import PasswordFormControl from '../Inputs/passwordFormControl'
+import EmailFormControl from '../Inputs/emailFormControl'
 import CustomSnackbarContent from '../../../CustomSnackbar/CustomSnackbarContent'
 import { isEmpty, extractErrors } from '../../helper'
 

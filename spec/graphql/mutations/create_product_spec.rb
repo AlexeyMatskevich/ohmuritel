@@ -6,11 +6,12 @@ RSpec.describe Mutations::CreateProduct do
   it { is_expected.to have_a_field(:product).of_type(Types::ProductType) }
 
   describe "create Product" do
+    let(:user) { build_stubbed(:admin) }
     let(:mutation_type) { "createProduct" }
     let(:mutation_string) {
       <<-GRAPHQL
-      mutation createProduct($name: String!, $weight: Int!, $price: Int!, $previewDescription: String!) {
-        createProduct(name: $name, weight: $weight, price: $price, previewDescription: $previewDescription) {
+      mutation createProduct($name: String!, $weight: Int!, $price: Int!, $previewDescription: String!, $image: String!) {
+        createProduct(name: $name, weight: $weight, price: $price, previewDescription: $previewDescription, image: $image) {
           product {
             id
             name
@@ -36,48 +37,13 @@ RSpec.describe Mutations::CreateProduct do
           weight: 30,
           price: 5,
           previewDescription: "Some description",
+          image: FilesTestHelper.blob_for_png.signed_id,
         },
         context: {current_user: user}
     end
 
-    context "when a user authenticated" do
-      context "and authorized as admin" do
-        let(:user) { build_stubbed(:admin) }
-
-        it "return the product object" do
-          expect(gql_response.data[mutation_type]["product"]).to include("name" => "Example product")
-        end
-      end
-
-      context "and authorized as user" do
-        let(:user) { build_stubbed(:user) }
-        let(:expected_error) {
-          {
-            "details" => nil,
-            "field" => "_error",
-            "message" => "You are not authorized to perform this action",
-          }
-        }
-
-        it "return the unauthorized message" do
-          expect(gql_response.data[mutation_type]["errors"]).to include(expected_error)
-        end
-      end
-    end
-
-    context "when a user not authenticated" do
-      let(:user) { nil }
-      let(:expected_error) {
-        {
-          "details" => nil,
-          "field" => "_error",
-          "message" => "You need to sign in or sign up before continuing.",
-        }
-      }
-
-      it "return the unauthenticated message" do
-        expect(gql_response.data[mutation_type]["errors"]).to include(expected_error)
-      end
+    it "return the product object" do
+      expect(gql_response.data[mutation_type]["product"]).to include("name" => "Example product")
     end
   end
 end

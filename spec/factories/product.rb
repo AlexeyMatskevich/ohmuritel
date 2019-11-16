@@ -5,5 +5,9 @@ FactoryBot.define do
     sequence(:weight) { |n| n * 25 }
     sequence(:price) { |n| n * 10 }
     sequence(:preview_description) { |n| "Lorem ipsum desctibe-#{n}" }
+
+    trait :with_image do
+      image { FilesTestHelper.png }
+    end
   end
 end

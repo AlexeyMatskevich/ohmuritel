@@ -7,8 +7,8 @@ import { Avatar, Button, CircularProgress, Container, Grid, Typography } from '@
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { useParams } from 'react-router-dom'
 import { useStyles } from '../../style'
-import PasswordFormControl from '../../Inputs/passwordFormControl'
-import PasswordConfirmFormControl from '../../Inputs/passwordConfirmFormControl'
+import PasswordFormControl from '../Inputs/passwordFormControl'
+import PasswordConfirmFormControl from '../Inputs/passwordConfirmFormControl'
 import { extractErrors, isEmpty } from '../../helper'
 import CustomSnackbarContent from '../../../CustomSnackbar/CustomSnackbarContent'
 
