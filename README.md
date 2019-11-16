@@ -1,6 +1,7 @@
 # Ohmuritel cheesecake
 
-[![Ruby Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://github.com/testdouble/standard) 
+[![Ruby Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://github.com/testdouble/standard)
+[![SemaphoreCI](https://alexeymatskevich.semaphoreci.com/badges/ohmuritel.svg?key=6e34c042-0dd0-42aa-bf4c-80366c5a9abb)](https://alexeymatskevich.semaphoreci.com/projects/ohmuritel)
 
 ## Installation
 1. [Install docker](https://docs.docker.com/docker-for-mac/install/)
