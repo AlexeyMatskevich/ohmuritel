@@ -55,7 +55,7 @@ export default function Product () {
               <CardActionArea>
                 <CardMedia
                   className={classes.media}
-                  image='/burger.jpg'
+                  image={data.product.imageUrl}
                   title={data.product.name}
                 />
               </CardActionArea>

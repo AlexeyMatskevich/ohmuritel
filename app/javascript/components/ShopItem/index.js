@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function Item (props) {
-  const { product: { id, name, price, previewDescription } } = props
+  const { product: { id, name, price, previewDescription, imageUrl } } = props
   const classes = useStyles()
   const history = useHistory()
 
@@ -46,7 +46,7 @@ export default function Item (props) {
         />
         <CardMedia
           className={classes.media}
-          image='/burger.jpg'
+          image={imageUrl}
           title={name}
         />
         <CardContent>

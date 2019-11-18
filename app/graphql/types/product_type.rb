@@ -26,6 +26,10 @@ module Types
       description "Product description"
     end
 
+    field :image_url, Url, null: true do
+      description "Product image url"
+    end
+
     def description
       object.rich_text_description.to_s
     end

@@ -3,7 +3,8 @@ query PRODUCTS {
         id,
         name,
         previewDescription,
-        price
+        price,
+        imageUrl
     }
 }
 
