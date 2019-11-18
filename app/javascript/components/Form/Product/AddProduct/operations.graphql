@@ -5,6 +5,7 @@ mutation createProduct($name: String!, $weight: Int!, $price: Int!, $previewDesc
       name
       previewDescription
       price
+      imageUrl
     }
     errors {
       message

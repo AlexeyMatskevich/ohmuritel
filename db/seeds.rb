@@ -33,22 +33,24 @@ User.create!(
   ]
 )
 
+burger = Product.create(
+  name: "Burger",
+  weight: 40,
+  price: 20,
+  preview_description: PREVIEW_DESCRIPTION,
+  description: DESCRIPTION
+)
+burger.image.attach(io: File.open("public/burger.jpg"), filename: "burger.jpg", content_type: "image/jpg")
+cheeseburger = Product.create(
+  name: "Cheeseburger",
+  weight: 40,
+  price: 30,
+  preview_description: PREVIEW_DESCRIPTION,
+  description: DESCRIPTION
+)
+cheeseburger.image.attach(io: File.open("public/cheeseburger.jpg"), filename: "cheeseburger.jpg", content_type: "image/jpg")
 Product.create!(
   [
-    {
-      name: "Example product 1",
-      weight: 40,
-      price: 20,
-      preview_description: PREVIEW_DESCRIPTION,
-      description: DESCRIPTION,
-    },
-    {
-      name: "Example product 2",
-      weight: 40,
-      price: 30,
-      preview_description: PREVIEW_DESCRIPTION,
-      description: DESCRIPTION,
-    },
     {
       name: "Echpochmak",
       weight: 40,

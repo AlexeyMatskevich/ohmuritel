@@ -4,6 +4,7 @@ query product($id: ID!) {
         name,
         price,
         weight,
-        description
+        description,
+        imageUrl
     }
 }

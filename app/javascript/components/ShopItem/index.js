@@ -6,6 +6,7 @@ import {
 import { red } from '@material-ui/core/colors'
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart'
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney'
+import BrokenImageIcon from '@material-ui/icons/BrokenImage'
 import Rating from '@material-ui/lab/Rating'
 import { useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
@@ -22,7 +23,13 @@ const useStyles = makeStyles(theme => ({
   },
   media: {
     height: 0,
-    paddingTop: '56.25%' // 16:9
+    paddingTop: '56.25%', // 16:9
+    position: 'relative'
+  },
+  brokenImage: {
+    position: 'absolute',
+    top: '49%',
+    left: '49%'
   },
   expandOpen: {
     transform: 'rotate(180deg)'
@@ -33,7 +40,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function Item (props) {
-  const { product: { id, name, price, previewDescription } } = props
+  const { product: { id, name, price, previewDescription, imageUrl } } = props
   const classes = useStyles()
   const history = useHistory()
 
@@ -46,9 +53,11 @@ export default function Item (props) {
         />
         <CardMedia
           className={classes.media}
-          image='/burger.jpg'
+          image={imageUrl}
           title={name}
-        />
+        >
+          {!imageUrl && <BrokenImageIcon className={classes.brokenImage} />}
+        </CardMedia>
         <CardContent>
           <Typography variant='body2' color='textSecondary' component='p'>
             {previewDescription}
