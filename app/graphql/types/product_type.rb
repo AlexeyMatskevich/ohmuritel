@@ -31,7 +31,19 @@ module Types
     end
 
     def description
-      object.rich_text_description.to_s
+      AssociationLoader.for(object.class, :rich_text_description).load(object).then do |desc|
+        next if desc.nil?
+
+        desc
+      end
+    end
+
+    def image_url
+      AssociationLoader.for(object.class, image_attachment: :blob).load(object).then do |image|
+        next if image.nil?
+
+        Rails.application.routes.url_helpers.rails_blob_url(image, host: ActiveStorage::Current.host)
+      end
     end
   end
 end
