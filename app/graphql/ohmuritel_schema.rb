@@ -1,7 +1,7 @@
 class OhmuritelSchema < GraphQL::Schema
   mutation(Types::MutationType)
   query(Types::QueryType)
-  use(BatchLoader::GraphQL)
+  use(GraphQL::Batch)
 
   rescue_from(ActionPolicy::Unauthorized) do |exp|
     raise GraphQL::ExecutionError.new(
