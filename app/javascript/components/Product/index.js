@@ -6,6 +6,7 @@ import {
   Card, CardActionArea, CardActions, CardMedia, Container, Grid, LinearProgress, makeStyles, Typography
 } from '@material-ui/core'
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney'
+import BrokenImageIcon from '@material-ui/icons/BrokenImage'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -13,7 +14,13 @@ const useStyles = makeStyles(theme => ({
   },
   media: {
     height: 0,
-    paddingTop: '56.25%' // 16:9
+    paddingTop: '56.25%', // 16:9
+    position: 'relative'
+  },
+  brokenImage: {
+    position: 'absolute',
+    top: '49%',
+    left: '49%'
   },
   grow: {
     flexGrow: 1
@@ -21,6 +28,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function Product () {
+  let trixText
   const classes = useStyles()
   const { id } = useParams()
   const { loading, data } = useQuery(product, { variables: { id: id } })
@@ -40,8 +48,8 @@ export default function Product () {
       </Container>
     )
   } else {
-    const trixText = () => {
-      return { __html: `${data.product.description}` }
+    trixText = () => {
+      return { __html: `${data.product.description || ''}` }
     }
 
     return (
@@ -57,7 +65,9 @@ export default function Product () {
                   className={classes.media}
                   image={data.product.imageUrl}
                   title={data.product.name}
-                />
+                >
+                  {!data.product.imageUrl && <BrokenImageIcon className={classes.brokenImage} />}
+                </CardMedia>
               </CardActionArea>
               <CardActions disableSpacing>
                 <Typography variant='body2' color='textSecondary' component='p'>
