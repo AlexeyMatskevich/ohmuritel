@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { product } from './operations.graphql'
 import { useQuery } from '@apollo/react-hooks'
 import {
-  Card, CardActionArea, CardActions, CardMedia, Container, Grid, LinearProgress, makeStyles, Typography
+  Card, CardActionArea, CardActions, CardMedia, Container, Grid, makeStyles, Typography
 } from '@material-ui/core'
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney'
 import BrokenImageIcon from '@material-ui/icons/BrokenImage'
@@ -19,8 +19,9 @@ const useStyles = makeStyles(theme => ({
   },
   brokenImage: {
     position: 'absolute',
-    top: '49%',
-    left: '49%'
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)'
   },
   grow: {
     flexGrow: 1
@@ -33,20 +34,8 @@ export default function Product () {
   const { id } = useParams()
   const { loading, data } = useQuery(product, { variables: { id: id } })
 
-  const progress = () => (
-    <Grid item xs={12}>
-      <LinearProgress />
-    </Grid>
-  )
-
-  if (data === undefined) {
-    return (
-      <Container component='main' maxWidth={false} className={classes.root}>
-        <Grid container spacing={2}>
-          {loading && progress()}
-        </Grid>
-      </Container>
-    )
+  if (loading) {
+    return false
   } else {
     trixText = () => {
       return { __html: `${data.product.description || ''}` }

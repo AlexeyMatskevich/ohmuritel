@@ -129,7 +129,7 @@ const createHttpLink = () =>
   })
 
 export const createClient = () => {
-  return new ApolloClient({
+  const client = new ApolloClient({
     cache,
     link: ApolloLink.from([
       createErrorLink(),
@@ -139,4 +139,10 @@ export const createClient = () => {
     typeDefs,
     resolvers
   })
+
+  client.onResetStore(() => {
+    cache.writeData({ data: { isLoggedIn, networkErrors: [] } })
+    console.log('Cache clear')
+  })
+  return client
 }

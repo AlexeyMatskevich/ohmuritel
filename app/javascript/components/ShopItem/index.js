@@ -28,8 +28,9 @@ const useStyles = makeStyles(theme => ({
   },
   brokenImage: {
     position: 'absolute',
-    top: '49%',
-    left: '49%'
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)'
   },
   expandOpen: {
     transform: 'rotate(180deg)'

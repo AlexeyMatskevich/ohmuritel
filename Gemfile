@@ -65,3 +65,4 @@ gem "rack-cors", "~> 1.0"
 gem "action_policy-graphql", "~> 0.3.1"
 gem "enumerize", "~> 2.3"
 gem "aws-sdk-s3", "~> 1.53", require: false
+gem "faker", "~> 2.7"

@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    minHeight: 300
+    minHeight: 400
   },
   action: {
     height: '100%'
