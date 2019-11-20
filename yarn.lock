@@ -2235,6 +2235,11 @@ console-control-strings@^1.0.0, console-control-strings@~1.1.0:
   resolved "https://registry.yarnpkg.com/console-control-strings/-/console-control-strings-1.1.0.tgz#3d7cf4464db6446ea644bf4b39507f9851008e8e"
   integrity sha1-PXz0Rk22RG6mRL9LOVB/mFEAjo4=
 
+"consolidated-events@^1.1.0 || ^2.0.0":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/consolidated-events/-/consolidated-events-2.0.2.tgz#da8d8f8c2b232831413d9e190dc11669c79f4a91"
+  integrity sha512-2/uRVMdRypf5z/TW/ncD/66l75P5hH2vM/GR8Jf8HLc2xnfJtmina6F6du8+v4Z2vTrMo7jC+W1tmEEuuELgkQ==
+
 constants-browserify@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/constants-browserify/-/constants-browserify-1.0.0.tgz#c20b96d8c617748aaf1c16021760cd27fcb8cb75"
@@ -6801,7 +6806,7 @@ promise-inflight@^1.0.1:
   resolved "https://registry.yarnpkg.com/promise-inflight/-/promise-inflight-1.0.1.tgz#98472870bf228132fcbdd868129bad12c3c029e3"
   integrity sha1-mEcocL8igTL8vdhoEputEsPAKeM=
 
-prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.0.0, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -6996,7 +7001,7 @@ react-hook-form@^3.24.0:
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-3.28.2.tgz#eade3f0d5b1fcb9a95ac34b34fb10561712ff1da"
   integrity sha512-aNTEIC6z7yuPqgtedAX3wwnzlIJmiSkgYnVxI+s1J8Ya4ibZl9aNRHJ6U/cSptj0KSl4Re2JqihGD9OdlEeUZQ==
 
-react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.6:
+react-is@^16.6.0, react-is@^16.6.3, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.6:
   version "16.12.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.12.0.tgz#2cc0fe0fba742d97fd527c42a13bec4eeb06241c"
   integrity sha512-rPCkf/mWBtKc97aLL9/txD8DZdemK0vkA3JMLShjlJB3Pj3s+lpf1KaBzMfQrAmhMQB0n1cU/SUGgKKBCe837Q==
@@ -7046,6 +7051,15 @@ react-trix@^0.5.1:
   integrity sha512-2Wqh5NJIrUyxso3SWreWMdkwIrcysdrAaIjZo91sURgs/TZeTPduYH/deCOJTq+7/vrvpIu78yRBRrOjAOTqyw==
   dependencies:
     trix "^1.2.0"
+
+react-waypoint@^9.0.2:
+  version "9.0.2"
+  resolved "https://registry.yarnpkg.com/react-waypoint/-/react-waypoint-9.0.2.tgz#d65fb0fe6ff5c1b832a1d01b1462a661fb921e45"
+  integrity sha512-6tIr9NozeDH789Ox2tOkyDcmprYOx1+eII40dERLrZclFe6RhWAQ/bbd6B7cGild6onXNwPzg16y0/wHWQ/q+g==
+  dependencies:
+    consolidated-events "^1.1.0 || ^2.0.0"
+    prop-types "^15.0.0"
+    react-is "^16.6.3"
 
 react@^16.10.1:
   version "16.12.0"

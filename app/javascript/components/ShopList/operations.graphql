@@ -1,5 +1,5 @@
-query productsConnection($last: Int, $after: String, $before: String) {
-    productsConnection(first: 2, last: $last, after: $after, before: $before) {
+query productsConnection($cursor: String) {
+    productsConnection(first: 12, after: $cursor) {
         pageInfo {
             endCursor
             startCursor
