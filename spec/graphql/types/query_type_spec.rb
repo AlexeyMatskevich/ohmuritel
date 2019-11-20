@@ -48,9 +48,7 @@ RSpec.describe Types::QueryType do
     }
 
     before do
-      query query_string, variables: {
-        email: "example@example.com",
-      }
+      query query_string, variables: {email: "example@example.com"}
     end
 
     it "returns all users" do
@@ -58,28 +56,39 @@ RSpec.describe Types::QueryType do
     end
   end
 
-  describe "get all products" do
+  describe "get products page" do
     let!(:products) { create_pair(:product) }
-
-    let(:query_type) { "products" }
+    let(:page) { 1 }
+    let(:query_type) { "productsPages" }
     let(:query_string) {
       <<-GRAPHQL
-      query PRODUCTS {
-        products{
-          name
+      query productsPages($pageSize: Int!, $page: Int!) {
+        productsPages(pageSize: $pageSize, page: $page) {
+          id
+          products {
+            name
+          }
         }
       }
       GRAPHQL
     }
 
     before do
-      query query_string
+      query query_string, variables: {pageSize: 2, page: page}
     end
 
     it "returns all products" do
-      expect(gql_response.data[query_type]).to match_array(
+      expect(gql_response.data[query_type].first["products"]).to match_array(
         products.map { |product| {"name" => product.name} }
       )
+    end
+
+    context "when page less than one" do
+      let(:page) { -1 }
+
+      it "returns error" do
+        expect(gql_response.errors.first["message"]).to eq "Page must be greater than 0"
+      end
     end
   end
 
@@ -98,9 +107,7 @@ RSpec.describe Types::QueryType do
     }
 
     before do
-      query query_string, variables: {
-        name: "example_name",
-      }
+      query query_string, variables: {name: "example_name"}
     end
 
     it "returns all users" do
