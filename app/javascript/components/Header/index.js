@@ -1,12 +1,13 @@
 import React from 'react'
 import { fade, makeStyles, withStyles } from '@material-ui/core/styles'
-import { AppBar, Toolbar, IconButton, Badge, InputBase } from '@material-ui/core'
+import { AppBar, Toolbar, IconButton, Badge, InputBase, LinearProgress } from '@material-ui/core'
 import HomeIcon from '@material-ui/icons/Home'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import SearchIcon from '@material-ui/icons/Search'
 import AccountControl from '../AccountControl'
 import { useHistory } from 'react-router-dom'
 import { withRouter } from 'react-router'
+import { useApolloNetworkStatus } from 'react-apollo-network-status'
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -69,6 +70,7 @@ const Counts = withStyles(theme => ({
 function Header () {
   const classes = useStyles()
   const history = useHistory()
+  const status = useApolloNetworkStatus()
 
   function handleLinkToHome () {
     history.push('/')
@@ -80,7 +82,7 @@ function Header () {
 
   return (
     <>
-      <AppBar position='static' role='banner'>
+      <AppBar position='sticky' role='banner'>
         <Toolbar component='nav' role='navigation' className={classes.menu}>
           <IconButton
             edge='start'
@@ -116,6 +118,7 @@ function Header () {
           </IconButton>
           <AccountControl />
         </Toolbar>
+        {status.numPendingQueries > 0 && <LinearProgress />}
       </AppBar>
     </>
   )

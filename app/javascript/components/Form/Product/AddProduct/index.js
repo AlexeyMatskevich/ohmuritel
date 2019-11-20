@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import clsx from 'clsx'
 import useForm, { FormContext } from 'react-hook-form'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation, useApolloClient } from '@apollo/react-hooks'
 import { createProduct } from './operations.graphql'
-import { PRODUCTS } from '../../../ShopList/operations.graphql'
 import { Avatar, Button, CircularProgress, Container, Grid, Typography, Snackbar } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import { useStyles } from '../../style'
@@ -20,6 +19,7 @@ import { directUpload } from '../direct_upload'
 export default function AddProduct () {
   const methods = useForm({ mode: 'onChange' })
   const { handleSubmit, errors, reset } = methods
+  const client = useApolloClient()
   const classes = useStyles()
   const buttonClassname = clsx({ [classes.buttonSuccess]: false })
   const [trixInput, setTrixInput] = useState()
@@ -35,20 +35,14 @@ export default function AddProduct () {
   const handleSuccess = ({ createProduct }) => {
     if (createProduct.success) {
       setOpenSuccess(true)
+      client.resetStore()
       reset()
     } else {
       setServerErrors(extractErrors(createProduct))
     }
   }
 
-  const [addProduct, { loading: mutationLoading }] = useMutation(createProduct, {
-    onCompleted: handleSuccess,
-    update (proxy, { data: { createProduct } }) {
-      const data = proxy.readQuery({ query: PRODUCTS })
-      data.products.push(createProduct.product)
-      proxy.writeQuery({ query: PRODUCTS, data })
-    }
-  })
+  const [addProduct, { loading: mutationLoading }] = useMutation(createProduct, { onCompleted: handleSuccess })
 
   const onSubmit = data => {
     directUpload(directVariables.url, directVariables.headers, directVariables.file).then(() => addProduct({
@@ -94,7 +88,7 @@ export default function AddProduct () {
                   message='New product created successfully'
                 />
               </Snackbar>
-              <Grid item container md={6} xs={12} spacing={2} alignContent='flex-start'>
+              <Grid item container md={6} xs={12} spacing={2} alignContent='flex-start' className={classes.formLeft}>
                 <Grid item container justify='center' xs={12}>
                   <Grid><ImageFormControl setDirectVariables={setDirectVariables} /></Grid>
                 </Grid>

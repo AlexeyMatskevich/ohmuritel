@@ -1,17 +1,32 @@
-query PRODUCTS {
-    products{
-        id,
-        name,
-        previewDescription,
-        price,
-        imageUrl
+query productsConnection($last: Int, $after: String, $before: String) {
+    productsConnection(first: 2, last: $last, after: $after, before: $before) {
+        pageInfo {
+            endCursor
+            startCursor
+            hasPreviousPage
+            hasNextPage
+        }
+        edges {
+            node {
+                id
+                name
+                previewDescription
+                price
+                imageUrl
+            }
+        }
     }
 }
 
-query canEdit {
-    currentUser {
-        canCreateProduct {
-            value
+query productsPages($pageSize: Int!, $page: Int!) {
+    productsPages(pageSize: $pageSize, page: $page) {
+        id
+        products {
+            id
+            name
+            previewDescription
+            price
+            imageUrl
         }
     }
 }

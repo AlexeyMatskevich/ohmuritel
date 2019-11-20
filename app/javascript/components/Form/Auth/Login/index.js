@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import clsx from 'clsx'
 import useForm, { FormContext } from 'react-hook-form'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation, useApolloClient } from '@apollo/react-hooks'
 import { signIn } from './operations.graphql'
 import {
   Avatar, Button, Checkbox, CircularProgress, Container, FormControlLabel, Grid, Link, Typography
@@ -17,12 +17,12 @@ import { isEmpty, extractErrors } from '../../helper'
 export default function Registration () {
   const [serverErrors, setServerErrors] = useState([])
   const classes = useStyles()
+  const client = useApolloClient()
   const history = useHistory()
   const buttonClassname = clsx({ [classes.buttonSuccess]: false })
   const handleOnCompleted = ({ signIn }) => {
     if (signIn.success) {
-      history.push('/')
-      window.location.reload()
+      client.resetStore().then(() => history.push('/'))
     } else {
       setServerErrors(extractErrors(signIn))
     }

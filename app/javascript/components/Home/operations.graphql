@@ -1,0 +1,8 @@
+query productsMeta{
+    productsCount
+    currentUser {
+        canCreateProduct {
+            value
+        }
+    }
+}
