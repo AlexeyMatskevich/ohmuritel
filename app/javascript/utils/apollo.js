@@ -140,9 +140,7 @@ export const createClient = () => {
     resolvers
   })
 
-  client.onResetStore(() => {
-    cache.writeData({ data: { isLoggedIn, networkErrors: [] } })
-    console.log('Cache clear')
-  })
+  client.onResetStore(() => { cache.writeData({ data: { isLoggedIn, networkErrors: [] } }) })
+
   return client
 }

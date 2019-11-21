@@ -50,7 +50,6 @@ export default function ImageFormControl (props) {
   const handleOnChange = (file) => {
     getFileMetadata(file).then((input) => {
       getDirectUpload({ variables: { ...input } }).then(({ data }) => {
-        console.log(data)
         setDirectVariables({
           ...data.createDirectUpload.directUpload,
           headers: JSON.parse(data.createDirectUpload.directUpload.headers),

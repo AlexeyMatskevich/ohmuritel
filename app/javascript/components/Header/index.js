@@ -82,7 +82,7 @@ function Header () {
 
   return (
     <>
-      <AppBar position='fixed' role='banner'>
+      <AppBar position='sticky' role='banner'>
         <Toolbar component='nav' role='navigation' className={classes.menu}>
           <IconButton
             edge='start'

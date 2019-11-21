@@ -7,7 +7,7 @@ export const directUpload = (url, headers, file) => {
   }
 
   const upload = new BlobUpload({ file, directUploadData: { url, headers } })
-  console.log(upload)
+
   return new Promise((resolve, reject) => {
     upload.create(error => {
       if (error) {
