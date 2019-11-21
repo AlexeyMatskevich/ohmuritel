@@ -44,8 +44,10 @@ export default function ShopList (props) {
   )
 
   useEffect(() => {
+    let result
     if (data !== undefined) {
-      setProductPage(findPage(page, data).products)
+      result = findPage(page, data)
+      if (result) setProductPage(result.products)
     }
   }, [data])
 
