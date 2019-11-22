@@ -25,7 +25,6 @@ x-backend: &backend
     <<: *env
     REDIS_URL: redis://redis:6379/
     DATABASE_URL: postgres://postgres:postgres@postgres:5432
-    ELASTICSEARCH_URL: elasticsearch:9200
     BOOTSNAP_CACHE_DIR: /bundle/bootsnap
     WEBPACKER_DEV_SERVER_HOST: webpacker
     WEB_CONCURRENCY: 1
@@ -35,7 +34,6 @@ x-backend: &backend
   depends_on:
     - postgres
     - redis
-    - elasticsearch
 
 services:
   rails:
@@ -54,18 +52,3 @@ services:
     image: redis:3.2-alpine
     ports:
       - 6379
-
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.4.2
-    environment:
-      - discovery.type=single-node
-      - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    ports:
-      - 9200
-      - 9300
