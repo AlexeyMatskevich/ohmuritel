@@ -71,12 +71,9 @@ RSpec.describe Types::QueryType do
         <<~GRAPHQL
           query productsPages($pageSize: Int!, $page: Int!) {
             productsPages(pageSize: $pageSize, page: $page) {
-              totalCount
-              pages{
-                id
-                products {
-                  name
-                }
+              id
+              products {
+                name
               }
             }
           }
@@ -88,7 +85,7 @@ RSpec.describe Types::QueryType do
       end
 
       it "returns all products" do
-        expect(gql_response.data.dig(query_type, "pages").first["products"]).to match_array(
+        expect(gql_response.data[query_type].first["products"]).to match_array(
           products.map { |product| {"name" => product.name} }
         )
       end
@@ -109,13 +106,10 @@ RSpec.describe Types::QueryType do
         <<~GRAPHQL
           query searchProductsPages($pageSize: Int!, $page: Int!, $search: String!) {
             searchProductsPages(pageSize: $pageSize, page: $page, search: $search) {
-              totalCount
-              pages{
-                id
-                products {
-                  name
-                  previewDescription
-                }
+              id
+              products {
+                name
+                previewDescription
               }
             }
           }
@@ -124,24 +118,21 @@ RSpec.describe Types::QueryType do
 
       let(:expected_result) {
         {
-          "searchProductsPages" => {
-            "totalCount" => 2,
-            "pages" => [
-              {
-                "id" => "1",
-                "products" => [
-                  {
-                    "name" => "Pizza",
-                    "previewDescription" => "Describe",
-                  },
-                  {
-                    "name" => "Name",
-                    "previewDescription" => "Pizza with salami",
-                  },
-                ],
-              },
-            ],
-          },
+          "searchProductsPages" => [
+            {
+              "id" => "1",
+              "products" => [
+                {
+                  "name" => "Pizza",
+                  "previewDescription" => "Describe",
+                },
+                {
+                  "name" => "Name",
+                  "previewDescription" => "Pizza with salami",
+                },
+              ],
+            },
+          ],
         }
       }
 
@@ -191,57 +182,6 @@ RSpec.describe Types::QueryType do
 
       it "returns all products" do
         expect(subject).to match_array(products.map { |product| {"name" => product.name} })
-      end
-    end
-
-    describe "#search_products_connection" do
-      let(:query_type) { "searchProductsConnection" }
-      let(:query_string) {
-        <<~GRAPHQL
-          query searchProductsConnection($cursor: String, $search: String!) {
-              searchProductsConnection(first: 12, after: $cursor, search: $search) {
-                  edges {
-                      node {
-                          name
-                          previewDescription
-                      }
-                  }
-              }
-          }
-        GRAPHQL
-      }
-
-      let(:expected_result) {
-        {
-          "searchProductsConnection" => {
-            "edges" => [
-              {
-                "node" => {
-                  "name" => "Pizza",
-                  "previewDescription" => "Describe",
-                },
-              },
-              {
-                "node" => {
-                  "name" => "Name",
-                  "previewDescription" => "Pizza with salami",
-                },
-              },
-            ],
-          },
-        }
-      }
-
-      before do
-        create_pair(:product)
-        create :product, :reindex, name: "Pizza", preview_description: "Describe"
-        create :product, :reindex, name: "Name", preview_description: "Pizza with salami"
-        Product.reindex
-        query query_string, variables: {search: "Pizza"}
-      end
-
-      it "search product with Pizza in name or preview description" do
-        expect(gql_response.data).to eq(expected_result)
       end
     end
 

@@ -8,19 +8,15 @@ module Types
       argument :search, String, required: true, description: "Search autocomplete"
     end
 
-    field :search_products_connection, Types::ProductType.connection_type, null: false do
-      description "Search products"
-
-      argument :search, String, required: true, description: "Search with this name or preview description"
-    end
-
     field :products_connection, Types::ProductType.connection_type, null: false, description: "Returns products"
-    field :products_pages, ProductPaginationType, null: false, description: "Returns paginated products" do
+    field :products_count, Int, null: false, description: "Returns a count of products"
+    field :products_pages, [ProductPagesType], null: false, description: "Returns paginated products" do
       argument :page_size, Int, required: true, description: "Page size"
       argument :page, Int, required: true, description: "Number of page"
     end
 
-    field :search_products_pages, ProductPaginationType, null: false, description: "Returns paginated products" do
+    field :search_products_count, Int, null: false, description: "Returns a count of products"
+    field :search_products_pages, [ProductPagesType], null: false, description: "Returns paginated products" do
       argument :search, String, required: true, description: "Search with this name or preview description"
       argument :page_size, Int, required: true, description: "Page size"
       argument :page, Int, required: true, description: "Number of page"
@@ -48,25 +44,24 @@ module Types
       Product.search(search, fields: [:name], match: :word_start, limit: 10, load: false).map(&:name)
     end
 
+    def search_products_count
+      Product.search(search, load: false).total_count
+    end
+
     def search_products_pages(page_size:, page:, search: nil)
       raise GraphQL::ExecutionError, "Page must be greater than 0" if page <= 0
 
-      product = Product.search(search, limit: page_size, offset: (page - 1) * page_size).to_a
-
-      {total_count: product.size, pages: [{id: page, products: product}]}
+      [{id: page, products: Product.search(search, per_page: page_size, page: page)}]
     end
 
     def products_pages(page_size:, page:)
       raise GraphQL::ExecutionError, "Page must be greater than 0" if page <= 0
 
-      product = Product.limit(page_size).offset((page - 1) * page_size)
-
-      {total_count: product.size, pages: [{id: page, products: product}]}
+      [{id: page, products: Product.limit(page_size).offset((page - 1) * page_size)}]
     end
 
-    def search_products_connection(search:)
-      ids = Product.search(search, load: false).map(&:id)
-      Product.where(id: ids)
+    def products_count
+      Product.count
     end
 
     def products_connection
