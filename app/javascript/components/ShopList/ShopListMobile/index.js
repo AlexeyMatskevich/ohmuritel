@@ -53,6 +53,11 @@ export default function ShopListMobile (props) {
             <NewItem />
           </Grid>}
         {!loading && data && renderPage(data.productsConnection.edges)}
+        {!loading && data && !data.productsConnection.pageInfo.hasNextPage && (
+          <Grid item xs={12}>
+            <Typography align='center' component='p' variant='subtitle1'>You looked at all the goods</Typography>
+          </Grid>
+        )}
       </Grid>
     </Container>
   )

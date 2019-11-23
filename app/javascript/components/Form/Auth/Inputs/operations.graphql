@@ -1,5 +1,3 @@
-query userByEmail($email: String!) {
-  userByEmail(email: $email) {
-    email
-  }
+query userEmailTaken($email: String!) {
+  userEmailTaken(email: $email)
 }

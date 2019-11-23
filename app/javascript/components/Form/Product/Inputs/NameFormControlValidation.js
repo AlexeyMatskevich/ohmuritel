@@ -3,7 +3,7 @@ import debounce from 'lodash/debounce'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useLazyQuery } from '@apollo/react-hooks'
-import { productByName } from './operations.graphql'
+import { productNameTaken } from './operations.graphql'
 
 export default function NameFormControlValidation () {
   const { errors, register, setError, clearError } = useFormContext()
@@ -11,11 +11,11 @@ export default function NameFormControlValidation () {
   const patternAria = 'name-error-max-length'
   const serverAria = 'name-error-already-taken'
 
-  const handleTakenName = ({ productByName }) => {
-    productByName ? setError('name', 'nameTaken') : clearError('name')
+  const handleTakenName = ({ productNameTaken }) => {
+    productNameTaken ? setError('name', 'nameTaken') : clearError('name')
   }
 
-  const [getName] = useLazyQuery(productByName, { onCompleted: handleTakenName })
+  const [getName] = useLazyQuery(productNameTaken, { onCompleted: handleTakenName })
 
   return (
     <FormControl required fullWidth error={!!errors.name}>
