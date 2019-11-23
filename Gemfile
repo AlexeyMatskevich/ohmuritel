@@ -51,4 +51,5 @@ group :development do
   gem "letter_opener", "~> 1.7"
   gem "awesome_print", "~> 1.8"
   gem "pry-rails", "~> 0.3.9"
+  gem "meta_request", "~> 0.7.2"
 end
