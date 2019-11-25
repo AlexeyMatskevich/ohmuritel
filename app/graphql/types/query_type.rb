@@ -15,8 +15,11 @@ module Types
       argument :page, Int, required: true, description: "Number of page"
     end
 
-    field :search_products_count, Int, null: false, description: "Returns a count of products"
-    field :search_products_pages, [ProductPagesType], null: false, description: "Returns paginated products" do
+    field :search_products_count, Int, null: false, description: "Returns a count of products"do
+      argument :search, String, required: true, description: "Search with this name or preview description"
+    end
+
+    field :search_products_pages, [Types::ProductType], null: false, description: "Returns paginated products" do
       argument :search, String, required: true, description: "Search with this name or preview description"
       argument :page_size, Int, required: true, description: "Page size"
       argument :page, Int, required: true, description: "Number of page"
@@ -44,14 +47,14 @@ module Types
       Product.search(search, fields: [:name], match: :word_start, limit: 10, load: false).map(&:name)
     end
 
-    def search_products_count
+    def search_products_count(search:)
       Product.search(search, load: false).total_count
     end
 
     def search_products_pages(page_size:, page:, search: nil)
       raise GraphQL::ExecutionError, "Page must be greater than 0" if page <= 0
 
-      [{id: page, products: Product.search(search, per_page: page_size, page: page)}]
+      Product.search(search, per_page: page_size, page: page)
     end
 
     def products_pages(page_size:, page:)

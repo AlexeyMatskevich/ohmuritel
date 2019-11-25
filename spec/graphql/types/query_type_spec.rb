@@ -106,11 +106,8 @@ RSpec.describe Types::QueryType do
         <<~GRAPHQL
           query searchProductsPages($pageSize: Int!, $page: Int!, $search: String!) {
             searchProductsPages(pageSize: $pageSize, page: $page, search: $search) {
-              id
-              products {
-                name
-                previewDescription
-              }
+              name
+              previewDescription
             }
           }
         GRAPHQL
@@ -120,17 +117,12 @@ RSpec.describe Types::QueryType do
         {
           "searchProductsPages" => [
             {
-              "id" => "1",
-              "products" => [
-                {
-                  "name" => "Pizza",
-                  "previewDescription" => "Describe",
-                },
-                {
-                  "name" => "Name",
-                  "previewDescription" => "Pizza with salami",
-                },
-              ],
+              "name" => "Pizza",
+              "previewDescription" => "Describe",
+            },
+            {
+              "name" => "Name",
+              "previewDescription" => "Pizza with salami",
             },
           ],
         }

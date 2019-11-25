@@ -1,0 +1,12 @@
+query searchProductsPages($pageSize: Int!, $page: Int!, $search: String!) {
+    searchProductsPages(pageSize: $pageSize, page: $page, search: $search) {
+        id
+        name
+        previewDescription
+        price
+        imageUrl
+    }
+}
+query searchProductsCount($search: String!) {
+  searchProductsCount(search: $search)
+}
