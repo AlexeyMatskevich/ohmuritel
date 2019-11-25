@@ -13,6 +13,7 @@ import AddProduct from '../components/Form/Product/AddProduct'
 import Home from '../components/Home'
 import Product from '../components/Product'
 import NetworkError from '../components/NetworkError'
+import SearchList from '../components/ShopList/SearchList'
 
 if (process.env.NODE_ENV !== 'production') {
   const axe = require('react-axe')
@@ -36,6 +37,9 @@ ReactDOM.render(
           </Route>
           <Route path='/new_product'>
             <AddProduct />
+          </Route>
+          <Route path='/search'>
+            <SearchList />
           </Route>
           <Route path='/new-password/:resetPasswordToken/:email'>
             <ResetPassword />

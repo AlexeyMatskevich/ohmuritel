@@ -1,117 +1,231 @@
 require "rails_helper"
 
 RSpec.describe Types::QueryType do
-  describe "get all users" do
-    let(:admin) { create :admin }
-    let!(:users) {
-      [
-        admin,
-        create(:user),
-        create(:user),
-      ]
-    }
-
-    let(:query_type) { "users" }
-    let(:query_string) {
-      <<-GRAPHQL
-      query USERS {
-        users {
-          email
-        }
+  describe "User" do
+    describe "get all users" do
+      let(:admin) { create :admin }
+      let!(:users) {
+        [
+          admin,
+          create(:user),
+          create(:user),
+        ]
       }
-      GRAPHQL
-    }
 
-    before do
-      query query_string, context: {current_user: admin}
-    end
-
-    it "returns all users" do
-      expect(gql_response.data[query_type]).to match_array(
-        users.map { |user| {"email" => user.email} }
-      )
-    end
-  end
-
-  describe "find user by email" do
-    let!(:users) { create :user, email: "example@example.com" }
-
-    let(:query_type) { "userByEmail" }
-    let(:query_string) {
-      <<-GRAPHQL
-      query userByEmail($email: String!) {
-        userByEmail(email: $email) {
-          email
-        }
-      }
-      GRAPHQL
-    }
-
-    before do
-      query query_string, variables: {email: "example@example.com"}
-    end
-
-    it "returns all users" do
-      expect(gql_response.data[query_type]).to eq({"email" => "example@example.com"})
-    end
-  end
-
-  describe "get products page" do
-    let!(:products) { create_pair(:product) }
-    let(:page) { 1 }
-    let(:query_type) { "productsPages" }
-    let(:query_string) {
-      <<-GRAPHQL
-      query productsPages($pageSize: Int!, $page: Int!) {
-        productsPages(pageSize: $pageSize, page: $page) {
-          id
-          products {
-            name
+      let(:query_type) { "users" }
+      let(:query_string) {
+        <<-GRAPHQL
+          query USERS {
+            users {
+              email
+            }
           }
-        }
+        GRAPHQL
       }
-      GRAPHQL
-    }
 
-    before do
-      query query_string, variables: {pageSize: 2, page: page}
+      before do
+        query query_string, context: {current_user: admin}
+      end
+
+      it "returns all users" do
+        expect(gql_response.data[query_type]).to match_array(
+          users.map { |user| {"email" => user.email} }
+        )
+      end
     end
 
-    it "returns all products" do
-      expect(gql_response.data[query_type].first["products"]).to match_array(
-        products.map { |product| {"name" => product.name} }
-      )
-    end
+    describe "#user_email_taken" do
+      subject { gql_response.data[query_type] }
+      let(:name) { "example@example.com" }
+      let!(:users) { create :user, email: "example@example.com" }
 
-    context "when page less than one" do
-      let(:page) { -1 }
+      let(:query_type) { "userEmailTaken" }
+      let(:query_string) {
+        <<-GRAPHQL
+          query userEmailTaken($email: String!) {
+            userEmailTaken(email: $email)
+          }
+        GRAPHQL
+      }
 
-      it "returns error" do
-        expect(gql_response.errors.first["message"]).to eq "Page must be greater than 0"
+      before do
+        query query_string, variables: {email: name}
+      end
+
+      it { is_expected.to eq true }
+
+      context "when email not taken" do
+        let(:name) { "Not name" }
+
+        it { is_expected.to eq false }
       end
     end
   end
 
-  describe "find product by name" do
-    let!(:product) { create :product, name: "example_name" }
-
-    let(:query_type) { "productByName" }
-    let(:query_string) {
-      <<-GRAPHQL
-      query productByName($name: String!) {
-        productByName(name: $name) {
-          name
-        }
+  describe "Product" do
+    describe "#products_pages" do
+      let!(:products) { create_pair(:product) }
+      let(:page) { 1 }
+      let(:query_type) { "productsPages" }
+      let(:query_string) {
+        <<~GRAPHQL
+          query productsPages($pageSize: Int!, $page: Int!) {
+            productsPages(pageSize: $pageSize, page: $page) {
+              id
+              products {
+                name
+              }
+            }
+          }
+        GRAPHQL
       }
-      GRAPHQL
-    }
 
-    before do
-      query query_string, variables: {name: "example_name"}
+      before do
+        query query_string, variables: {pageSize: 2, page: page}
+      end
+
+      it "returns all products" do
+        expect(gql_response.data[query_type].first["products"]).to match_array(
+          products.map { |product| {"name" => product.name} }
+        )
+      end
+
+      context "when page less than one" do
+        let(:page) { -1 }
+
+        it "returns error" do
+          expect(gql_response.errors.first["message"]).to eq "Page must be greater than 0"
+        end
+      end
     end
 
-    it "returns all users" do
-      expect(gql_response.data[query_type]).to eq({"name" => "example_name"})
+    describe "#search_products_pages" do
+      let(:page) { 1 }
+      let(:query_type) { "searchProductsPages" }
+      let(:query_string) {
+        <<~GRAPHQL
+          query searchProductsPages($pageSize: Int!, $page: Int!, $search: String!) {
+            searchProductsPages(pageSize: $pageSize, page: $page, search: $search) {
+              name
+              previewDescription
+            }
+          }
+        GRAPHQL
+      }
+
+      let(:expected_result) {
+        {
+          "searchProductsPages" => [
+            {
+              "name" => "Pizza",
+              "previewDescription" => "Describe",
+            },
+            {
+              "name" => "Name",
+              "previewDescription" => "Pizza with salami",
+            },
+          ],
+        }
+      }
+
+      before do
+        create_pair(:product)
+        create :product, :reindex, name: "Pizza", preview_description: "Describe"
+        create :product, :reindex, name: "Name", preview_description: "Pizza with salami"
+        Product.reindex
+        query query_string, variables: {pageSize: 2, page: page, search: "Pizza"}
+      end
+
+      it "search product with Pizza in name or preview description" do
+        expect(gql_response.data).to eq(expected_result)
+      end
+
+      context "when page less than one" do
+        let(:page) { -1 }
+
+        it "returns error" do
+          expect(gql_response.errors.first["message"]).to eq "Page must be greater than 0"
+        end
+      end
+    end
+
+    describe "#products_connection" do
+      subject { gql_response.data.dig(query_type, "edges").map { |x| x["node"] } }
+
+      let!(:products) { create_pair(:product) }
+      let(:query_type) { "productsConnection" }
+      let(:query_string) {
+        <<~GRAPHQL
+          query productsConnection($cursor: String) {
+              productsConnection(first: 12, after: $cursor) {
+                  edges {
+                      node {
+                          name
+                      }
+                  }
+              }
+          }
+        GRAPHQL
+      }
+
+      before do
+        query query_string
+      end
+
+      it "returns all products" do
+        expect(subject).to match_array(products.map { |product| {"name" => product.name} })
+      end
+    end
+
+    describe "#products_autocomplete" do
+      let(:query_type) { "productsAutocomplete" }
+      let(:query_string) {
+        <<-GRAPHQL
+          query productsAutocomplete($search: String!) {
+            productsAutocomplete(search: $search)
+          }
+        GRAPHQL
+      }
+
+      before do
+        create_pair(:product)
+        create :product, :reindex, name: "Pizza"
+        create :product, :reindex, name: "Pizza with salami"
+        Product.reindex
+        query query_string, variables: {search: "Pi"}
+      end
+
+      it "return autocomplete for Pi" do
+        expect(gql_response.data).to eq({"productsAutocomplete" => ["Pizza", "Pizza with salami"]})
+      end
+    end
+
+    describe "product_name_taken" do
+      subject { gql_response.data[query_type] }
+
+      let(:name) { "example_name" }
+      let!(:product) { create :product, name: "example_name" }
+
+      let(:query_type) { "productNameTaken" }
+      let(:query_string) {
+        <<-GRAPHQL
+          query productNameTaken($name: String!) {
+            productNameTaken(name: $name)
+          }
+        GRAPHQL
+      }
+
+      before do
+        query query_string, variables: {name: name}
+      end
+
+      it { is_expected.to eq true }
+
+      context "when name not taken" do
+        let(:name) { "Not name" }
+
+        it { is_expected.to eq false }
+      end
     end
   end
 end

@@ -4,14 +4,28 @@ module Types
       argument :id, ID, required: true, description: "Product id"
     end
 
-    field :products_connection, ProductConnection, null: false, description: "Returns a list of products with cursor"
+    field :products_autocomplete, [String], null: false, description: "Returns a autocomplete by name of product" do
+      argument :search, String, required: true, description: "Search autocomplete"
+    end
+
+    field :products_connection, Types::ProductType.connection_type, null: false, description: "Returns products"
     field :products_count, Int, null: false, description: "Returns a count of products"
-    field :products_pages, [Types::ProductPagesType], null: false, description: "Returns a list of products" do
+    field :products_pages, [ProductPagesType], null: false, description: "Returns paginated products" do
       argument :page_size, Int, required: true, description: "Page size"
       argument :page, Int, required: true, description: "Number of page"
     end
 
-    field :product_by_name, Types::ProductType, null: true, description: "Returns product by name" do
+    field :search_products_count, Int, null: false, description: "Returns a count of products" do
+      argument :search, String, required: true, description: "Search with this name or preview description"
+    end
+
+    field :search_products_pages, [Types::ProductType], null: false, description: "Returns paginated products" do
+      argument :search, String, required: true, description: "Search with this name or preview description"
+      argument :page_size, Int, required: true, description: "Page size"
+      argument :page, Int, required: true, description: "Number of page"
+    end
+
+    field :product_name_taken, Boolean, null: false, description: "Checks for exists product with this name" do
       argument :name, String, required: true, description: "Product name"
     end
 
@@ -21,7 +35,7 @@ module Types
 
     field :users, [Types::UserType], null: false, authorize: true, description: "Returns a list of users"
     field :current_user, Types::UserType, null: true, description: "Returns current user"
-    field :user_by_email, Types::UserType, null: true, description: "Returns a user by email" do
+    field :user_email_taken, Boolean, null: false, description: "Checks for exists user with this name" do
       argument :email, String, required: true, description: "User email"
     end
 
@@ -29,8 +43,18 @@ module Types
       Product.find(id)
     end
 
-    def products_count
-      Product.count
+    def products_autocomplete(search:)
+      Product.search(search, fields: [:name], match: :word_start, limit: 10, load: false).map(&:name)
+    end
+
+    def search_products_count(search:)
+      Product.search(search, load: false).total_count
+    end
+
+    def search_products_pages(page_size:, page:, search: nil)
+      raise GraphQL::ExecutionError, "Page must be greater than 0" if page <= 0
+
+      Product.search(search, per_page: page_size, page: page)
     end
 
     def products_pages(page_size:, page:)
@@ -39,12 +63,16 @@ module Types
       [{id: page, products: Product.limit(page_size).offset((page - 1) * page_size)}]
     end
 
+    def products_count
+      Product.count
+    end
+
     def products_connection
       Product.all
     end
 
-    def product_by_name(name:)
-      Product.find_by_name(name)
+    def product_name_taken(name:)
+      Product.exists?(name: name)
     end
 
     def users
@@ -59,8 +87,8 @@ module Types
       User.find(id)
     end
 
-    def user_by_email(email:)
-      User.find_by_email(email)
+    def user_email_taken(email:)
+      User.exists?(email: email)
     end
   end
 end

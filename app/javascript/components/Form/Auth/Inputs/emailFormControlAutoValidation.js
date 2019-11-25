@@ -2,7 +2,7 @@ import { FormControl, FormHelperText, Input, InputAdornment, InputLabel, makeSty
 import EmailIcon from '@material-ui/icons/Email'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
-import { userByEmail } from './operations.graphql'
+import { userEmailTaken } from './operations.graphql'
 import { useLazyQuery } from '@apollo/react-hooks'
 import PropTypes from 'prop-types'
 import debounce from 'lodash/debounce'
@@ -21,11 +21,11 @@ export default function EmailFormControlAutoValidation (props) {
   const requiredAria = 'email-error-required'
   const patternAria = 'email-error-pattern'
   const emailTakenAria = 'email-error-already-taken'
-  const handleTakenEmail = ({ userByEmail }) => {
-    userByEmail ? setError('email', 'emailTaken') : clearError('email')
+  const handleTakenEmail = ({ userEmailTaken }) => {
+    userEmailTaken ? setError('email', 'emailTaken') : clearError('email')
   }
 
-  const [getEmail] = useLazyQuery(userByEmail, { onCompleted: handleTakenEmail })
+  const [getEmail] = useLazyQuery(userEmailTaken, { onCompleted: handleTakenEmail })
 
   return (
     <FormControl required fullWidth error={!!errors.email}>

@@ -1,13 +1,13 @@
 import React from 'react'
 import { fade, makeStyles, withStyles } from '@material-ui/core/styles'
-import { AppBar, Toolbar, IconButton, Badge, InputBase, LinearProgress } from '@material-ui/core'
+import { AppBar, Toolbar, IconButton, Badge, LinearProgress } from '@material-ui/core'
 import HomeIcon from '@material-ui/icons/Home'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
-import SearchIcon from '@material-ui/icons/Search'
 import AccountControl from '../AccountControl'
 import { useHistory } from 'react-router-dom'
 import { withRouter } from 'react-router'
 import { useApolloNetworkStatus } from 'react-apollo-network-status'
+import Search from '../Search'
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -17,7 +17,6 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(2)
   },
   search: {
-    position: 'relative',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.white, 0.15),
     '&:hover': {
@@ -35,26 +34,6 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up('sm')]: {
       marginLeft: theme.spacing(3),
       width: '400px'
-    }
-  },
-  searchIcon: {
-    width: theme.spacing(5),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  inputRoot: {
-    color: 'inherit'
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 5),
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: 400
     }
   }
 }))
@@ -93,18 +72,7 @@ function Header () {
             <HomeIcon />
           </IconButton>
           <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder='Search…'
-              fullWidth
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
+            <Search />
           </div>
           <div className={classes.grow} />
           <IconButton

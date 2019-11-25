@@ -17,4 +17,18 @@ RSpec.describe Product, type: :model do
   it "create Product with image" do
     expect(create(:product, :with_image)).to be_valid
   end
+
+  describe "Search", search: true do
+    it "searches by name" do
+      create(:product, :reindex, name: "Pizza")
+      Product.reindex
+      assert_equal ["Pizza"], Product.search("Pizza").map(&:name)
+      assert_equal ["Pizza"], Product.search("Pi", match: :word_start, load: false).map(&:name)
+    end
+
+    it "searches by preview_description" do
+      create(:product, :reindex, preview_description: "Pizza with sausage")
+      assert_equal ["Pizza with sausage"], Product.search("sausage").map(&:preview_description)
+    end
+  end
 end
