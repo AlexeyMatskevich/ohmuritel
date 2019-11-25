@@ -1,0 +1,18 @@
+query reviewsConnection($productId: ID!, $cursor: String) {
+    reviewsConnection(first: 10, after: $cursor, productId: $productId) {
+        edges {
+            node {
+                body
+                id
+                rating
+                user {
+                    fullName
+                }
+            }
+        }
+        pageInfo {
+            endCursor
+            hasNextPage
+        }
+    }
+}

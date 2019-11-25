@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Grid, Typography } from '@material-ui/core'
-import Item from '../../ShopItem'
+import ShopItem from '../../ShopItem'
 import { useQuery } from '@apollo/react-hooks'
 import { searchProductsPages, searchProductsCount } from './operations.graphql'
 import Pagination from 'material-ui-flat-pagination/lib/Pagination'
@@ -40,7 +40,7 @@ export default function ShopList () {
     } else {
       return products.map((product) => (
         <Grid key={product.id} item className={classes.item} xs={12} sm={6} md={4} lg={3} xl={2}>
-          <Item product={product} />
+          <ShopItem product={product} />
         </Grid>
       ))
     }

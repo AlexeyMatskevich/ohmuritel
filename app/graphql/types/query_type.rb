@@ -8,6 +8,10 @@ module Types
       argument :search, String, required: true, description: "Search autocomplete"
     end
 
+    field :reviews_connection, Types::ReviewType.connection_type, null: false, description: "Returns products" do
+      argument :product_id, ID, required: true, description: "Product id"
+    end
+
     field :products_connection, Types::ProductType.connection_type, null: false, description: "Returns products"
     field :products_count, Int, null: false, description: "Returns a count of products"
     field :products_pages, [ProductPagesType], null: false, description: "Returns paginated products" do
@@ -41,6 +45,10 @@ module Types
 
     def product(id:)
       Product.find(id)
+    end
+
+    def reviews_connection(product_id:)
+      Review.where(product_id: product_id).reverse_order
     end
 
     def products_autocomplete(search:)

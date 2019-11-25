@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core'
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney'
 import BrokenImageIcon from '@material-ui/icons/BrokenImage'
+import Reviews from '../Reviews'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -72,6 +73,11 @@ export default function Product () {
           </Grid>
           <Grid item xs={12} sm={6} lg={8}>
             <div dangerouslySetInnerHTML={trixText()} />
+          </Grid>
+          <Grid item container justify='space-between'>
+            <Grid item xs={12}>
+              <Reviews productId={id} />
+            </Grid>
           </Grid>
         </Grid>
       </Container>
