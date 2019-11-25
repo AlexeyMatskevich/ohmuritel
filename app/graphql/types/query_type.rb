@@ -15,7 +15,7 @@ module Types
       argument :page, Int, required: true, description: "Number of page"
     end
 
-    field :search_products_count, Int, null: false, description: "Returns a count of products"do
+    field :search_products_count, Int, null: false, description: "Returns a count of products" do
       argument :search, String, required: true, description: "Search with this name or preview description"
     end
 
