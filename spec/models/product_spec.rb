@@ -21,7 +21,7 @@ RSpec.describe Product, type: :model do
   describe "Search", search: true do
     it "searches by name" do
       create(:product, :reindex, name: "Pizza")
-
+      Product.reindex
       assert_equal ["Pizza"], Product.search("Pizza").map(&:name)
       assert_equal ["Pizza"], Product.search("Pi", match: :word_start, load: false).map(&:name)
     end
