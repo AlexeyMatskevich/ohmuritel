@@ -47,11 +47,11 @@ RSpec.describe Mutations::CreateReview do
           "body" => "Example review",
           "rating" => 4,
           "product" => {
-            "id" => product.id.to_s
-          }
+            "id" => product.id.to_s,
+          },
         },
         "errors" => [],
-        "success" => true
+        "success" => true,
       }
     }
     it "return the product object" do
