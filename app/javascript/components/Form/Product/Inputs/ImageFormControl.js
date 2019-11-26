@@ -1,3 +1,4 @@
+'use strict'
 import { CircularProgress, makeStyles } from '@material-ui/core'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'

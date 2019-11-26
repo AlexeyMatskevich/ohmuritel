@@ -1,3 +1,4 @@
+'use strict'
 import { FileChecksum } from '@rails/activestorage/src/file_checksum'
 
 function calculateChecksum (file) {

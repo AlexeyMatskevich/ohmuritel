@@ -1,3 +1,4 @@
+'use strict'
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { product } from './operations.graphql'

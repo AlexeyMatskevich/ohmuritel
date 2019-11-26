@@ -1,3 +1,4 @@
+'use strict'
 import { BlobUpload } from '@rails/activestorage/src/blob_upload'
 import { CSRF } from '../../../utils/csrf'
 

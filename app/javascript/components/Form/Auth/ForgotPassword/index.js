@@ -1,3 +1,4 @@
+'use strict'
 import React, { useState } from 'react'
 import clsx from 'clsx'
 import useForm, { FormContext } from 'react-hook-form'

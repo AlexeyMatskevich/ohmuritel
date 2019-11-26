@@ -1,3 +1,4 @@
+'use strict'
 import React from 'react'
 import { IconButton, Menu, MenuItem } from '@material-ui/core'
 import { AccountCircle } from '@material-ui/icons'
