@@ -1,9 +1,9 @@
 query reviewsConnection($productId: ID!, $cursor: String) {
-    reviewsConnection(first: 10, after: $cursor, productId: $productId) {
+    reviewsConnection(first: 10, after: $cursor, productId: $productId) @connection(key: "reviews", filter: ["productId"]) {
         edges {
             node {
-                body
                 id
+                body
                 rating
                 author {
                     fullName

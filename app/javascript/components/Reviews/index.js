@@ -1,16 +1,14 @@
 'use strict'
 import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import Divider from '@material-ui/core/Divider'
-import ListItemText from '@material-ui/core/ListItemText'
+import { Divider, List, ListItem, ListItemText, makeStyles, Typography } from '@material-ui/core'
 import Rating from '@material-ui/lab/Rating'
 import { Waypoint } from 'react-waypoint'
 import PropTypes from 'prop-types'
 import { reviewsConnection } from './operations.graphql'
+import { IsUserLoggedIn } from '../operations.graphql'
 import { useQuery } from '@apollo/react-hooks'
-import { Grid, Typography } from '@material-ui/core'
+import NewReview from './NewReview'
+import { loadMore } from '../../utils/graphql'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -26,56 +24,46 @@ export default function Reviews (props) {
   const classes = useStyles()
   const { productId } = props
   const { loading, data, fetchMore } = useQuery(reviewsConnection, { variables: { productId } })
+  const { data: user } = useQuery(IsUserLoggedIn)
+
+  const getEdges = () => data.reviewsConnection.edges
+  const hasNextPage = () => data && getEdges().length > 0 && !data.reviewsConnection.pageInfo.hasNextPage
+  const hasNotNextPage = () => data && getEdges().length > 0 && data.reviewsConnection.pageInfo.hasNextPage
+  const pageEnd = () => <Typography align='center' variant='subtitle1'>You looked at all the reviews</Typography>
+  const renderNoReview = () => <Typography align='center' variant='subtitle1'>No reviews yet add</Typography>
+  const renderLoginOrRegister = () => (
+    <Typography align='center' variant='subtitle1'>Register or login into system to leave comments</Typography>
+  )
+
+  function review (node, i) {
+    return (
+      <React.Fragment key={node.id}>
+        <ListItem alignItems='flex-start'>
+          <ListItemText
+            primary={
+              <>
+                <Rating value={node.rating} readOnly />
+                <br />
+                {node.author.fullName}
+              </>
+            }
+            secondary={node.body}
+          />
+        </ListItem>
+        <Divider variant='middle' component='li' />
+        {hasNotNextPage() && i === getEdges().length - 2 && (
+          <Waypoint onEnter={() => { loadMore(fetchMore, data, 'reviewsConnection') }} />
+        )}
+      </React.Fragment>)
+  }
 
   return (
     <>
       {!loading && data && (
         <List className={classes.root}>
-          {
-            data.reviewsConnection.edges.length === 0
-              ? (<Typography align='center' component='p' variant='subtitle1'>No reviews yet add</Typography>)
-              : data.reviewsConnection.edges.map(({ node }, i) => (
-                <React.Fragment key={node.id}>
-                  <ListItem alignItems='flex-start'>
-                    <ListItemText
-                      primary={
-                        <>
-                          <Rating value={node.rating} readOnly />
-                          <br />
-                          {node.author.fullName}
-                        </>
-                      }
-                      secondary={node.body}
-                    />
-                  </ListItem>
-                  <Divider variant='inset' component='li' />
-                  {data.reviewsConnection.pageInfo.hasNextPage && i === data.reviewsConnection.edges.length - 2 && (
-                    <Waypoint onEnter={() => fetchMore({
-                      variables: { cursor: data.reviewsConnection.pageInfo.endCursor },
-                      updateQuery: (previousResult, { fetchMoreResult }) => {
-                        const newEdges = fetchMoreResult.reviewsConnection.edges
-                        const pageInfo = fetchMoreResult.reviewsConnection.pageInfo
-
-                        return newEdges.length
-                          ? {
-                            reviewsConnection: {
-                              __typename: previousResult.reviewsConnection.__typename,
-                              edges: [...previousResult.reviewsConnection.edges, ...newEdges],
-                              pageInfo
-                            }
-                          }
-                          : previousResult
-                      }
-                    })}
-                    />)}
-                </React.Fragment>
-              ))
-          }
-          {data && data.reviewsConnection.edges.length > 0 && !data.reviewsConnection.pageInfo.hasNextPage && (
-            <Grid item xs={12}>
-              <Typography align='center' component='p' variant='subtitle1'>You looked at all the reviews</Typography>
-            </Grid>
-          )}
+          {user.isLoggedIn ? <NewReview productId={productId} /> : renderLoginOrRegister()}
+          {getEdges().length === 0 ? renderNoReview() : getEdges().map(({ node }, i) => review(node, i))}
+          {hasNextPage() && pageEnd()}
         </List>
       )}
     </>
