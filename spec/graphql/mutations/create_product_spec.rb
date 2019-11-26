@@ -13,7 +13,6 @@ RSpec.describe Mutations::CreateProduct do
       mutation createProduct($name: String!, $weight: Int!, $price: Int!, $previewDescription: String!, $image: String!) {
         createProduct(name: $name, weight: $weight, price: $price, previewDescription: $previewDescription, image: $image) {
           product {
-            id
             name
             weight
             price
@@ -42,8 +41,21 @@ RSpec.describe Mutations::CreateProduct do
         context: {current_user: user}
     end
 
+    let(:expected_result) {
+      {
+        "product" => {
+          "name" => "Example product",
+          "weight" => 30,
+          "price" => 5,
+          "previewDescription" => "Some description",
+        },
+        "errors" => [],
+        "success" => true,
+      }
+    }
+
     it "return the product object" do
-      expect(gql_response.data[mutation_type]["product"]).to include("name" => "Example product")
+      expect(gql_response.data[mutation_type]).to eq expected_result
     end
   end
 end
