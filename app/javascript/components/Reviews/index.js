@@ -29,41 +29,37 @@ export default function Reviews (props) {
   const getEdges = () => data.reviewsConnection.edges
   const hasNextPage = () => data && getEdges().length > 0 && !data.reviewsConnection.pageInfo.hasNextPage
   const hasNotNextPage = () => data && getEdges().length > 0 && data.reviewsConnection.pageInfo.hasNextPage
-  const pageEnd = () => <Typography align='center' variant='subtitle1'>You looked at all the reviews</Typography>
-  const renderNoReview = () => <Typography align='center' variant='subtitle1'>No reviews yet add</Typography>
-  const renderLoginOrRegister = () => (
-    <Typography align='center' variant='subtitle1'>Register or login into system to leave comments</Typography>
-  )
+  const subtitle = (text) => <Typography align='center' component='p' variant='subtitle1'>{text}</Typography>
 
-  function review (node, i) {
-    return (
-      <React.Fragment key={node.id}>
-        <ListItem alignItems='flex-start'>
-          <ListItemText
-            primary={
-              <>
-                <Rating value={node.rating} readOnly />
-                <br />
-                {node.author.fullName}
-              </>
-            }
-            secondary={node.body}
-          />
-        </ListItem>
-        <Divider variant='middle' component='li' />
-        {hasNotNextPage() && i === getEdges().length - 2 && (
-          <Waypoint onEnter={() => { loadMore(fetchMore, data, 'reviewsConnection') }} />
-        )}
-      </React.Fragment>)
-  }
+  const review = (node, i) => (
+    <React.Fragment key={node.id}>
+      <ListItem alignItems='flex-start'>
+        <ListItemText
+          primary={
+            <>
+              <Rating value={node.rating} readOnly aria-label='rating' />
+              <br />
+              {node.author.fullName}
+            </>
+          }
+          secondary={node.body}
+        />
+      </ListItem>
+      <Divider variant='middle' component='li' />
+      {hasNotNextPage() && i === getEdges().length - 2 && (
+        <Waypoint onEnter={() => { loadMore(fetchMore, data, 'reviewsConnection') }} />
+      )}
+    </React.Fragment>)
 
   return (
     <>
       {!loading && data && (
         <List className={classes.root}>
-          {user.isLoggedIn ? <NewReview productId={productId} /> : renderLoginOrRegister()}
-          {getEdges().length === 0 ? renderNoReview() : getEdges().map(({ node }, i) => review(node, i))}
-          {hasNextPage() && pageEnd()}
+          {user.isLoggedIn
+            ? <NewReview productId={productId} />
+            : subtitle('Register or login into system to leave comments')}
+          {getEdges().length === 0 ? subtitle('No reviews yet add') : getEdges().map(({ node }, i) => review(node, i))}
+          {hasNextPage() && subtitle('You looked at all the reviews')}
         </List>
       )}
     </>

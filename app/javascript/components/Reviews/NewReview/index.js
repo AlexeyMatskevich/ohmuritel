@@ -72,7 +72,9 @@ export default function NewReview (props) {
           value={rating}
           onChange={(event, newValue) => {
             setRating(newValue)
-          }} name='rating'
+          }}
+          name='rating'
+          aria-label='new rating'
         />
         <FormControl required fullWidth>
           <InputLabel htmlFor='review'>Add review</InputLabel>
