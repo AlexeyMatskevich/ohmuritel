@@ -65,6 +65,8 @@ GEM
     activerecord (6.0.1)
       activemodel (= 6.0.1)
       activesupport (= 6.0.1)
+    activerecord-import (1.0.3)
+      activerecord (>= 3.2)
     activestorage (6.0.1)
       actionpack (= 6.0.1)
       activejob (= 6.0.1)
@@ -391,6 +393,7 @@ PLATFORMS
 DEPENDENCIES
   aasm (~> 5.0)
   action_policy-graphql (~> 0.3.1)
+  activerecord-import (~> 1.0)
   autosuggest (~> 0.1.0)
   awesome_print (~> 1.8)
   aws-sdk-s3 (~> 1.53)

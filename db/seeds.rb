@@ -1,54 +1,31 @@
-User.create!(
-  [
-    {
-      email: "admin@admin",
-      first_name: "Jane",
-      last_name: "Doe",
-      password: "12345678",
-      role: :admin,
-    },
-  ]
+User.create(
+  email: "admin@admin",
+  first_name: "Admin",
+  last_name: "Administrator",
+  password: "12345678",
+  role: :admin,
 )
 
-user = User.create(
-  email: "john.doe@example.com",
-  first_name: "John",
-  last_name: "Doe",
-  password: "12345678",
-)
-user2 = User.create(
-  email: "jane.doe@example.com",
-  first_name: "Jane",
-  last_name: "Doe",
-  password: "12345678",
-)
-user3 = User.create(
-  email: "dane.doe@example.com",
-  first_name: "Jane",
-  last_name: "Doe",
-  password: "12345678",
-)
-
-burger = Product.create(
+burger = Product.new(
   name: "Burger",
   weight: 40,
   price: 20,
   preview_description: Faker::Food.description,
   description: Faker::Lorem.paragraph(sentence_count: 2)
 )
-burger.image.attach(io: File.open("public/burger.jpg"), filename: "burger.jpg", content_type: "image/jpg")
-cheeseburger = Product.create(
-  name: "Cheeseburger",
+
+cheeseburgerer = Product.new(
+  name: "Cheeseburgerer",
   weight: 40,
   price: 30,
   preview_description: Faker::Food.description,
   description: Faker::Lorem.paragraph(sentence_count: 2)
 )
-cheeseburger.image.attach(io: File.open("public/cheeseburger.jpg"), filename: "cheeseburger.jpg", content_type: "image/jpg")
 
-100.times do
-  Product.create(
-    name: Faker::Food.dish,
+products = []
+54.times do
+  products << Product.new(
+    name: Faker::Food.unique.dish,
     weight: rand(10..150),
     price: rand(1..15),
     preview_description: Faker::Food.description,
@@ -56,31 +33,64 @@ cheeseburger.image.attach(io: File.open("public/cheeseburger.jpg"), filename: "c
   )
 end
 
-3.times do
+products << burger
+products << cheeseburgerer
+Product.import products
+burger.image.attach(io: File.open("public/burger.jpg"), filename: "burger.jpg", content_type: "image/jpg")
+cheeseburgerer.image.attach(io: File.open("public/cheeseburger.jpg"), filename: "cheeseburger.jpg", content_type: "image/jpg")
+
+users = []
+30.times do
+  users << User.new(
+    email: Faker::Internet.email,
+    first_name: Faker::Name.first_name,
+    last_name: Faker::Name.last_name,
+    password: "12345678",
+  )
+end
+
+User.import users
+
+reviews = []
+
+products.each_with_index do |product, i|
+  reviews << Review.new(
+    body: Faker::Lorem.paragraph,
+    rating: rand(1..5),
+    user: users[i % users.length],
+    product: product,
+  )
+end
+
+3.times do |i|
   4.times do
-    Review.create(
-      body: Faker::Lorem.paragraph(sentence_count: 2),
+    reviews << Review.new(
+      body: Faker::Lorem.paragraph,
       rating: rand(1..5),
-      user: user,
-      product: cheeseburger,
+      user: users[i],
+      product: cheeseburgerer,
     )
   end
 
   4.times do
-    Review.create(
-      body: Faker::Lorem.paragraph(sentence_count: 2),
+    reviews << Review.new(
+      body: Faker::Lorem.paragraph,
       rating: rand(1..5),
-      user: user2,
-      product: cheeseburger,
+      user: users[i],
+      product: cheeseburgerer,
     )
   end
 
   4.times do
-    Review.create(
-      body: Faker::Lorem.paragraph(sentence_count: 2),
+    reviews << Review.new(
+      body: Faker::Lorem.paragraph,
       rating: rand(1..5),
-      user: user3,
-      product: cheeseburger,
+      user: users[i],
+      product: cheeseburgerer,
     )
   end
 end
+
+Review.import reviews
+
+Product.reindex

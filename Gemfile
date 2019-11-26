@@ -23,6 +23,7 @@ gem "elasticsearch-rails", "~> 7.0"
 gem "elasticsearch-model", "~> 7.0"
 gem "searchkick", "~> 4.1"
 gem "autosuggest", "~> 0.1.0"
+gem "activerecord-import", "~> 1.0"
 
 group :development, :test do
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
