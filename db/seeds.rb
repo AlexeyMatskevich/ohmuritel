@@ -22,6 +22,13 @@ user2 = User.create(
   last_name: "Doe",
   password: "12345678",
 )
+user3 = User.create(
+  email: "dane.doe@example.com",
+  first_name: "Jane",
+  last_name: "Doe",
+  password: "12345678",
+)
+
 burger = Product.create(
   name: "Burger",
   weight: 40,
@@ -49,20 +56,31 @@ cheeseburger.image.attach(io: File.open("public/cheeseburger.jpg"), filename: "c
   )
 end
 
-10.times do
-  Review.create(
-    body: Faker::Lorem.paragraph(sentence_count: 2),
-    rating: rand(1..5),
-    user: user,
-    product: cheeseburger,
-  )
-end
+3.times do
+  4.times do
+    Review.create(
+      body: Faker::Lorem.paragraph(sentence_count: 2),
+      rating: rand(1..5),
+      user: user,
+      product: cheeseburger,
+    )
+  end
 
-10.times do
-  Review.create(
-    body: Faker::Lorem.paragraph(sentence_count: 2),
-    rating: rand(1..5),
-    user: user2,
-    product: cheeseburger,
-  )
+  4.times do
+    Review.create(
+      body: Faker::Lorem.paragraph(sentence_count: 2),
+      rating: rand(1..5),
+      user: user2,
+      product: cheeseburger,
+    )
+  end
+
+  4.times do
+    Review.create(
+      body: Faker::Lorem.paragraph(sentence_count: 2),
+      rating: rand(1..5),
+      user: user3,
+      product: cheeseburger,
+    )
+  end
 end

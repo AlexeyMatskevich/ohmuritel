@@ -5,7 +5,7 @@ query reviewsConnection($productId: ID!, $cursor: String) {
                 body
                 id
                 rating
-                user {
+                author {
                     fullName
                 }
             }

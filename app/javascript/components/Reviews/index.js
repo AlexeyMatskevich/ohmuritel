@@ -41,14 +41,14 @@ export default function Reviews (props) {
                         <>
                           <Rating value={node.rating} readOnly />
                           <br />
-                          {node.user.fullName}
+                          {node.author.fullName}
                         </>
                       }
                       secondary={node.body}
                     />
                   </ListItem>
                   <Divider variant='inset' component='li' />
-                  {i === data.reviewsConnection.edges.length - 2 && (
+                  {data.reviewsConnection.pageInfo.hasNextPage && i === data.reviewsConnection.edges.length - 2 && (
                     <Waypoint onEnter={() => fetchMore({
                       variables: { cursor: data.reviewsConnection.pageInfo.endCursor },
                       updateQuery: (previousResult, { fetchMoreResult }) => {

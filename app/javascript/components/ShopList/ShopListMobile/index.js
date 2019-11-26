@@ -16,7 +16,7 @@ export default function ShopListMobile (props) {
     edges.map(({ node }, i) => (
       <Grid key={node.id} item className={classes.item} xs={12} sm={6} md={4} lg={3} xl={2}>
         <ShopItem product={node} />
-        {i === edges.length - 4 && (
+        {data.productsConnection.pageInfo.hasNextPage && i === edges.length - 4 && (
           <Waypoint onEnter={() => fetchMore({
             variables: {
               cursor: data.productsConnection.pageInfo.endCursor
