@@ -8,6 +8,7 @@ RSpec.describe Mutations::CreateReview do
   describe "create Review" do
     let(:user) { create(:user) }
     let(:product) { create(:product) }
+
     let(:mutation_type) { "createReview" }
     let(:mutation_string) {
       <<-GRAPHQL

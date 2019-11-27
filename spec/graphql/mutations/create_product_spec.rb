@@ -7,6 +7,7 @@ RSpec.describe Mutations::CreateProduct do
 
   describe "create Product" do
     let(:user) { build_stubbed(:admin) }
+
     let(:mutation_type) { "createProduct" }
     let(:mutation_string) {
       <<-GRAPHQL

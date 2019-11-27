@@ -10,4 +10,16 @@ describe ReviewPolicy do
   describe_rule :create? do
     succeed "when user with user role"
   end
+
+  describe_rule :destroy? do
+    succeed "when user is admin" do
+      let(:user) { build_stubbed :admin }
+    end
+
+    failed "when user in not admin" do
+      succeed "when user is owner" do
+        let(:record) { build_stubbed :review, user: user }
+      end
+    end
+  end
 end
