@@ -2,11 +2,11 @@ module Types
   class UserType < Types::BaseObject
     description "Data of a user"
 
-    field :id, ID, null: false, description: "ID of the user"
-    field :email, String, null: false, description: "Email address of the user"
-    field :first_name, String, null: false, description: "First name of the user"
-    field :last_name, String, null: false, description: "Last name of the user"
-    field :full_name, String, null: false, description: "Full name of the user"
+    field :id, ID, "ID of the user", null: false
+    field :email, String, "Email address of the user", null: false
+    field :first_name, String, "First name of the user", null: false
+    field :last_name, String, "Last name of the user", null: false
+    field :full_name, String, "Full name of the user", null: false
 
     def full_name
       # `object` references the user instance

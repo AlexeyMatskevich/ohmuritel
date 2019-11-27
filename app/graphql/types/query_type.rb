@@ -1,46 +1,46 @@
 module Types
   class QueryType < Types::BaseObject
-    field :product, Types::ProductType, null: true, description: "Returns a product" do
-      argument :id, ID, required: true, description: "Product id"
+    field :product, Types::ProductType, "Returns a product", null: true do
+      argument :id, ID, "Product id", required: true
     end
 
-    field :products_autocomplete, [String], null: false, description: "Returns a autocomplete by name of product" do
-      argument :search, String, required: true, description: "Search autocomplete"
+    field :products_autocomplete, [String], "Returns a autocomplete by name of product", null: false do
+      argument :search, String, "Search autocomplete", required: true
     end
 
-    field :reviews_connection, Types::ReviewType.connection_type, null: false, description: "Returns products" do
-      argument :product_id, ID, required: true, description: "Product id"
+    field :reviews_connection, Types::ReviewType.connection_type, "Returns products", null: false do
+      argument :product_id, ID, "Product id", required: true
     end
 
-    field :products_connection, Types::ProductType.connection_type, null: false, description: "Returns products"
-    field :products_count, Int, null: false, description: "Returns a count of products"
-    field :products_pages, [ProductPagesType], null: false, description: "Returns paginated products" do
-      argument :page_size, Int, required: true, description: "Page size"
-      argument :page, Int, required: true, description: "Number of page"
+    field :products_connection, Types::ProductType.connection_type, "Returns products", null: false
+    field :products_count, Int, "Returns a count of products", null: false
+    field :products_pages, [ProductPagesType], "Returns paginated products", null: false do
+      argument :page_size, Int, "Page size", required: true
+      argument :page, Int, "Number of page", required: true
     end
 
-    field :search_products_count, Int, null: false, description: "Returns a count of products" do
-      argument :search, String, required: true, description: "Search with this name or preview description"
+    field :search_products_count, Int, "Returns a count of products", null: false do
+      argument :search, String, "Search with this name or preview description", required: true
     end
 
-    field :search_products_pages, [Types::ProductType], null: false, description: "Returns paginated products" do
-      argument :search, String, required: true, description: "Search with this name or preview description"
-      argument :page_size, Int, required: true, description: "Page size"
-      argument :page, Int, required: true, description: "Number of page"
+    field :search_products_pages, [Types::ProductType], "Returns paginated products", null: false do
+      argument :search, String, "Search with this name or preview description", required: true
+      argument :page_size, Int, "Page size", required: true
+      argument :page, Int, "Number of page", required: true
     end
 
-    field :product_name_taken, Boolean, null: false, description: "Checks for exists product with this name" do
-      argument :name, String, required: true, description: "Product name"
+    field :product_name_taken, Boolean, "Checks for exists product with this name", null: false do
+      argument :name, String, "Product name", required: true
     end
 
-    field :user, Types::UserType, null: true, authorize: true, description: "Returns a user by id" do
-      argument :id, ID, required: true, description: "User ID"
+    field :user, Types::UserType, "Returns a user by id", null: true, authorize: true do
+      argument :id, ID, "User ID", required: true
     end
 
-    field :users, [Types::UserType], null: false, authorize: true, description: "Returns a list of users"
-    field :current_user, Types::UserType, null: true, description: "Returns current user"
-    field :user_email_taken, Boolean, null: false, description: "Checks for exists user with this name" do
-      argument :email, String, required: true, description: "User email"
+    field :users, [Types::UserType], "Returns a list of users", null: false, authorize: true
+    field :current_user, Types::UserType, "Returns current user", null: true
+    field :user_email_taken, Boolean, "Checks for exists user with this name", null: false do
+      argument :email, String, "User email", required: true
     end
 
     def product(id:)
