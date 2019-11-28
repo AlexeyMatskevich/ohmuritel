@@ -7,6 +7,9 @@ mutation createReview($body: String!, $rating: Int!, $productId: ID!) {
             author {
                 fullName
             }
+            canDestroy {
+                value
+            }
         }
         errors {
             message

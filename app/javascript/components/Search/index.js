@@ -33,9 +33,11 @@ export default function Search () {
     <Autocomplete
       className={classes.autocomplete}
       freeSolo
+      clearOnEscape
       id='search'
       options={options}
       onChange={(_event, value) => {
+        if (!value) return
         history.push(`/search?q=${value}`)
       }}
       renderInput={params => (

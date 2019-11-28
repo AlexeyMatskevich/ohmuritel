@@ -46,7 +46,7 @@ export default function NewReview (props) {
   const [rating, setRating] = useState(5)
   const handleSuccess = ({ createReview }) => createReview.success ? reset() : null
   const { handleSubmit, errors, register, reset } = useForm({ mode: 'onBlur' })
-  const onSubmit = data => addReview({ variables: { body: data.review, rating, productId } })
+  const handleOnSubmit = data => addReview({ variables: { body: data.review, rating, productId } })
   const [addReview, { loading: mutationLoading }] = useMutation(createReview, {
     onCompleted: handleSuccess,
     update (proxy, { data: { createReview } }) {
@@ -67,7 +67,7 @@ export default function NewReview (props) {
 
   return (
     <ListItem alignItems='flex-start'>
-      <form className={classes.form} onSubmit={handleSubmit(onSubmit)} noValidate>
+      <form className={classes.form} onSubmit={handleSubmit(handleOnSubmit)} noValidate>
         <Rating
           value={rating}
           onChange={(event, newValue) => {

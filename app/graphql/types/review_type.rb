@@ -11,5 +11,7 @@ module Types
     def author
       AssociationLoader.for(object.class, :user).load(object)
     end
+
+    expose_authorization_rules :destroy?, raise: false
   end
 end

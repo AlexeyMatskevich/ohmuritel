@@ -8,6 +8,9 @@ query reviewsConnection($productId: ID!, $cursor: String) {
                 author {
                     fullName
                 }
+                canDestroy {
+                    value
+                }
             }
         }
         pageInfo {

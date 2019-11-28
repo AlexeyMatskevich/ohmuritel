@@ -1,0 +1,10 @@
+mutation deleteReview($id: ID!) {
+    deleteReview(id: $id) {
+        errors {
+            message
+            field
+            details
+        }
+        success
+    }
+}

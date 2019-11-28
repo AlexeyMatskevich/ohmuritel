@@ -17,6 +17,7 @@ export default function AccountControl () {
   const handleLogoutClick = () => {
     window.localStorage.clear()
     client.resetStore().then(() => handleMenuClose())
+    history.push('/')
   }
 
   const handleMenuClose = () => {
