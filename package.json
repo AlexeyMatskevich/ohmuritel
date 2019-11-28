@@ -36,7 +36,8 @@
     "react-router-dom": "^5.1.2",
     "react-trix": "^0.5.1",
     "react-waypoint": "^9.0.2",
-    "trix": "^1.0.0"
+    "trix": "^1.0.0",
+    "use-debounce": "^3.1.0"
   },
   "version": "0.1.0",
   "devDependencies": {
