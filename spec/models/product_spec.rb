@@ -14,6 +14,8 @@ RSpec.describe Product, type: :model do
     it { should validate_length_of(:preview_description).is_at_most(255) }
   end
 
+  it { should have_many :reviews }
+
   it "create Product with image" do
     expect(create(:product, :with_image)).to be_valid
   end

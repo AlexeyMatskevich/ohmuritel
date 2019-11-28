@@ -1,3 +1,4 @@
+'use strict'
 import React from 'react'
 import { fade, makeStyles, withStyles } from '@material-ui/core/styles'
 import { AppBar, Toolbar, IconButton, Badge, LinearProgress } from '@material-ui/core'

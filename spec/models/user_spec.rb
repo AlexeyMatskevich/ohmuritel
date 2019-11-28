@@ -10,4 +10,6 @@ RSpec.describe User, type: :model do
     it { should validate_uniqueness_of(:email).case_insensitive }
     it { should enumerize(:role).in(:user, :admin) }
   end
+
+  it { should have_many :reviews }
 end

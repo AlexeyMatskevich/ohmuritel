@@ -10,6 +10,10 @@ describe UserPolicy do
   describe_rule :show? do
     succeed "when user is admin"
 
+    failed "when user in quest" do
+      let(:user) { nil }
+    end
+
     failed "when user in not admin" do
       before { user.role = "user" }
 

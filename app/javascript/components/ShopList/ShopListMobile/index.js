@@ -1,42 +1,25 @@
+'use strict'
 import React from 'react'
 import { Container, Grid, Typography } from '@material-ui/core'
-import Item from '../../ShopItem'
+import ShopItem from '../../ShopItem'
 import NewItem from '../../ShopItem/NewItem'
 import { useQuery } from '@apollo/react-hooks'
 import { productsConnection } from './../operations.graphql'
 import { useStyles } from './../style'
 import { Waypoint } from 'react-waypoint'
+import { loadMore } from '../../../utils/graphql'
 
 export default function ShopListMobile (props) {
   const classes = useStyles()
   const { police } = props
   const { loading, data, fetchMore } = useQuery(productsConnection)
 
-  const renderPage = (products) => (
-    products.map(({ node }, i) => (
+  const renderPage = (edges) => (
+    edges.map(({ node }, i) => (
       <Grid key={node.id} item className={classes.item} xs={12} sm={6} md={4} lg={3} xl={2}>
-        <Item product={node} />
-        {i === data.productsConnection.edges.length - 4 && (
-          <Waypoint onEnter={() => fetchMore({
-            variables: {
-              cursor: data.productsConnection.pageInfo.endCursor
-            },
-            updateQuery: (previousResult, { fetchMoreResult }) => {
-              const newEdges = fetchMoreResult.productsConnection.edges
-              const pageInfo = fetchMoreResult.productsConnection.pageInfo
-
-              return newEdges.length
-                ? {
-                  productsConnection: {
-                    __typename: previousResult.productsConnection.__typename,
-                    edges: [...previousResult.productsConnection.edges, ...newEdges],
-                    pageInfo
-                  }
-                }
-                : previousResult
-            }
-          })}
-          />
+        <ShopItem product={node} />
+        {data.productsConnection.pageInfo.hasNextPage && i === edges.length - 4 && (
+          <Waypoint onEnter={() => { loadMore(fetchMore, data, 'productsConnection') }} />
         )}
       </Grid>
     ))

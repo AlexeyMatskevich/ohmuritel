@@ -1,28 +1,11 @@
 module Mutations
   class CreateProduct < BaseMutation
-    argument :name, String, required: true do
-      description "New products name"
-    end
-
-    argument :weight, Integer, required: true do
-      description "New products weight"
-    end
-
-    argument :price, Integer, required: true do
-      description "New products price"
-    end
-
-    argument :preview_description, String, required: true do
-      description "New products description for preview page"
-    end
-
-    argument :description, String, required: false do
-      description "New products description"
-    end
-
-    argument :image, String, required: true do
-      description "Signed blob ID generated via `createDirectUpload` mutation"
-    end
+    argument :name, String, "New products name", required: true
+    argument :weight, Integer, "New products weight", required: true
+    argument :price, Integer, "New products price", required: true
+    argument :preview_description, String, "New products description for preview page", required: true
+    argument :description, String, "New products description", required: false
+    argument :image, String, "Signed blob ID generated via `createDirectUpload` mutation", required: true
 
     field :product, Types::ProductType, null: true
 

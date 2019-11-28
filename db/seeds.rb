@@ -1,59 +1,96 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
-DESCRIPTION = "<div class=\"trix-content\">\n  <h1>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h1><div>Ut enim ad minim <strong>veniam</strong>, quis nostrud exercitation ullamco laboris <strong>nisi</strong> ut aliquip ex ea <em>commodo consequat</em>. Duis aute irure dolor in <del>reprehenderit</del> in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<br><br>\n</div><ol>\n<li>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</li>\n<li>Aliquam tincidunt mauris eu risus.</li>\n<li>Vestibulum auctor dapibus neque.<ul><li>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</li></ul>\n</li>\n</ol><ul>\n<li>Aliquam tincidunt mauris eu risus.</li>\n<li>Vestibulum auctor dapibus neque.</li>\n</ul><pre> Lorem ipsum dolor sit amet, consectetuer adipiscing elit.\n    Aliquam tincidunt mauris eu risus.\n    Vestibulum auctor dapibus neque.</pre><h1>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h1><div>Ut enim ad minim <strong>veniam</strong>, quis nostrud exercitation ullamco laboris <strong>nisi</strong> ut aliquip ex ea <em>commodo consequat</em>. Duis aute irure dolor in <del>reprehenderit</del> in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<br><br>\n</div><ol>\n<li>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</li>\n<li>Aliquam tincidunt mauris eu risus.</li>\n<li>Vestibulum auctor dapibus neque.<ul><li>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</li></ul>\n</li>\n</ol><ul>\n<li>Aliquam tincidunt mauris eu risus.</li>\n<li>Vestibulum auctor dapibus neque.</li>\n</ul><pre> Lorem ipsum dolor sit amet, consectetuer adipiscing elit.\n    Aliquam tincidunt mauris eu risus.\n    Vestibulum auctor dapibus neque.</pre>\n</div>\n"
-
-User.create!(
-  [
-    {
-      email: "john.doe@example.com",
-      first_name: "John",
-      last_name: "Doe",
-      password: "12345678",
-    },
-    {
-      email: "jane.doe@example.com",
-      first_name: "Jane",
-      last_name: "Doe",
-      password: "12345678",
-    },
-    {
-      email: "admin@admin",
-      first_name: "Jane",
-      last_name: "Doe",
-      password: "12345678",
-      role: :admin,
-    },
-  ]
+User.create(
+  email: "admin@admin",
+  first_name: "Admin",
+  last_name: "Administrator",
+  password: "12345678",
+  role: :admin,
 )
 
-burger = Product.create(
+burger = Product.new(
   name: "Burger",
   weight: 40,
   price: 20,
   preview_description: Faker::Food.description,
-  description: DESCRIPTION
+  description: Faker::Lorem.paragraph(sentence_count: 2)
 )
-burger.image.attach(io: File.open("public/burger.jpg"), filename: "burger.jpg", content_type: "image/jpg")
-cheeseburger = Product.create(
-  name: "Cheeseburger",
+
+cheeseburgerer = Product.new(
+  name: "Cheeseburgerer",
   weight: 40,
   price: 30,
   preview_description: Faker::Food.description,
-  description: DESCRIPTION
+  description: Faker::Lorem.paragraph(sentence_count: 2)
 )
-cheeseburger.image.attach(io: File.open("public/cheeseburger.jpg"), filename: "cheeseburger.jpg", content_type: "image/jpg")
 
-100.times do
-  Product.create(
-    name: Faker::Food.dish,
+products = []
+54.times do
+  products << Product.new(
+    name: Faker::Food.unique.dish,
     weight: rand(10..150),
     price: rand(1..15),
     preview_description: Faker::Food.description,
     description: Faker::Food.description,
   )
 end
+
+products << burger
+products << cheeseburgerer
+Product.import products
+burger.image.attach(io: File.open("public/burger.jpg"), filename: "burger.jpg", content_type: "image/jpg")
+cheeseburgerer.image.attach(io: File.open("public/cheeseburger.jpg"), filename: "cheeseburger.jpg", content_type: "image/jpg")
+
+users = []
+30.times do
+  users << User.new(
+    email: Faker::Internet.email,
+    first_name: Faker::Name.first_name,
+    last_name: Faker::Name.last_name,
+    password: "12345678",
+  )
+end
+
+User.import users
+
+reviews = []
+
+products.each_with_index do |product, i|
+  reviews << Review.new(
+    body: Faker::Lorem.paragraph,
+    rating: rand(1..5),
+    user: users[i % users.length],
+    product: product,
+  )
+end
+
+3.times do |i|
+  4.times do
+    reviews << Review.new(
+      body: Faker::Lorem.paragraph,
+      rating: rand(1..5),
+      user: users[i],
+      product: cheeseburgerer,
+    )
+  end
+
+  4.times do
+    reviews << Review.new(
+      body: Faker::Lorem.paragraph,
+      rating: rand(1..5),
+      user: users[i],
+      product: cheeseburgerer,
+    )
+  end
+
+  4.times do
+    reviews << Review.new(
+      body: Faker::Lorem.paragraph,
+      rating: rand(1..5),
+      user: users[i],
+      product: cheeseburgerer,
+    )
+  end
+end
+
+Review.import reviews
+
+Product.reindex

@@ -10,6 +10,10 @@ describe ProductPolicy do
   describe_rule :create? do
     succeed "when user is admin"
 
+    failed "when user in quest" do
+      let(:user) { nil }
+    end
+
     failed "when user in not admin" do
       before { user.role = "user" }
     end

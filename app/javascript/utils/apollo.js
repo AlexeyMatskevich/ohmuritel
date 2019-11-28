@@ -1,3 +1,4 @@
+'use strict'
 import { ApolloClient } from 'apollo-client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { HttpLink } from 'apollo-link-http'
@@ -7,7 +8,7 @@ import { resolvers, typeDefs } from './type'
 import { networkErrors } from '../components/operations.graphql'
 import { CSRF } from './csrf'
 
-const cache = new InMemoryCache()
+const cache = new InMemoryCache({ freezeResults: true })
 const isLoggedIn = !!window.localStorage.getItem('refreshToken') || !!window.localStorage.getItem('token')
 
 cache.writeData({
@@ -137,7 +138,8 @@ export const createClient = () => {
       createHttpLink()
     ]),
     typeDefs,
-    resolvers
+    resolvers,
+    assumeImmutableResults: true
   })
 
   client.onResetStore(() => { cache.writeData({ data: { isLoggedIn, networkErrors: [] } }) })

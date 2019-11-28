@@ -2,13 +2,13 @@ module Types
   class ProductType < Types::BaseObject
     description "Data of product"
 
-    field :id, ID, null: false, description: "ID of the user"
-    field :name, String, null: false, description: "Product name"
-    field :weight, Integer, null: false, description: "Product weight"
-    field :price, Integer, null: false, description: "Product price"
-    field :preview_description, String, null: false, description: "Product description for preview"
-    field :description, String, null: true, description: "Product description"
-    field :image_url, Url, null: true, description: "Product image url"
+    field :id, ID, "ID of the user", null: false
+    field :name, String, "Product name", null: false
+    field :weight, Integer, "Product weight", null: false
+    field :price, Integer, "Product price", null: false
+    field :preview_description, String, "Product description for preview", null: false
+    field :description, String, "Product description", null: true
+    field :image_url, Url, "Product image url", null: true
 
     def description
       AssociationLoader.for(object.class, :rich_text_description).load(object).then do |desc|

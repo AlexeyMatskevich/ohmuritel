@@ -19,4 +19,8 @@ class OhmuritelSchema < GraphQL::Schema
   rescue_from(ActionPolicy::AuthorizationContextMissing) do
     raise GraphQL::ExecutionError.new(I18n.t("devise.failure.unauthenticated"))
   end
+
+  rescue_from(ActiveRecord::RecordNotFound) do |err|
+    raise GraphQL::ExecutionError, err.message
+  end
 end

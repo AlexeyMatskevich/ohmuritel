@@ -177,6 +177,35 @@ RSpec.describe Types::QueryType do
       end
     end
 
+    describe "#reviews_connection" do
+      subject { gql_response.data.dig(query_type, "edges").map { |x| x["node"] } }
+
+      let(:product) { create(:product) }
+      let!(:reviews) { create_pair(:review, product: product) }
+      let(:query_type) { "reviewsConnection" }
+      let(:query_string) {
+        <<~GRAPHQL
+          query reviewsConnection($productId: ID!, $cursor: String) {
+              reviewsConnection(first: 10, after: $cursor, productId: $productId) {
+                  edges {
+                      node {
+                          body
+                      }
+                  }
+              }
+          }
+        GRAPHQL
+      }
+
+      before do
+        query query_string, variables: {productId: product.id}
+      end
+
+      it "returns all reviews" do
+        expect(subject).to match_array(reviews.map { |review| {"body" => review.body} }.reverse)
+      end
+    end
+
     describe "#products_autocomplete" do
       let(:query_type) { "productsAutocomplete" }
       let(:query_string) {

@@ -1,3 +1,4 @@
+'use strict'
 import React from 'react'
 import { IconButton, Menu, MenuItem } from '@material-ui/core'
 import { AccountCircle } from '@material-ui/icons'
@@ -16,6 +17,7 @@ export default function AccountControl () {
   const handleLogoutClick = () => {
     window.localStorage.clear()
     client.resetStore().then(() => handleMenuClose())
+    history.push('/')
   }
 
   const handleMenuClose = () => {

@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   extend Enumerize
-
+  has_many :reviews
   enumerize :role, in: [:user, :admin], default: :user
 
   devise :database_authenticatable, :registerable,

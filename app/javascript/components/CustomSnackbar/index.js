@@ -1,3 +1,4 @@
+'use strict'
 import { Snackbar } from '@material-ui/core'
 import CustomSnackbarContent from './CustomSnackbarContent'
 import React from 'react'

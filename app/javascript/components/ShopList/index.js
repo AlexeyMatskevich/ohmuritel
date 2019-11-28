@@ -1,6 +1,7 @@
+'use strict'
 import React, { useEffect, useState } from 'react'
 import { Container, Grid, Typography } from '@material-ui/core'
-import Item from '../ShopItem'
+import ShopItem from '../ShopItem'
 import NewItem from '../ShopItem/NewItem'
 import { useQuery } from '@apollo/react-hooks'
 import { productsPages } from './operations.graphql'
@@ -38,7 +39,7 @@ export default function ShopList (props) {
   const renderPage = (products) => (
     products.map((product) => (
       <Grid key={product.id} item className={classes.item} xs={12} sm={6} md={4} lg={3} xl={2}>
-        <Item product={product} />
+        <ShopItem product={product} />
       </Grid>
     ))
   )

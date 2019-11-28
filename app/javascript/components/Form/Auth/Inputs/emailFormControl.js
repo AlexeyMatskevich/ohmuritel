@@ -1,3 +1,4 @@
+'use strict'
 import { FormControl, FormHelperText, Input, InputAdornment, InputLabel, makeStyles } from '@material-ui/core'
 import EmailIcon from '@material-ui/icons/Email'
 import React from 'react'

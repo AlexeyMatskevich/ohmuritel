@@ -1,3 +1,4 @@
+'use strict'
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -40,7 +41,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function Item (props) {
+export default function ShopItem (props) {
   const { product: { id, name, price, previewDescription, imageUrl } } = props
   const classes = useStyles()
   const history = useHistory()
@@ -79,6 +80,6 @@ export default function Item (props) {
   )
 }
 
-Item.propTypes = {
+ShopItem.propTypes = {
   product: PropTypes.object.isRequired
 }
