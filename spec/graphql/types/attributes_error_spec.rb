@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Types::AttributesError do
+describe Types::AttributesError do
   subject { described_class }
 
   it { is_expected.to have_field(:field).of_type("String!") }

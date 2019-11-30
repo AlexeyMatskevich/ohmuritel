@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Types::Url do
+describe Types::Url do
   describe "validate url" do
     subject { Types::Url.coerce_input(url, nil) }
     let(:url) { "https://site.com" }

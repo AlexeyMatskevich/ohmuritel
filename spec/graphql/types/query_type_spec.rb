@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Types::QueryType do
+describe Types::QueryType do
   describe "User" do
     describe "get all users" do
       let(:admin) { create :admin }

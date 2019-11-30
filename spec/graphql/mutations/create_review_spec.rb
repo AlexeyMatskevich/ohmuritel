@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Mutations::CreateReview do
+describe Mutations::CreateReview do
   subject { described_class }
 
   it { is_expected.to have_a_field(:review).of_type(Types::ReviewType) }

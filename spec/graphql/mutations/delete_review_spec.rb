@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Mutations::DeleteReview do
+describe Mutations::DeleteReview do
   subject { described_class }
 
   describe "delete Review" do

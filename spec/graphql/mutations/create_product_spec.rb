@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Mutations::CreateProduct do
+describe Mutations::CreateProduct do
   subject { described_class }
 
   it { is_expected.to have_a_field(:product).of_type(Types::ProductType) }

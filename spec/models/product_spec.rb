@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Product, type: :model do
+describe Product do
   describe "validations" do
     subject { create(:product) }
     it { should validate_presence_of(:name) }

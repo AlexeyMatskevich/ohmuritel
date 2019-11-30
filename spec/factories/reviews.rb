@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :review do
-    sequence(:body) { |n| "Review #{n}" }
+    body { "Review" }
     rating { 5 }
     user
     product

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Types::MutationType do
+describe Types::MutationType do
   subject { described_class }
 
   it { is_expected.to implement(::Types::GraphqlAuth) }
