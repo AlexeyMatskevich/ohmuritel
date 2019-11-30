@@ -9,6 +9,7 @@ module Types
     field :preview_description, String, "Product description for preview", null: false
     field :description, String, "Product description", null: true
     field :image_url, Url, "Product image url", null: true
+    field :rating, Integer, "Product rating", null: true
 
     def description
       AssociationLoader.for(object.class, :rich_text_description).load(object).then do |desc|

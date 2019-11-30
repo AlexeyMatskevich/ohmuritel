@@ -9,4 +9,5 @@ RSpec.describe Types::ProductType do
   it { is_expected.to have_field(:price).of_type("Int!") }
   it { is_expected.to have_field(:previewDescription).of_type("String!") }
   it { is_expected.to have_field(:description).of_type("String") }
+  it { is_expected.to have_field(:rating).of_type("Int") }
 end

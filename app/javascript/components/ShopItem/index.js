@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function ShopItem (props) {
-  const { product: { id, name, price, previewDescription, imageUrl } } = props
+  const { product: { id, name, price, previewDescription, imageUrl, rating } } = props
   const classes = useStyles()
   const history = useHistory()
 
@@ -51,7 +51,7 @@ export default function ShopItem (props) {
       <CardActionArea onClick={() => history.push(`/product/${id}`)}>
         <CardHeader
           title={name}
-          subheader={<Rating value={4.5} readOnly />}
+          subheader={<Rating value={rating} readOnly />}
         />
         <CardMedia
           className={classes.media}
