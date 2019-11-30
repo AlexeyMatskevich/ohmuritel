@@ -13,6 +13,7 @@ query productsConnection($cursor: String) {
                 previewDescription
                 price
                 imageUrl
+                rating
             }
         }
     }
@@ -27,6 +28,7 @@ query productsPages($pageSize: Int!, $page: Int!) {
             previewDescription
             price
             imageUrl
+            rating
         }
     }
 }

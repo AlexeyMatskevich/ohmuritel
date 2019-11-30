@@ -5,6 +5,7 @@ query searchProductsPages($pageSize: Int!, $page: Int!, $search: String!) {
         previewDescription
         price
         imageUrl
+        rating
     }
 }
 query searchProductsCount($search: String!) {
