@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_25_101518) do
+ActiveRecord::Schema.define(version: 2019_11_30_211039) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -54,6 +54,9 @@ ActiveRecord::Schema.define(version: 2019_11_25_101518) do
     t.string "preview_description", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "reviews_count", default: 0, null: false
+    t.integer "overall_rating", default: 0, null: false
+    t.float "rating"
     t.index ["name"], name: "index_products_on_name", unique: true
   end
 
@@ -102,4 +105,30 @@ ActiveRecord::Schema.define(version: 2019_11_25_101518) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "reviews", "products"
   add_foreign_key "reviews", "users"
+  create_trigger("reviews_after_insert_row_tr", :generated => true, :compatibility => 1).
+      on("reviews").
+      after(:insert) do
+    <<-SQL_ACTIONS
+UPDATE products
+SET
+  reviews_count = reviews_count + 1,
+  overall_rating = overall_rating + NEW.rating,
+  rating = (overall_rating + NEW.rating)::float / (reviews_count + 1)
+WHERE id = NEW.product_id;
+    SQL_ACTIONS
+  end
+
+  create_trigger("reviews_after_delete_row_tr", :generated => true, :compatibility => 1).
+      on("reviews").
+      after(:delete) do
+    <<-SQL_ACTIONS
+UPDATE products
+SET
+  reviews_count = reviews_count - 1,
+  overall_rating = overall_rating - OLD.rating,
+  rating = (overall_rating - OLD.rating)::float / NULLIF((reviews_count - 1), 0)
+WHERE id = OLD.product_id;
+    SQL_ACTIONS
+  end
+
 end
