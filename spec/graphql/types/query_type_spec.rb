@@ -66,14 +66,16 @@ describe Types::QueryType do
     describe "#products_pages" do
       let!(:products) { create_pair(:product) }
       let(:page) { 1 }
+      let(:variables) { {pageSize: 2, page: page} }
+      let(:attributes) { "name" }
       let(:query_type) { "productsPages" }
       let(:query_string) {
         <<~GRAPHQL
-          query productsPages($pageSize: Int!, $page: Int!) {
-            productsPages(pageSize: $pageSize, page: $page) {
+          query productsPages($pageSize: Int!, $page: Int!, $order: ProductOrder) {
+            productsPages(pageSize: $pageSize, page: $page, order: $order) {
               id
               products {
-                name
+                #{attributes}
               }
             }
           }
@@ -81,7 +83,7 @@ describe Types::QueryType do
       }
 
       before do
-        query query_string, variables: {pageSize: 2, page: page}
+        query query_string, variables: variables
       end
 
       it "returns all products" do
@@ -95,6 +97,54 @@ describe Types::QueryType do
 
         it "returns error" do
           expect(gql_response.errors.first["message"]).to eq "Page must be greater than 0"
+        end
+      end
+
+      context "when product order by rating" do
+        let!(:products) { [create(:product, rating: 3), create(:product, rating: 5), create(:product, rating: 4)] }
+        let(:variables) { {pageSize: 3, page: page, order: "rating"} }
+        let(:attributes) { "rating" }
+
+        it "returns product ordered by rating" do
+          expect(gql_response.data[query_type].first["products"]).to match_array(
+            products.sort { |a, b| b.rating <=> a.rating }.map { |product| {"rating" => product.rating} }
+          )
+        end
+      end
+
+      context "when product order by weight" do
+        let!(:products) { [create(:product, weight: 3), create(:product, weight: 5), create(:product, weight: 4)] }
+        let(:variables) { {pageSize: 3, page: page, order: "weight"} }
+        let(:attributes) { "weight" }
+
+        it "returns product ordered by weight" do
+          expect(gql_response.data[query_type].first["products"]).to match_array(
+            products.sort { |a, b| b.weight <=> a.weight }.map { |product| {"weight" => product.weight} }
+          )
+        end
+      end
+
+      context "when product order by price" do
+        let!(:products) { [create(:product, price: 3), create(:product, price: 5), create(:product, price: 4)] }
+        let(:variables) { {pageSize: 3, page: page, order: "price"} }
+        let(:attributes) { "price" }
+
+        it "returns product ordered by price" do
+          expect(gql_response.data[query_type].first["products"]).to match_array(
+            products.sort { |a, b| b.price <=> a.price }.map { |product| {"price" => product.price} }
+          )
+        end
+      end
+
+      context "when product order by weight" do
+        let!(:products) { [create(:product, weight: 3), create(:product, weight: 5), create(:product, weight: 4)] }
+        let(:variables) { {pageSize: 3, page: page, order: "weight"} }
+        let(:attributes) { "weight" }
+
+        it "returns product ordered by weight" do
+          expect(gql_response.data[query_type].first["products"]).to match_array(
+            products.sort { |a, b| b.weight <=> a.weight }.map { |product| {"weight" => product.weight} }
+          )
         end
       end
     end
@@ -153,14 +203,16 @@ describe Types::QueryType do
       subject { gql_response.data.dig(query_type, "edges").map { |x| x["node"] } }
 
       let!(:products) { create_pair(:product) }
+      let(:variables) { {} }
+      let(:attributes) { "name" }
       let(:query_type) { "productsConnection" }
       let(:query_string) {
         <<~GRAPHQL
-          query productsConnection($cursor: String) {
-              productsConnection(first: 12, after: $cursor) {
+          query productsConnection($cursor: String, $order: ProductOrder) {
+              productsConnection(first: 12, after: $cursor, order: $order) {
                   edges {
                       node {
-                          name
+                          #{attributes}
                       }
                   }
               }
@@ -169,11 +221,59 @@ describe Types::QueryType do
       }
 
       before do
-        query query_string
+        query query_string, variables: variables
       end
 
       it "returns all products" do
         expect(subject).to match_array(products.map { |product| {"name" => product.name} })
+      end
+
+      context "when product order by rating" do
+        let!(:products) { [create(:product, rating: 3), create(:product, rating: 5), create(:product, rating: 4)] }
+        let(:variables) { {order: "rating"} }
+        let(:attributes) { "rating" }
+
+        it "returns product ordered by rating" do
+          expect(subject).to match_array(
+            products.sort { |a, b| b.rating <=> a.rating }.map { |product| {"rating" => product.rating} }
+          )
+        end
+      end
+
+      context "when product order by weight" do
+        let!(:products) { [create(:product, weight: 3), create(:product, weight: 5), create(:product, weight: 4)] }
+        let(:variables) { {order: "weight"} }
+        let(:attributes) { "weight" }
+
+        it "returns product ordered by weight" do
+          expect(subject).to match_array(
+            products.sort { |a, b| b.weight <=> a.weight }.map { |product| {"weight" => product.weight} }
+          )
+        end
+      end
+
+      context "when product order by price" do
+        let!(:products) { [create(:product, price: 3), create(:product, price: 5), create(:product, price: 4)] }
+        let(:variables) { {order: "price"} }
+        let(:attributes) { "price" }
+
+        it "returns product ordered by price" do
+          expect(subject).to match_array(
+            products.sort { |a, b| b.price <=> a.price }.map { |product| {"price" => product.price} }
+          )
+        end
+      end
+
+      context "when product order by weight" do
+        let!(:products) { [create(:product, weight: 3), create(:product, weight: 5), create(:product, weight: 4)] }
+        let(:variables) { {order: "weight"} }
+        let(:attributes) { "weight" }
+
+        it "returns product ordered by weight" do
+          expect(subject).to match_array(
+            products.sort { |a, b| b.weight <=> a.weight }.map { |product| {"weight" => product.weight} }
+          )
+        end
       end
     end
 

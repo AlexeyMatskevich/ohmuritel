@@ -12,12 +12,9 @@ module Types
       argument :product_id, ID, "Product id", required: true
     end
 
-    field :products_connection, Types::ProductType.connection_type, "Returns products", null: false
+    field :products_connection, resolver: Resolvers::ProductsConnection
     field :products_count, Int, "Returns a count of products", null: false
-    field :products_pages, [ProductPagesType], "Returns paginated products", null: false do
-      argument :page_size, Int, "Page size", required: true
-      argument :page, Int, "Number of page", required: true
-    end
+    field :products_pages, function: Resolvers::ProductsPages
 
     field :search_products_count, Int, "Returns a count of products", null: false do
       argument :search, String, "Search with this name or preview description", required: true
@@ -63,12 +60,6 @@ module Types
       raise GraphQL::ExecutionError, "Page must be greater than 0" if page <= 0
 
       Product.search(search, per_page: page_size, page: page)
-    end
-
-    def products_pages(page_size:, page:)
-      raise GraphQL::ExecutionError, "Page must be greater than 0" if page <= 0
-
-      [{id: page, products: Product.limit(page_size).offset((page - 1) * page_size)}]
     end
 
     def products_count
