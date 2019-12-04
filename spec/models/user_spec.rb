@@ -12,4 +12,5 @@ describe User do
   end
 
   it { should have_many :reviews }
+  it { should have_many :orders }
 end
