@@ -41,7 +41,7 @@ module Types
     end
 
     def product(id:)
-      Product.find(id)
+      Product.friendly.find(id)
     end
 
     def reviews_connection(product_id:)

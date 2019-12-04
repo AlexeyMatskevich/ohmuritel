@@ -14,6 +14,7 @@ query productsConnection($cursor: String, $order: ProductOrder) {
                 price
                 imageUrl
                 rating
+                slug
             }
         }
     }
@@ -27,5 +28,6 @@ query products($pageSize: Int!, $page: Int!, $order: ProductOrder) {
         price
         imageUrl
         rating
+        slug
     }
 }

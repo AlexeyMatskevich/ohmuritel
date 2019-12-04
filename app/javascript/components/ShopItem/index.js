@@ -42,13 +42,13 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function ShopItem (props) {
-  const { product: { id, name, price, previewDescription, imageUrl, rating } } = props
+  const { product: { name, price, previewDescription, imageUrl, rating, slug } } = props
   const classes = useStyles()
   const history = useHistory()
 
   return (
     <Card className={classes.card}>
-      <CardActionArea onClick={() => history.push(`/product/${id}`)}>
+      <CardActionArea onClick={() => history.push(`/product/${slug}`)}>
         <CardHeader
           title={name}
           subheader={<Rating value={rating} readOnly />}
