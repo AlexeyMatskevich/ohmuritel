@@ -7,5 +7,9 @@ export const useStyles = makeStyles(theme => ({
   },
   item: {
     display: 'flex'
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120
   }
 }))
