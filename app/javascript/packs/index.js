@@ -57,7 +57,7 @@ ReactDOM.render(
           <Route path='/order'>
             <Order />
           </Route>
-          <Route exact path='/'>
+          <Route exact path={['/', '/shop']}>
             <Home />
           </Route>
         </Switch>
