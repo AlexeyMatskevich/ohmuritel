@@ -63,31 +63,26 @@ describe Types::QueryType do
   end
 
   describe "Product" do
-    describe "#products_pages" do
+    describe "#products" do
       let!(:products) { create_pair(:product) }
       let(:page) { 1 }
       let(:variables) { {pageSize: 2, page: page} }
       let(:attributes) { "name" }
-      let(:query_type) { "productsPages" }
+      let(:query_type) { "products" }
       let(:query_string) {
         <<~GRAPHQL
-          query productsPages($pageSize: Int!, $page: Int!, $order: ProductOrder) {
-            productsPages(pageSize: $pageSize, page: $page, order: $order) {
-              id
-              products {
-                #{attributes}
-              }
+          query products($pageSize: Int!, $page: Int!, $order: ProductOrder) {
+            products(pageSize: $pageSize, page: $page, order: $order) {
+              #{attributes}
             }
           }
         GRAPHQL
       }
 
-      before do
-        query query_string, variables: variables
-      end
+      before { query query_string, variables: variables }
 
       it "returns all products" do
-        expect(gql_response.data[query_type].first["products"]).to match_array(
+        expect(gql_response.data[query_type]).to match_array(
           products.map { |product| {"name" => product.name} }
         )
       end
@@ -106,7 +101,7 @@ describe Types::QueryType do
         let(:attributes) { "rating" }
 
         it "returns product ordered by rating" do
-          expect(gql_response.data[query_type].first["products"]).to match_array(
+          expect(gql_response.data[query_type]).to match_array(
             products.sort { |a, b| b.rating <=> a.rating }.map { |product| {"rating" => product.rating} }
           )
         end
@@ -118,7 +113,7 @@ describe Types::QueryType do
         let(:attributes) { "weight" }
 
         it "returns product ordered by weight" do
-          expect(gql_response.data[query_type].first["products"]).to match_array(
+          expect(gql_response.data[query_type]).to match_array(
             products.sort { |a, b| b.weight <=> a.weight }.map { |product| {"weight" => product.weight} }
           )
         end
@@ -130,8 +125,20 @@ describe Types::QueryType do
         let(:attributes) { "price" }
 
         it "returns product ordered by price" do
-          expect(gql_response.data[query_type].first["products"]).to match_array(
+          expect(gql_response.data[query_type]).to match_array(
             products.sort { |a, b| b.price <=> a.price }.map { |product| {"price" => product.price} }
+          )
+        end
+      end
+
+      context "when product order by low price" do
+        let!(:products) { [create(:product, price: 3), create(:product, price: 5), create(:product, price: 4)] }
+        let(:variables) { {pageSize: 3, page: page, order: "price"} }
+        let(:attributes) { "price" }
+
+        it "returns product ordered by price" do
+          expect(gql_response.data[query_type]).to match_array(
+            products.sort_by(&:price).map { |product| {"price" => product.price} }
           )
         end
       end
@@ -142,7 +149,7 @@ describe Types::QueryType do
         let(:attributes) { "weight" }
 
         it "returns product ordered by weight" do
-          expect(gql_response.data[query_type].first["products"]).to match_array(
+          expect(gql_response.data[query_type]).to match_array(
             products.sort { |a, b| b.weight <=> a.weight }.map { |product| {"weight" => product.weight} }
           )
         end
@@ -261,6 +268,16 @@ describe Types::QueryType do
           expect(subject).to match_array(
             products.sort { |a, b| b.price <=> a.price }.map { |product| {"price" => product.price} }
           )
+        end
+      end
+
+      context "when product order by low price" do
+        let!(:products) { [create(:product, price: 3), create(:product, price: 5), create(:product, price: 4)] }
+        let(:variables) { {order: "price"} }
+        let(:attributes) { "price" }
+
+        it "returns product ordered by price" do
+          expect(subject).to match_array(products.sort_by(&:price).map { |product| {"price" => product.price} })
         end
       end
 

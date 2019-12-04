@@ -4,7 +4,7 @@ require "search_object/plugin/graphql"
 module Resolvers
   class ProductsConnection < BaseResolver
     include SearchObject.module(:graphql)
-    include Products
+    include ProductsOrder
 
     type Types::ProductType.connection_type, null: false
     scope { Product.all }

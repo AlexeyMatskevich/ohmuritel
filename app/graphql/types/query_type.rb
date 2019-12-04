@@ -14,7 +14,7 @@ module Types
 
     field :products_connection, resolver: Resolvers::ProductsConnection
     field :products_count, Int, "Returns a count of products", null: false
-    field :products_pages, function: Resolvers::ProductsPages
+    field :products, function: Resolvers::Products
 
     field :search_products_count, Int, "Returns a count of products", null: false do
       argument :search, String, "Search with this name or preview description", required: true
