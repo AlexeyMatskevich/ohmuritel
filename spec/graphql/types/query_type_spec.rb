@@ -156,13 +156,13 @@ describe Types::QueryType do
       end
     end
 
-    describe "#search_products_pages" do
+    describe "#search_products" do
       let(:page) { 1 }
-      let(:query_type) { "searchProductsPages" }
+      let(:query_type) { "searchProducts" }
       let(:query_string) {
         <<~GRAPHQL
-          query searchProductsPages($pageSize: Int!, $page: Int!, $search: String!) {
-            searchProductsPages(pageSize: $pageSize, page: $page, search: $search) {
+          query searchProducts($pageSize: Int!, $page: Int!, $search: String!) {
+            searchProducts(pageSize: $pageSize, page: $page, search: $search) {
               name
               previewDescription
             }
@@ -172,7 +172,7 @@ describe Types::QueryType do
 
       let(:expected_result) {
         {
-          "searchProductsPages" => [
+          "searchProducts" => [
             {
               "name" => "Pizza",
               "previewDescription" => "Describe",
