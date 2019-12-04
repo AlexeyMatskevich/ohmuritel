@@ -6,6 +6,7 @@ query searchProducts($pageSize: Int!, $page: Int!, $search: String!) {
         price
         imageUrl
         rating
+        slug
     }
 }
 query searchProductsCount($search: String!) {

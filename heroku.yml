@@ -7,7 +7,7 @@ build:
     web: Dockerfile
   config:
     RAILS_ENV: production
-    GEMFILE_SHA: 2a123200d971a7a61139e415527e4ade3162add20ff4cfe02d0706d114b6802c
+    GEMFILE_SHA: 426eed9c7c74b47a815c93588b6fbfe2631bae9d6825df99778374475e20ab2b
     YARN_SHA: fdd7b8896615c4367ee994cdcbfd488861162a1d32f9b67133aff9885ef53a18
 release:
   command:

@@ -10,6 +10,7 @@ module Types
     field :description, String, "Product description", null: true
     field :image_url, Url, "Product image url", null: true
     field :rating, Integer, "Product rating", null: true
+    field :slug, String, "Product slug", null: false
 
     def description
       AssociationLoader.for(object.class, :rich_text_description).load(object).then do |desc|
