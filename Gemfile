@@ -5,7 +5,7 @@ ruby "2.6.5"
 
 gem "rails", "~> 6.0.0"
 gem "pg", ">= 0.18", "< 2.0"
-gem "puma", "~> 3.11"
+gem "puma", "~> 4.3"
 gem "sass-rails", "~> 5"
 gem "webpacker", "~> 4.0"
 gem "bcrypt", "~> 3.1.7"
@@ -26,12 +26,14 @@ gem "autosuggest", "~> 0.1.0"
 gem "activerecord-import", "~> 1.0"
 gem "hairtrigger", "~> 0.2.23"
 gem "search_object_graphql", "~> 0.3"
+gem "faker", "~> 2.7"
 gem "friendly_id", "~> 5.3"
+gem "bonsai-elasticsearch-rails", github: "omc/bonsai-elasticsearch-rails", branch: "master"
 
 group :development, :test do
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
   gem "pry", "~> 0.12.2"
-  gem "rspec-rails", "= 4.0.0.beta2"
+  gem "rspec-rails", "= 4.0.0.beta3"
   gem "rspec-graphql_matchers", "~> 1.1"
   gem "shoulda-matchers", "~> 4.1"
   gem "graphql-rails_logger", "~> 1.2"
@@ -42,7 +44,6 @@ group :development, :test do
   gem "database_consistency", "~> 0.7.4"
   gem "bundler-audit", "~> 0.6.1"
   gem "brakeman", "~> 4.6"
-  gem "faker", "~> 2.7"
   gem "standard"
 end
 
