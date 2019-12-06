@@ -8,15 +8,6 @@ GIT
       jwt (~> 1.5)
       rails (>= 5.1)
 
-GIT
-  remote: https://github.com/omc/bonsai-elasticsearch-rails.git
-  revision: 942dea4a263e0b86c7dc197528ea9770c88146c8
-  branch: master
-  specs:
-    bonsai-elasticsearch-rails (0.3.0)
-      elasticsearch-model (< 99)
-      elasticsearch-rails (< 99)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -114,6 +105,8 @@ GEM
     bcrypt (3.1.13)
     bcrypt (3.1.13-java)
     bindex (0.8.1)
+    bonsai-searchkick (0.0.1)
+      searchkick (< 99)
     bootsnap (1.4.5)
       msgpack (~> 1.0)
     bootsnap (1.4.5-java)
@@ -425,7 +418,7 @@ DEPENDENCIES
   awesome_print (~> 1.8)
   aws-sdk-s3 (~> 1.53)
   bcrypt (~> 3.1.7)
-  bonsai-elasticsearch-rails!
+  bonsai-searchkick (~> 0.0.1)
   bootsnap (>= 1.4.2)
   brakeman (~> 4.6)
   bundler-audit (~> 0.6.1)
