@@ -28,6 +28,7 @@ gem "hairtrigger", "~> 0.2.23"
 gem "search_object_graphql", "~> 0.3"
 gem "faker", "~> 2.7"
 gem "friendly_id", "~> 5.3"
+gem "bonsai-elasticsearch-rails", github: "omc/bonsai-elasticsearch-rails", branch: "master"
 
 group :development, :test do
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
