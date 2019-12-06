@@ -32,7 +32,7 @@ gem "friendly_id", "~> 5.3"
 group :development, :test do
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
   gem "pry", "~> 0.12.2"
-  gem "rspec-rails", "= 4.0.0.beta2"
+  gem "rspec-rails", "= 4.0.0.beta3"
   gem "rspec-graphql_matchers", "~> 1.1"
   gem "shoulda-matchers", "~> 4.1"
   gem "graphql-rails_logger", "~> 1.2"
