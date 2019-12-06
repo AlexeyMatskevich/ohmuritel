@@ -26,6 +26,7 @@ gem "autosuggest", "~> 0.1.0"
 gem "activerecord-import", "~> 1.0"
 gem "hairtrigger", "~> 0.2.23"
 gem "search_object_graphql", "~> 0.3"
+gem "faker", "~> 2.7"
 gem "friendly_id", "~> 5.3"
 
 group :development, :test do
@@ -42,7 +43,6 @@ group :development, :test do
   gem "database_consistency", "~> 0.7.4"
   gem "bundler-audit", "~> 0.6.1"
   gem "brakeman", "~> 4.6"
-  gem "faker", "~> 2.7"
   gem "standard"
 end
 
