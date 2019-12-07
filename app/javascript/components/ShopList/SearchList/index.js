@@ -19,6 +19,7 @@ export default function ShopList () {
   const pageSize = 12
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
+  const [oldSearch, setOldSearch] = useState('')
   const query = useHistoryQuery()
   const { data: count } = useQuery(searchProductsCount, { variables: { search: query.get('q') } })
   const [getSearch, { data }] = useLazyQuery(searchProducts)
@@ -44,11 +45,13 @@ export default function ShopList () {
   useEffect(() => {
     const search = query.get('q')
 
-    if (search) {
+    if (search !== oldSearch) {
       setSearch(search)
+      setPage(1)
+      setOldSearch(search)
       getSearch({ variables: { pageSize, page: 1, search } })
     }
-  }, [])
+  })
 
   return (
     <Container component='main' maxWidth={false} className={classes.root}>
