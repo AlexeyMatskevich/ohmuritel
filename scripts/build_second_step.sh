@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Don't run build if there were no changes in yarn
-git diff --quiet --exit-code origin/master $SEMAPHORE_GIT_BRANCH -- yarn.lock && exit;
-
 function docker_tag_exists() {
     curl --silent -f -lSL https://hub.docker.com/v2/repositories/$1/tags/$2 > /dev/null
 }

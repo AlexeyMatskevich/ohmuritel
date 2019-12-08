@@ -47,7 +47,7 @@ module Types
     end
 
     def reviews_connection(product_id:)
-      Review.where(product_id: product_id).reverse_order
+      Product.friendly.find(product_id).reviews.reverse_order
     end
 
     def products_autocomplete(search:)

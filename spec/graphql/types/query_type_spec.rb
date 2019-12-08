@@ -298,6 +298,7 @@ describe Types::QueryType do
       subject { gql_response.data.dig(query_type, "edges").map { |x| x["node"] } }
 
       let(:product) { create(:product) }
+      let(:productId) { product.id }
       let!(:reviews) { create_pair(:review, product: product) }
       let(:query_type) { "reviewsConnection" }
       let(:query_string) {
@@ -315,11 +316,19 @@ describe Types::QueryType do
       }
 
       before do
-        query query_string, variables: {productId: product.id}
+        query query_string, variables: {productId: productId}
       end
 
       it "returns all reviews" do
         expect(subject).to match_array(reviews.map { |review| {"body" => review.body} }.reverse)
+      end
+
+      context "when use slug instead of id" do
+        let(:productId) { product.slug }
+
+        it "returns all reviews" do
+          expect(subject).to match_array(reviews.map { |review| {"body" => review.body} }.reverse)
+        end
       end
     end
 
