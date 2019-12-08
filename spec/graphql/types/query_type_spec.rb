@@ -383,4 +383,99 @@ describe Types::QueryType do
       end
     end
   end
+
+  describe "Order" do
+    describe "#current_order" do
+      let(:user) { create(:user) }
+      let!(:order) { create(:order, user: user) }
+      let(:query_type) { "currentOrder" }
+      let(:query_string) {
+        <<~GRAPHQL
+          query currentOrder {
+            currentOrder {
+              orderItems {
+                quantity
+                product {
+                  description
+                  imageUrl
+                  previewDescription
+                  price
+                  rating
+                  weight
+                }
+              }
+              user {
+                firstName
+                fullName
+                lastName
+              }
+            }
+          }
+        GRAPHQL
+      }
+
+      before do
+        query query_string, context: {current_user: user}
+      end
+
+      let(:expected_result) {
+        {
+          "orderItems" => [
+            {
+              "quantity" => 1,
+              "product" => {
+                "description" => nil,
+                "imageUrl" => nil,
+                "previewDescription" => "Description",
+                "price" => 15,
+                "rating" => nil,
+                "weight" => 25,
+              },
+            },
+            {
+              "quantity" => 1,
+              "product" => {
+                "description" => nil,
+                "imageUrl" => nil,
+                "previewDescription" => "Description",
+                "price" => 15,
+                "rating" => nil,
+                "weight" => 25,
+              },
+            },
+          ],
+          "user" => {
+            "firstName" => "First name",
+            "fullName" => "First name Last name",
+            "lastName" => "Last name",
+          },
+        }
+      }
+
+      it "search product with Pizza in name or preview description" do
+        expect(gql_response.data[query_type]).to eq(expected_result)
+      end
+    end
+
+    describe "#current_order_items_count" do
+      let(:user) { create(:user) }
+      let!(:order) { create(:order, user: user) }
+      let(:query_type) { "currentOrderItemsCount" }
+      let(:query_string) {
+        <<~GRAPHQL
+          query currentOrderItemsCount {
+            currentOrderItemsCount
+          }
+        GRAPHQL
+      }
+
+      before do
+        query query_string, context: {current_user: user}
+      end
+
+      it "search product with Pizza in name or preview description" do
+        expect(gql_response.data[query_type]).to eq(2)
+      end
+    end
+  end
 end

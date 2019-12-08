@@ -15,14 +15,11 @@ import Home from '../components/Home'
 import Product from '../components/Product'
 import NetworkError from '../components/NetworkError'
 import SearchList from '../components/ShopList/SearchList'
+import Order from '../components/Order'
 
 if (process.env.NODE_ENV !== 'production') {
   const axe = require('react-axe')
   axe(React, ReactDOM, 1000)
-}
-
-function Order () {
-  return <h1>Order</h1>
 }
 
 ReactDOM.render(
