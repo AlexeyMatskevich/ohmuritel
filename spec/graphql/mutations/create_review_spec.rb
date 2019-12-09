@@ -55,7 +55,8 @@ describe Mutations::CreateReview do
         "success" => true,
       }
     }
-    it "return the product object" do
+
+    it "return the review response" do
       expect(gql_response.data[mutation_type]).to eq expected_result
     end
   end
