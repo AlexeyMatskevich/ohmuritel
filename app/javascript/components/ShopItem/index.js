@@ -1,5 +1,5 @@
 'use strict'
-import React from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   CardHeader, CardMedia, CardContent, CardActions, IconButton, Typography, CardActionArea, Card
@@ -8,9 +8,12 @@ import { red } from '@material-ui/core/colors'
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart'
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney'
 import BrokenImageIcon from '@material-ui/icons/BrokenImage'
+import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import Rating from '@material-ui/lab/Rating'
 import { useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import { addProductToBasket } from './operations.graphql'
+import { useMutation } from '@apollo/react-hooks'
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -42,9 +45,17 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function ShopItem (props) {
-  const { product: { name, price, previewDescription, imageUrl, rating, slug } } = props
+  const { product: { id, name, price, previewDescription, imageUrl, rating, slug } } = props
   const classes = useStyles()
   const history = useHistory()
+  const [added, setAdded] = useState(false)
+  const handleSuccess = ({ addProductToBasket }) => {
+    if (addProductToBasket.success) {
+      setAdded(true)
+    }
+  }
+
+  const [addToBasket] = useMutation(addProductToBasket, { variables: { id }, onCompleted: handleSuccess })
 
   return (
     <Card className={classes.card}>
@@ -67,9 +78,17 @@ export default function ShopItem (props) {
         </CardContent>
       </CardActionArea>
       <CardActions disableSpacing>
-        <IconButton aria-label='add to basket'>
-          <AddShoppingCartIcon />
-        </IconButton>
+        {added
+          ? (
+            <IconButton aria-label='add to basket' disabled>
+              <CheckCircleIcon />
+            </IconButton>
+          )
+          : (
+            <IconButton aria-label='add to basket' onClick={addToBasket}>
+              <AddShoppingCartIcon />
+            </IconButton>
+          )}
         <div className={classes.grow} />
         <Typography variant='h6' component='p'>
           {price}
