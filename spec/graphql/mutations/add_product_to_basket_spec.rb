@@ -31,7 +31,7 @@ describe Mutations::AddProductToBasket do
     context "when user is quest" do
       let(:user) { nil }
       let(:expected_result) {
-        {"errors" => [{"field" =>"_error", "message" => I18n.t("devise.failure.unauthenticated")}], "success" => false}
+        {"errors" => [{"field" => "_error", "message" => I18n.t("devise.failure.unauthenticated")}], "success" => false}
       }
 
       it "return the unauthenticated response" do
