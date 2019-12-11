@@ -80,7 +80,7 @@ export default function ShopItem (props) {
       <CardActions disableSpacing>
         {added
           ? (
-            <IconButton aria-label='add to basket' disabled>
+            <IconButton aria-label='added to basket' disabled>
               <CheckCircleIcon />
             </IconButton>
           )
