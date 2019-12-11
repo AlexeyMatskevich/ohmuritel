@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_04_222543) do
+ActiveRecord::Schema.define(version: 2019_12_11_205600) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(version: 2019_12_04_222543) do
     t.integer "quantity", default: 1, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["order_id", "product_id"], name: "index_order_items_on_order_id_and_product_id", unique: true
     t.index ["order_id"], name: "index_order_items_on_order_id"
     t.index ["product_id"], name: "index_order_items_on_product_id"
   end
