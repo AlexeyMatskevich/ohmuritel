@@ -58,7 +58,6 @@ export default function ShopListMobile (props) {
             <InputLabel id='sort-by'>Sort By</InputLabel>
             <Select
               labelId='sort-by'
-              id='sort-by'
               value={order}
               onChange={handleChange}
             >

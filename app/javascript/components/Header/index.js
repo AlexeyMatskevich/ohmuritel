@@ -38,6 +38,11 @@ const useStyles = makeStyles(theme => ({
       marginLeft: theme.spacing(3),
       width: '400px'
     }
+  },
+  progress: {
+    position: 'fixed',
+    top: '0px',
+    width: '100%'
   }
 }))
 
@@ -90,7 +95,7 @@ function Header () {
           </IconButton>
           <AccountControl />
         </Toolbar>
-        {status.numPendingQueries > 0 && <LinearProgress />}
+        {status.numPendingQueries > 0 && <LinearProgress className={classes.progress} />}
       </AppBar>
     </>
   )

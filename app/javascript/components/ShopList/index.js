@@ -25,7 +25,6 @@ export default function ShopList (props) {
   const [order, setOrder] = useState('creation')
   const [getProducts, { data }] = useLazyQuery(products)
   const handleOnClick = order => {
-    console.log('order', order)
     setOrder(order)
     setPage(1)
     getProducts({ variables: { pageSize: pageSize, page: 1, order } })

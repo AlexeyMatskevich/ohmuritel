@@ -55,7 +55,11 @@ export default function ShopItem (props) {
     }
   }
 
-  const [addToBasket] = useMutation(addProductToBasket, { variables: { id }, onCompleted: handleSuccess })
+  const [addToBasket] = useMutation(addProductToBasket, {
+    variables: { id },
+    onCompleted: handleSuccess,
+    refetchQueries: ['currentOrderCount']
+  })
 
   return (
     <Card className={classes.card}>
