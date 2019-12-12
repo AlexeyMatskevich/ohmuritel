@@ -29,7 +29,7 @@ module GraphQL
       obj.serializable_hash
         .except("created_at", "updated_at")
         .merge({"id" => obj[:id].to_s})
-        .transform_keys { |key| key.to_s.camelize(first_letter = :lower) }
+        .transform_keys { |key| key.to_s.camelize(:lower) }
     end
   end
 end
