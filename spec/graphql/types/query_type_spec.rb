@@ -353,7 +353,7 @@ describe Types::QueryType do
   describe "Order" do
     describe "#current_order" do
       let(:user) { create(:user) }
-      let!(:order) { create(:order, user: user) }
+      let!(:order) { create(:order, item_count: 2, user: user) }
       let(:query_type) { "currentOrder" }
       let(:query_string) {
         <<~GRAPHQL
