@@ -10,7 +10,7 @@ import { withRouter } from 'react-router'
 import { useApolloNetworkStatus } from 'react-apollo-network-status'
 import Search from '../Search'
 import { useQuery } from '@apollo/react-hooks'
-import { currentOrderItemsCount } from './operations.graphql'
+import { currentOrderCount } from './operations.graphql'
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -53,7 +53,7 @@ function Header () {
   const classes = useStyles()
   const history = useHistory()
   const status = useApolloNetworkStatus()
-  const { data } = useQuery(currentOrderItemsCount)
+  const { data } = useQuery(currentOrderCount)
 
   function handleLinkToHome () {
     history.push('/')
@@ -84,7 +84,7 @@ function Header () {
             color='inherit'
             onClick={handleLinkToOrder}
           >
-            <Counts badgeContent={data && data.currentOrderItemsCount} color='primary'>
+            <Counts badgeContent={data && data.currentOrder && data.currentOrder.orderCount} color='primary'>
               <ShoppingCartIcon />
             </Counts>
           </IconButton>
