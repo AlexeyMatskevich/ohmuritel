@@ -7,9 +7,11 @@ module Mutations
 
       return unauthenticated if user.blank?
 
-      order = Order.find_or_create_by(user: User.first)
+      order = Order.find_or_create_by(user: user)
 
-      OrderItem.create!(order: order, product_id: id)
+      order_item = OrderItem.find_by(order: order, product_id: id)
+
+      order_item ? order_item.update(quantity: order_item.quantity + 1) : OrderItem.create(order: order, product_id: id)
 
       valid
     end

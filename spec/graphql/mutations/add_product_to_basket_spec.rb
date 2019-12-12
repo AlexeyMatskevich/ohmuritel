@@ -1,9 +1,8 @@
 require "rails_helper"
 
 describe Mutations::AddProductToBasket do
-  subject { described_class }
-
   describe "add product to basket" do
+    subject { gql_response.data[mutation_type] }
     let(:user) { create(:user) }
     let(:product) { create(:product) }
 
@@ -22,10 +21,24 @@ describe Mutations::AddProductToBasket do
       GRAPHQL
     }
 
-    before { mutation mutation_string, variables: {id: product.id}, context: {current_user: user} }
+    def request
+      mutation mutation_string, variables: {id: product.id}, context: {current_user: user}
+    end
 
-    it "return the success response" do
-      expect(gql_response.data[mutation_type]).to eq({"errors" => [], "success" => true})
+    let(:expected_result) { {"errors" => [], "success" => true} }
+
+    it("return the success response") do
+      request
+
+      expect(subject).to eq(expected_result)
+    end
+
+    context "when basket already exist" do
+      let(:order) { create(:order, item_count: 3, user: user) }
+
+      it "change " do
+        expect { request }.to change { order.order_items.sum(:quantity) }.by(1)
+      end
     end
 
     context "when user is quest" do
@@ -35,6 +48,8 @@ describe Mutations::AddProductToBasket do
       }
 
       it "return the unauthenticated response" do
+        request
+
         expect(gql_response.data[mutation_type]).to eq(expected_result)
       end
     end
