@@ -24,6 +24,13 @@ module GraphQL
     end
 
     alias mutation query
+
+    def query_hash(obj)
+      obj.serializable_hash
+        .except("created_at", "updated_at")
+        .merge({"id" => obj[:id].to_s})
+        .transform_keys { |key| key.to_s.camelize(first_letter = :lower) }
+    end
   end
 end
 

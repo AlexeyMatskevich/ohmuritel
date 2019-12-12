@@ -41,7 +41,6 @@ module Types
     end
 
     field :current_order, Types::OrderType, "Return current order", null: true, authorize: true
-    field :current_order_items_count, Int, "Return current order", null: false
 
     def product(id:)
       Product.friendly.find(id)
@@ -95,10 +94,6 @@ module Types
 
     def current_order
       Order.where(user: context[:current_user]).last
-    end
-
-    def current_order_items_count
-      Order.where(user: context[:current_user]).last&.order_items&.length || 0
     end
   end
 end
