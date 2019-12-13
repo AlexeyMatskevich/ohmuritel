@@ -23,4 +23,8 @@ class OhmuritelSchema < GraphQL::Schema
   rescue_from(ActiveRecord::RecordNotFound) do |err|
     raise GraphQL::ExecutionError, err.message
   end
+
+  rescue_from(ActiveRecord::RecordInvalid) do |err|
+    raise GraphQL::ExecutionError, err.message
+  end
 end

@@ -5,20 +5,38 @@ module Mutations
     field :errors, [Types::AttributesError], null: false
     field :success, Boolean, null: false
 
-    def valid(obj)
-      {
+    def valid(obj = nil)
+      response = {
         errors: [],
         success: true,
-        "#{obj.class.to_s.camelize(:lower)}": obj,
       }
+
+      obj ? response.merge({"#{underscore(obj)}": obj}) : response
     end
 
-    def invalid(obj)
-      {
-        errors: add_attribute_errors(obj),
+    def invalid(obj = nil)
+      error(obj: obj)
+    end
+
+    def unauthenticated(obj = nil)
+      errors = [{field: :_error, message: I18n.t("devise.failure.unauthenticated")}]
+
+      error(obj: obj, errors: errors)
+    end
+
+    private
+
+    def error(obj: nil, errors: nil)
+      response = {
+        errors: errors || add_attribute_errors(obj),
         success: false,
-        "#{obj.class.to_s.camelize(:lower)}": nil,
       }
+
+      obj ? response.merge({"#{underscore(obj)}": nil}) : response
+    end
+
+    def underscore(obj)
+      obj.is_a?(Class) ? obj.to_s.underscore : obj.class.to_s.underscore
     end
 
     def add_attribute_errors(obj)

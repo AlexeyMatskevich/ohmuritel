@@ -23,13 +23,11 @@ describe Mutations::DeleteReview do
       GRAPHQL
     }
 
-    before do
-      mutation mutation_string, variables: {id: review_id}, context: {current_user: user}
-    end
+    before { mutation mutation_string, variables: {id: review_id}, context: {current_user: user} }
 
     let(:expected_result) { {"errors" => [], "success" => true} }
 
-    it "return the product object" do
+    it "return the success response" do
       expect(gql_response.data[mutation_type]).to eq expected_result
     end
   end

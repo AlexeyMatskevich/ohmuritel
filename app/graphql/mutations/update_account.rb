@@ -11,15 +11,7 @@ module Mutations
     def resolve(args)
       user = context[:current_user]
 
-      if user.blank?
-        return {
-          errors: [
-            {field: :_error, message: I18n.t("devise.failure.unauthenticated")},
-          ],
-          success: false,
-          user: nil,
-        }
-      end
+      return unauthenticated(User) if user.blank?
 
       user.update_with_password args
 

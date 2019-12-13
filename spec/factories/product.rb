@@ -10,8 +10,19 @@ FactoryBot.define do
       image { FilesTestHelper.png }
     end
 
+    trait :with_reviews do
+      transient do
+        review_count { 1 }
+        review_rating { 4 }
+      end
+
+      after :create do |product, evaluator|
+        create_list :review, evaluator.review_count, product: product, rating: evaluator.review_rating
+      end
+    end
+
     trait :reindex do
-      after(:create) do |product, _evaluator|
+      after(:create) do |product|
         product.reindex(refresh: true)
       end
     end

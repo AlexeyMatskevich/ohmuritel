@@ -23,15 +23,11 @@ describe Types::QueryType do
         GRAPHQL
       }
 
-      before do
-        query query_string, context: {current_user: admin}
-      end
+      before { query query_string, context: {current_user: admin} }
 
-      it "returns all users" do
-        expect(gql_response.data[query_type]).to match_array(
-          users.map { |user| {"email" => user.email} }
-        )
-      end
+      let(:expected_result) { users.map { |user| {"email" => user.email} } }
+
+      it("returns all users") { expect(gql_response.data[query_type]).to match_array(expected_result) }
     end
 
     describe "#user_email_taken" do
@@ -48,9 +44,7 @@ describe Types::QueryType do
         GRAPHQL
       }
 
-      before do
-        query query_string, variables: {email: name}
-      end
+      before { query query_string, variables: {email: name} }
 
       it { is_expected.to eq true }
 
@@ -64,16 +58,18 @@ describe Types::QueryType do
 
   describe "Product" do
     describe "#products" do
+      subject { gql_response.data[query_type] }
       let!(:products) { create_pair(:product) }
       let(:page) { 1 }
       let(:variables) { {pageSize: 2, page: page} }
-      let(:attributes) { "name" }
+      let(:attribute) {}
       let(:query_type) { "products" }
       let(:query_string) {
         <<~GRAPHQL
           query products($pageSize: Int!, $page: Int!, $order: ProductOrder) {
             products(pageSize: $pageSize, page: $page, order: $order) {
-              #{attributes}
+              id
+              #{attribute}
             }
           }
         GRAPHQL
@@ -81,88 +77,86 @@ describe Types::QueryType do
 
       before { query query_string, variables: variables }
 
-      it "returns all products" do
-        expect(gql_response.data[query_type]).to match_array(
-          products.map { |product| {"name" => product.name} }
-        )
-      end
+      let(:expected_result) { products.map { |product| query_hash(product).slice("id") } }
+
+      it { is_expected.to match_array(expected_result) }
 
       context "when page less than one" do
         let(:page) { -1 }
 
-        it "returns error" do
-          expect(gql_response.errors.first["message"]).to eq "Page must be greater than 0"
-        end
+        it("returns error") { expect(gql_response.errors.first["message"]).to eq "Page must be greater than 0" }
       end
 
       context "when product order by rating" do
-        let!(:products) { [create(:product, rating: 3), create(:product, rating: 5), create(:product, rating: 4)] }
+        let!(:products) { Array.new(3) { |i| create(:product, :with_reviews, review_rating: 5 - i).reload } }
         let(:variables) { {pageSize: 3, page: page, order: "rating"} }
-        let(:attributes) { "rating" }
+        let(:attribute) { "rating" }
 
-        it "returns product ordered by rating" do
-          expect(gql_response.data[query_type]).to match_array(
-            products.sort { |a, b| b.rating <=> a.rating }.map { |product| {"rating" => product.rating} }
-          )
-        end
+        let(:expected_result) {
+          products.sort { |a, b| b.rating <=> a.rating }.map { |product| query_hash(product).slice("id", attribute) }
+        }
+
+        it { is_expected.to match_array(expected_result) }
       end
 
       context "when product order by weight" do
         let!(:products) { [create(:product, weight: 3), create(:product, weight: 5), create(:product, weight: 4)] }
         let(:variables) { {pageSize: 3, page: page, order: "weight"} }
-        let(:attributes) { "weight" }
+        let(:attribute) { "weight" }
 
-        it "returns product ordered by weight" do
-          expect(gql_response.data[query_type]).to match_array(
-            products.sort { |a, b| b.weight <=> a.weight }.map { |product| {"weight" => product.weight} }
-          )
-        end
+        let(:expected_result) {
+          products.sort { |a, b| b.weight <=> a.weight }.map { |product| query_hash(product).slice("id", attribute) }
+        }
+
+        it { is_expected.to match_array(expected_result) }
       end
 
       context "when product order by price" do
         let!(:products) { [create(:product, price: 3), create(:product, price: 5), create(:product, price: 4)] }
         let(:variables) { {pageSize: 3, page: page, order: "price"} }
-        let(:attributes) { "price" }
+        let(:attribute) { "price" }
 
-        it "returns product ordered by price" do
-          expect(gql_response.data[query_type]).to match_array(
-            products.sort { |a, b| b.price <=> a.price }.map { |product| {"price" => product.price} }
-          )
-        end
+        let(:expected_result) {
+          products.sort { |a, b| b.price <=> a.price }.map { |product| query_hash(product).slice("id", attribute) }
+        }
+
+        it { is_expected.to match_array(expected_result) }
       end
 
       context "when product order by low price" do
         let!(:products) { [create(:product, price: 3), create(:product, price: 5), create(:product, price: 4)] }
         let(:variables) { {pageSize: 3, page: page, order: "price"} }
-        let(:attributes) { "price" }
+        let(:attribute) { "price" }
+        let(:expected_result) { products.sort_by(&:price).map { |product| query_hash(product).slice("id", attribute) } }
 
-        it "returns product ordered by price" do
-          expect(gql_response.data[query_type]).to match_array(
-            products.sort_by(&:price).map { |product| {"price" => product.price} }
-          )
-        end
+        it { is_expected.to match_array(expected_result) }
       end
 
-      context "when product order by weight" do
-        let!(:products) { [create(:product, weight: 3), create(:product, weight: 5), create(:product, weight: 4)] }
-        let(:variables) { {pageSize: 3, page: page, order: "weight"} }
-        let(:attributes) { "weight" }
+      context "when product order by reviews" do
+        let(:variables) { {pageSize: 3, page: page, order: "reviews"} }
+        let!(:products) {
+          Array.new(3) { |i| query_hash(create(:product, :with_reviews, review_count: i)).slice("id") }
+        }
 
-        it "returns product ordered by weight" do
-          expect(gql_response.data[query_type]).to match_array(
-            products.sort { |a, b| b.weight <=> a.weight }.map { |product| {"weight" => product.weight} }
-          )
-        end
+        it { is_expected.to match_array(products) }
       end
     end
 
     describe "#search_products" do
       let(:page) { 1 }
+      let!(:products) {
+        [
+          create(:product, :reindex, name: "Pizza", preview_description: "Describe"),
+          create(:product, :reindex, name: "Name", preview_description: "Pizza with salami"),
+        ]
+      }
+
       let(:query_type) { "searchProducts" }
       let(:query_string) {
         <<~GRAPHQL
           query searchProducts($pageSize: Int!, $page: Int!, $search: String!) {
             searchProducts(pageSize: $pageSize, page: $page, search: $search) {
+              id
               name
               previewDescription
             }
@@ -170,39 +164,22 @@ describe Types::QueryType do
         GRAPHQL
       }
 
-      let(:expected_result) {
-        {
-          "searchProducts" => [
-            {
-              "name" => "Pizza",
-              "previewDescription" => "Describe",
-            },
-            {
-              "name" => "Name",
-              "previewDescription" => "Pizza with salami",
-            },
-          ],
-        }
-      }
+      let(:expected_result) { products.map { |product| query_hash(product).slice("id", "name", "previewDescription") } }
 
       before do
         create_pair(:product)
-        create :product, :reindex, name: "Pizza", preview_description: "Describe"
-        create :product, :reindex, name: "Name", preview_description: "Pizza with salami"
         Product.reindex
         query query_string, variables: {pageSize: 2, page: page, search: "Pizza"}
       end
 
       it "search product with Pizza in name or preview description" do
-        expect(gql_response.data).to eq(expected_result)
+        expect(gql_response.data[query_type]).to eq(expected_result)
       end
 
       context "when page less than one" do
         let(:page) { -1 }
 
-        it "returns error" do
-          expect(gql_response.errors.first["message"]).to eq "Page must be greater than 0"
-        end
+        it("returns error") { expect(gql_response.errors.first["message"]).to eq "Page must be greater than 0" }
       end
     end
 
@@ -211,7 +188,7 @@ describe Types::QueryType do
 
       let!(:products) { create_pair(:product) }
       let(:variables) { {} }
-      let(:attributes) { "name" }
+      let(:attribute) {}
       let(:query_type) { "productsConnection" }
       let(:query_string) {
         <<~GRAPHQL
@@ -219,7 +196,8 @@ describe Types::QueryType do
               productsConnection(first: 12, after: $cursor, order: $order) {
                   edges {
                       node {
-                          #{attributes}
+                          id
+                          #{attribute}
                       }
                   }
               }
@@ -227,79 +205,72 @@ describe Types::QueryType do
         GRAPHQL
       }
 
-      before do
-        query query_string, variables: variables
-      end
+      before { query query_string, variables: variables }
 
-      it "returns all products" do
-        expect(subject).to match_array(products.map { |product| {"name" => product.name} })
-      end
+      let(:expected_result) { products.map { |product| query_hash(product).slice("id") } }
+
+      it("returns all products") { expect(subject).to match_array(expected_result) }
 
       context "when product order by rating" do
-        let!(:products) { [create(:product, rating: 3), create(:product, rating: 5), create(:product, rating: 4)] }
+        let!(:products) { Array.new(3) { |i| create(:product, :with_reviews, review_rating: 5 - i).reload } }
         let(:variables) { {order: "rating"} }
-        let(:attributes) { "rating" }
+        let(:attribute) { "rating" }
 
-        it "returns product ordered by rating" do
-          expect(subject).to match_array(
-            products.sort { |a, b| b.rating <=> a.rating }.map { |product| {"rating" => product.rating} }
-          )
-        end
+        let(:expected_result) {
+          products.sort { |a, b| b.rating <=> a.rating }.map { |product| query_hash(product).slice("id", attribute) }
+        }
+
+        it { is_expected.to match_array(expected_result) }
       end
 
       context "when product order by weight" do
         let!(:products) { [create(:product, weight: 3), create(:product, weight: 5), create(:product, weight: 4)] }
         let(:variables) { {order: "weight"} }
-        let(:attributes) { "weight" }
+        let(:attribute) { "weight" }
 
-        it "returns product ordered by weight" do
-          expect(subject).to match_array(
-            products.sort { |a, b| b.weight <=> a.weight }.map { |product| {"weight" => product.weight} }
-          )
-        end
+        let(:expected_result) {
+          products.sort { |a, b| b.weight <=> a.weight }.map { |product| query_hash(product).slice("id", attribute) }
+        }
+
+        it { is_expected.to match_array(expected_result) }
       end
 
       context "when product order by price" do
         let!(:products) { [create(:product, price: 3), create(:product, price: 5), create(:product, price: 4)] }
         let(:variables) { {order: "price"} }
-        let(:attributes) { "price" }
+        let(:attribute) { "price" }
 
-        it "returns product ordered by price" do
-          expect(subject).to match_array(
-            products.sort { |a, b| b.price <=> a.price }.map { |product| {"price" => product.price} }
-          )
-        end
+        let(:expected_result) {
+          products.sort { |a, b| b.price <=> a.price }.map { |product| query_hash(product).slice("id", attribute) }
+        }
+
+        it { is_expected.to match_array(expected_result) }
       end
 
       context "when product order by low price" do
         let!(:products) { [create(:product, price: 3), create(:product, price: 5), create(:product, price: 4)] }
         let(:variables) { {order: "price"} }
-        let(:attributes) { "price" }
+        let(:attribute) { "price" }
+        let(:expected_result) { products.sort_by(&:price).map { |product| query_hash(product).slice("id", attribute) } }
 
-        it "returns product ordered by price" do
-          expect(subject).to match_array(products.sort_by(&:price).map { |product| {"price" => product.price} })
-        end
+        it { is_expected.to match_array(expected_result) }
       end
 
-      context "when product order by weight" do
-        let!(:products) { [create(:product, weight: 3), create(:product, weight: 5), create(:product, weight: 4)] }
-        let(:variables) { {order: "weight"} }
-        let(:attributes) { "weight" }
+      context "when product order by reviews" do
+        let(:variables) { {order: "reviews"} }
+        let!(:products) {
+          Array.new(3) { |i| query_hash(create(:product, :with_reviews, review_count: i)).slice("id") }
+        }
 
-        it "returns product ordered by weight" do
-          expect(subject).to match_array(
-            products.sort { |a, b| b.weight <=> a.weight }.map { |product| {"weight" => product.weight} }
-          )
-        end
+        it { is_expected.to match_array(products) }
       end
     end
 
     describe "#reviews_connection" do
       subject { gql_response.data.dig(query_type, "edges").map { |x| x["node"] } }
 
-      let(:product) { create(:product) }
-      let(:productId) { product.id }
-      let!(:reviews) { create_pair(:review, product: product) }
+      let!(:product) { create(:product, :with_reviews, review_count: 2) }
+      let(:product_id) { product.id }
       let(:query_type) { "reviewsConnection" }
       let(:query_string) {
         <<~GRAPHQL
@@ -307,6 +278,7 @@ describe Types::QueryType do
               reviewsConnection(first: 10, after: $cursor, productId: $productId) {
                   edges {
                       node {
+                          id
                           body
                       }
                   }
@@ -315,20 +287,16 @@ describe Types::QueryType do
         GRAPHQL
       }
 
-      before do
-        query query_string, variables: {productId: productId}
-      end
+      before { query query_string, variables: {product_id: product_id} }
 
-      it "returns all reviews" do
-        expect(subject).to match_array(reviews.map { |review| {"body" => review.body} }.reverse)
-      end
+      let(:expected_result) { product.reviews.map { |review| query_hash(review).slice("id", "body") }.reverse }
+
+      it { is_expected.to match_array(expected_result) }
 
       context "when use slug instead of id" do
         let(:productId) { product.slug }
 
-        it "returns all reviews" do
-          expect(subject).to match_array(reviews.map { |review| {"body" => review.body} }.reverse)
-        end
+        it { is_expected.to match_array(expected_result) }
       end
     end
 
@@ -370,9 +338,7 @@ describe Types::QueryType do
         GRAPHQL
       }
 
-      before do
-        query query_string, variables: {name: name}
-      end
+      before { query query_string, variables: {name: name} }
 
       it { is_expected.to eq true }
 
@@ -387,94 +353,52 @@ describe Types::QueryType do
   describe "Order" do
     describe "#current_order" do
       let(:user) { create(:user) }
-      let!(:order) { create(:order, user: user) }
+      let!(:order) { create(:order, item_count: 2, user: user) }
       let(:query_type) { "currentOrder" }
       let(:query_string) {
         <<~GRAPHQL
           query currentOrder {
             currentOrder {
+              id
+              orderCount
               orderItems {
                 quantity
                 product {
-                  description
-                  imageUrl
-                  previewDescription
-                  price
-                  rating
-                  weight
+                  id
+                  name
                 }
               }
               user {
-                firstName
-                fullName
-                lastName
+                id
+                email
               }
             }
           }
         GRAPHQL
       }
 
-      before do
-        query query_string, context: {current_user: user}
-      end
+      before { query query_string, context: {current_user: user} }
 
       let(:expected_result) {
         {
+          "id" => order.id.to_s,
+          "orderCount" => 2,
           "orderItems" => [
             {
-              "quantity" => 1,
-              "product" => {
-                "description" => nil,
-                "imageUrl" => nil,
-                "previewDescription" => "Description",
-                "price" => 15,
-                "rating" => nil,
-                "weight" => 25,
-              },
+              "quantity" => order.order_items.first.quantity,
+              "product" => query_hash(order.order_items.first.product).slice("id", "name"),
             },
             {
-              "quantity" => 1,
-              "product" => {
-                "description" => nil,
-                "imageUrl" => nil,
-                "previewDescription" => "Description",
-                "price" => 15,
-                "rating" => nil,
-                "weight" => 25,
-              },
+              "quantity" => order.order_items.second.quantity,
+              "product" => query_hash(order.order_items.second.product).slice("id", "name"),
             },
           ],
-          "user" => {
-            "firstName" => "First name",
-            "fullName" => "First name Last name",
-            "lastName" => "Last name",
-          },
+          "user" => query_hash(user).slice("id", "email"),
         }
       }
 
       it "search product with Pizza in name or preview description" do
         expect(gql_response.data[query_type]).to eq(expected_result)
-      end
-    end
-
-    describe "#current_order_items_count" do
-      let(:user) { create(:user) }
-      let!(:order) { create(:order, user: user) }
-      let(:query_type) { "currentOrderItemsCount" }
-      let(:query_string) {
-        <<~GRAPHQL
-          query currentOrderItemsCount {
-            currentOrderItemsCount
-          }
-        GRAPHQL
-      }
-
-      before do
-        query query_string, context: {current_user: user}
-      end
-
-      it "search product with Pizza in name or preview description" do
-        expect(gql_response.data[query_type]).to eq(2)
       end
     end
   end

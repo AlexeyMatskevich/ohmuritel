@@ -1,8 +1,8 @@
 module Mutations
   class CreateReview < BaseMutation
-    argument :body, String, required: true, description: "New products name"
-    argument :rating, Integer, required: true, description: "New products weight"
-    argument :product_id, ID, required: true, description: "New products description for preview page"
+    argument :body, String, "New products name", required: true
+    argument :rating, Integer, "New products weight", required: true
+    argument :product_id, ID, "New products description for preview page", required: true
 
     field :review, Types::ReviewType, null: true
 
