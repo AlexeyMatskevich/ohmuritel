@@ -1,10 +1,11 @@
 module Types
   class MutationType < Types::BaseObject
-    # TODO: remove me
-    field :test_field, String, null: false,
-                               description: "An example field added by the generator"
-    def test_field
-      "Hello World"
-    end
+    implements ::Types::GraphqlAuth
+
+    field :create_product, mutation: Mutations::CreateProduct
+    field :create_direct_upload, mutation: Mutations::CreateDirectUpload
+    field :create_review, mutation: Mutations::CreateReview
+    field :delete_review, mutation: Mutations::DeleteReview
+    field :add_product_to_basket, mutation: Mutations::AddProductToBasket
   end
 end

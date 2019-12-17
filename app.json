@@ -7,13 +7,13 @@
   ],
   "description": "",
   "env": {
+    "HEROKU_APP_NAME": {
+      "required": true
+    },
     "NODE_ENV": {
       "required": true
     },
     "RAILS_ENV": {
-      "required": true
-    },
-    "RAILS_MASTER_KEY": {
       "required": true
     },
     "RAILS_SERVE_STATIC_FILES": {
@@ -30,7 +30,7 @@
   },
   "name": "ohmuritel",
   "scripts": {
-    "postdeploy": "bin/rails db:seed"
+    "postdeploy": "bundle exec rake db:schema:load db:seed"
   },
   "stack": "container"
 }

@@ -1,0 +1,3 @@
+query userEmailTaken($email: String!) {
+  userEmailTaken(email: $email)
+}

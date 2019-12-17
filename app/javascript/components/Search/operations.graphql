@@ -1,0 +1,3 @@
+query productsAutocomplete($search: String!) {
+  productsAutocomplete(search: $search)
+}

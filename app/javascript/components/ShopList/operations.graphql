@@ -1,0 +1,33 @@
+query productsConnection($cursor: String, $order: ProductOrder) {
+    productsConnection(first: 12, after: $cursor, order: $order) @connection(key: "productsConnection", filter: ["order"]) {
+        pageInfo {
+            endCursor
+            startCursor
+            hasPreviousPage
+            hasNextPage
+        }
+        edges {
+            node {
+                id
+                name
+                previewDescription
+                price
+                imageUrl
+                rating
+                slug
+            }
+        }
+    }
+}
+
+query products($pageSize: Int!, $page: Int!, $order: ProductOrder) {
+    products(pageSize: $pageSize, page: $page, order: $order) @connection(key: "products", filter: ["page", "order"]) {
+        id
+        name
+        previewDescription
+        price
+        imageUrl
+        rating
+        slug
+    }
+}

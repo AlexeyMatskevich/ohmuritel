@@ -11,3 +11,5 @@ ignore:
   - 'public/**/*'
   - '.docker/**/*'
   - 'app/javascript/**/*'
+  - 'spec/**/*':
+      - Style/Semicolon

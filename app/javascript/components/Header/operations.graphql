@@ -1,0 +1,6 @@
+query currentOrderCount {
+    currentOrder {
+        id
+        orderCount
+    }
+}

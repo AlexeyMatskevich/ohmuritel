@@ -1,0 +1,14 @@
+query searchProducts($pageSize: Int!, $page: Int!, $search: String!) {
+    searchProducts(pageSize: $pageSize, page: $page, search: $search) @connection(key: "searchProducts", filter: ["page", "search"]){
+        id
+        name
+        previewDescription
+        price
+        imageUrl
+        rating
+        slug
+    }
+}
+query searchProductsCount($search: String!) {
+  searchProductsCount(search: $search)
+}

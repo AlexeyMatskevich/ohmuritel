@@ -1,0 +1,10 @@
+mutation createProduct($name: String!, $weight: Int!, $price: Int!, $previewDescription: String!, $description: String, $image: String! ) {
+  createProduct(name: $name, weight: $weight, price: $price, previewDescription: $previewDescription, description: $description, image: $image) {
+    errors {
+      message
+      field
+      details
+    }
+    success
+  }
+}

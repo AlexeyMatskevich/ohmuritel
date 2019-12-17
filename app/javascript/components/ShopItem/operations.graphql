@@ -1,0 +1,9 @@
+mutation addProductToBasket($id: ID!) {
+  addProductToBasket(id: $id) {
+    errors {
+      message
+      field
+    }
+    success
+  }
+}

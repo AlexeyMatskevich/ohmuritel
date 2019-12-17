@@ -3,15 +3,15 @@ pre-commit:
   commands:
     standard:
       tags: frontend lint
-      glob: ",*.{js}"
+      glob: "**/*.js"
       run:  dip yarn_no_tty standard {staged_files} --verbose | dip yarn snazzy # {staged_files} - list of files
     standardrb:
       tags: backend lint
-      glob: "{bin/*,Gemfile,*.{rb,erb}}"
+      glob: "{**/bin/*,**/.lefthook/**/*,**/Gemfile,**/*.{rb,erb},!(db/schema.rb)}"
       run: dip bundle_no_tty exec standardrb {staged_files} | dip yarn snazzy
     rspec:
       tags: rspec spec backend
-      glob: "*spec.rb"
+      glob: "**/*spec.rb"
       run: dip rspec_no_tty --fail-fast {staged_files}
 pre-push:
   parallel: true
@@ -31,3 +31,16 @@ pre-push:
     brakeman:
       tags: backend
       run: dip bundle_no_tty exec brakeman
+post-checkout:
+  piped: true
+  scripts:
+    "01-bundle-checkinstall":
+      tags: backend
+    "02-yarn-checkinstall":
+      tags: fronend
+    "03-db-migrate":
+      tags: backend
+      runner: docker-compose -f docker-compose-dev.yml run --rm rails
+    "04-crystalball-update":
+      tags: rspec backend
+      runner: docker-compose -f docker-compose-dev.yml run --rm -e RAILS_ENV=test rails

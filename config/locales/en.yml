@@ -30,4 +30,14 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  activerecord:
+    attributes:
+      user:
+        email: email
+  enumerize:
+    user:
+      role:
+        user: user
+        admin: admin
+  action_policy:
+    unauthorized: You are not authorized to perform this action
