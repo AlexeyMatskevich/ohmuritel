@@ -17,17 +17,9 @@ module Mutations
       if user.save
         generate_access_token(user, response)
 
-        {
-          errors: [],
-          success: true,
-          user: user,
-        }
+        valid(user)
       else
-        {
-          errors: add_attribute_errors(user),
-          success: false,
-          user: nil,
-        }
+        invalid(user)
       end
     end
   end

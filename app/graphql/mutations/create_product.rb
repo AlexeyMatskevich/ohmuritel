@@ -14,11 +14,7 @@ module Mutations
 
       authorize! product, to: :create?
 
-      if product.save
-        valid(product)
-      else
-        invalid(product)
-      end
+      product.save ? valid(product) : invalid(product)
     end
   end
 end
