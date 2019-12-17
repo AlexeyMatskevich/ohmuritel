@@ -4,7 +4,7 @@ class Product < ApplicationRecord
   searchkick default_fields: %w[name^5 preview_description], word_start: [:name]
   has_rich_text :description
   has_one_attached :image
-  has_many :reviews
+  has_many :reviews, dependent: :destroy
   friendly_id :name, use: :slugged
 
   validates :name, presence: true, length: {maximum: 55}, uniqueness: {case_sensitive: false}

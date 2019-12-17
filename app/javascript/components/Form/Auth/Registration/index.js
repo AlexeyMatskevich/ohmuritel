@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import clsx from 'clsx'
 import useForm, { FormContext } from 'react-hook-form'
-import { useMutation } from '@apollo/react-hooks'
+import { useApolloClient, useMutation } from '@apollo/react-hooks'
 import { signUp } from './operations.graphql'
 import {
   Avatar, Button, CircularProgress, Container, FormControl, FormHelperText, Grid, Input, InputLabel, Link, Typography
@@ -19,11 +19,11 @@ import CustomSnackbarContent from '../../../CustomSnackbar/CustomSnackbarContent
 export default function Registration () {
   const classes = useStyles()
   const history = useHistory()
+  const client = useApolloClient()
   const buttonClassname = clsx({ [classes.buttonSuccess]: false })
   const handleOnCompleted = ({ signUp }) => {
     if (signUp.success) {
-      history.push('/')
-      window.location.reload()
+      client.resetStore().then(() => history.push('/'))
     } else {
       setServerErrors(extractErrors(signUp))
     }
