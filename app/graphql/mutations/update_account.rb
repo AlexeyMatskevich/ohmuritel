@@ -15,19 +15,7 @@ module Mutations
 
       user.update_with_password args
 
-      if user.errors.any?
-        {
-          errors: add_attribute_errors(user),
-          success: false,
-          user: nil,
-        }
-      else
-        {
-          errors: [],
-          success: true,
-          user: user,
-        }
-      end
+      user.errors.any? ? invalid(user) : valid(user)
     end
   end
 end

@@ -7,7 +7,7 @@ module Mutations
 
       authorize! review, to: :destroy?
 
-      review.destroy ? {errors: [], success: true} : {errors: add_attribute_errors(review), success: false}
+      review.destroy ? valid : invalid(review)
     end
   end
 end
