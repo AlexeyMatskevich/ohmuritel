@@ -11,12 +11,14 @@ interaction:
   bash:
     service: rails
     command: /bin/bash
-    compose_run_options: [no-deps]
+    compose:
+      run_options: [no-deps]
 
   bundle:
     service: rails
     command: bin/bundle
-    compose_run_options: [no-deps]
+    compose:
+      run_options: [no-deps]
 
   bundle_no_tty:
     service: rails
@@ -30,10 +32,6 @@ interaction:
   rails:
     service: rails
     command: bundle exec rails
-    subcommands:
-      s:
-        service: rails
-        compose_run_options: [service-ports]
 
   ruby:
     service: rails
@@ -45,7 +43,8 @@ interaction:
   yarn:
     service: rails
     command: yarn
-    compose_run_options: [no-deps]
+    compose:
+      run_options: [no-deps]
 # We use no-deps for don't start linker container
 # https://docs.docker.com/compose/reference/run/
   yarn_no_tty:
@@ -58,17 +57,16 @@ interaction:
     environment:
       RAILS_ENV: test
     command: bundle exec rspec
-    subcommands:
-      s:
-        service: rails
-        compose_run_options: [service-ports]
+    compose:
+      run_options: ['-p 3001:3001']
 
   rspec_no_tty:
     service: rails
     environment:
       RAILS_ENV: test
     command: bundle exec rspec
-    compose_run_options: [-T]
+    compose:
+      run_options: ['-p 3001:3001']
 
   crystalball:
     service: rails
@@ -81,7 +79,8 @@ interaction:
     environment:
       RAILS_ENV: test
     command: bundle exec crystalball
-    compose_run_options: [-T]
+    compose:
+      run_options: [-T]
 
   database_consistency:
     service: rails
@@ -94,17 +93,20 @@ interaction:
     environment:
       RAILS_ENV: test
     command: bundle exec database_consistency
-    compose_run_options: [-T]
+    compose:
+      run_options: [-T]
 
   standard:
     service: rails
     command: yarn standard
-    compose_run_options: [no-deps]
+    compose:
+      run_options: [no-deps]
 
   standardrb:
     service: rails
     command: bundle exec standardrb
-    compose_run_options: [no-deps]
+    compose:
+      run_options: [no-deps]
 
   psql:
     service: postgres
@@ -116,6 +118,6 @@ interaction:
 
 provision:
   - dip compose down --volumes
-  - dip compose up -d postgres redis
+  - dip compose up -d postgres redis elasticsearch
   - dip yarn install
   - dip bash -c ./bin/setup

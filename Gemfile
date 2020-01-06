@@ -45,6 +45,8 @@ group :development, :test do
   gem "bundler-audit", "~> 0.6.1"
   gem "brakeman", "~> 4.6"
   gem "standard"
+  gem "capybara", "~> 3.30"
+  gem "selenium-webdriver", "~> 3.142"
 end
 
 group :development do
