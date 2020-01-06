@@ -73,6 +73,9 @@ interaction:
     environment:
       RAILS_ENV: test
     command: bundle exec crystalball
+    compose:
+      run_options: ['-p 3001:3001']
+
 
   crystalball_no_tty:
     service: rails
@@ -81,6 +84,8 @@ interaction:
     command: bundle exec crystalball
     compose:
       run_options: [-T]
+    compose:
+      run_options: ['-p 3001:3001']
 
   database_consistency:
     service: rails

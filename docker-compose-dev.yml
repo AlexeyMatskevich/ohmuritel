@@ -40,6 +40,7 @@ x-backend: &backend
     - postgres
     - redis
     - elasticsearch
+    - selenium_chrome
 
 services:
   rails:
