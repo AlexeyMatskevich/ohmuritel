@@ -48,7 +48,7 @@ group :development, :test do
 end
 
 group :development do
-  gem "git", "~> 1.5"
+  gem "git", "~> 1.13"
   gem "web-console", ">= 3.3.0"
   gem "listen", ">= 3.0.5", "< 3.2"
   gem "sniffer", "~> 0.3.2"
