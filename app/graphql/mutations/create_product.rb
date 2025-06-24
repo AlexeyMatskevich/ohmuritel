@@ -10,7 +10,7 @@ module Mutations
     field :product, Types::ProductType, null: true
 
     def resolve(args)
-      product = Product.new args
+      product = Product.new args.merge(rating: 0)
 
       authorize! product, to: :create?
 
